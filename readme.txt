@@ -264,11 +264,13 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
-* **CDN** Kept the saved Cloudflare zone when the API lookup fails after a plugin update. (nathaningram)
-* **Cache** Bypassed cache for REST requests authenticated by HTTP credentials such as Application Passwords. (Ionut Platon #419630)
 
 = 7.9.2 - Coming soon 2026 =
-* **WooCommerce** Checked product editing permissions and request data before Advanced Bulk Edit cache purges.
+* **CDN** Kept the saved Cloudflare zone when an API lookup fails and cleared it when a successful lookup returns no active zones. (nathaningram)
+* **Cache** Bypassed cache for REST requests authenticated by HTTP credentials such as Application Passwords. (Ionut Platon #419630)
+* **3rd** Checked product editing permissions and request data before WooCommerce Advanced Bulk Edit cache purges.
+* **3rd** Bypassed page cache for WooCommerce Store API requests and purged each edited product once per Advanced Bulk Edit request.
+* **3rd** Required site settings permission before saving WCML crawler options.
 * **LQIP** Validated image paths and used hashed paths for images outside the upload directory when storing placeholders.
 * **Media** Limited missing image dimension checks to local files by default, with remote checks available through a filter.
 * **VPI** Validated attribute names and escaped attribute values when rebuilding image markup.

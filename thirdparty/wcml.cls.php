@@ -197,6 +197,9 @@ class WCML {
 	 * @return void
 	 */
 	public static function _handle_save() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- LSCWP verified nonce before firing this action.
 		if (!isset($_POST['litespeed_wcml_crawler_present'])) {
 			return;

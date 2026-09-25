@@ -14,6 +14,7 @@ defined('WPINC') || exit();
 
 use LiteSpeed\API;
 use LiteSpeed\Base;
+use LiteSpeed\Control;
 use LiteSpeed\ESI;
 
 /**
@@ -77,6 +78,7 @@ class WooCommerce extends Base {
 
 		add_action('litespeed_control_finalize', [ $this, 'set_control' ]);
 		add_action('litespeed_tag_finalize', [ $this, 'set_tag' ]);
+		add_filter( 'rest_pre_dispatch', [ $this, 'nocache_store_api' ], 1, 3 );
 
 		// Purge affected product caches when WooCommerce stock changes, including cancellation restocks.
 		add_action('woocommerce_product_set_stock', [ $this, 'purge_product' ]);
@@ -140,6 +142,23 @@ class WooCommerce extends Base {
 				}
 			);
 		}
+	}
+
+	/**
+	 * Keep the session-bound WooCommerce Store API out of the public page cache.
+	 *
+	 * @since 7.9.2
+	 * @param mixed            $result  Pre-dispatch result.
+	 * @param \WP_REST_Server  $server  REST server instance.
+	 * @param \WP_REST_Request $request Current REST request.
+	 * @return mixed
+	 */
+	public function nocache_store_api( $result, $server, $request ) {
+		$route = is_object( $request ) && is_callable( [ $request, 'get_route' ] ) ? $request->get_route() : '';
+		if ( is_string( $route ) && ( '/wc/store/' === substr( $route, 0, 10 ) || '/wc/store' === $route ) ) {
+			Control::set_nocache_hard( 'WooCommerce Store API' );
+		}
+		return $result;
 	}
 
 	/**
@@ -1028,25 +1047,33 @@ class WooCommerce extends Base {
 		 *      )
 		 *  )
 		 */
-		$stock_string_arr = [];
+		$product_ids = [];
 
 		// Ensure data is unslashed before processing.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Third-party plugin may not send nonce. Data format defined by third-party plugin.
 		$data = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : [];
 
 		foreach ( (array) $data as $stock_value ) {
-			$stock_string_arr = array_merge( $stock_string_arr, explode( '#^#', (string) $stock_value ) );
+			if ( ! is_string( $stock_value ) ) {
+				continue;
+			}
+			foreach ( explode( '#^#', $stock_value ) as $edited_stock ) {
+				$product_id = (int) strtok( $edited_stock, '$' );
+				if ( $product_id > 0 ) {
+					$product_ids[ $product_id ] = true;
+				}
+			}
+		}
+
+		if ( ! $product_ids ) {
+			return;
 		}
 
 		$lscwp_3rd_woocommerce = new self();
 
-		if ( count( $stock_string_arr ) < 1 ) {
-			return;
-		}
-
-		foreach ( $stock_string_arr as $edited_stock ) {
-			$product_id = (int) strtok( (string) $edited_stock, '$' );
-			$product    = wc_get_product( $product_id );
+		// The same product can appear in several edited columns; purge it once per request.
+		foreach ( array_keys( $product_ids ) as $product_id ) {
+			$product = wc_get_product( $product_id );
 
 			if ( empty( $product ) ) {
 				do_action( 'litespeed_debug', '3rd woo purge: ' . $product_id . ' not found.' );
