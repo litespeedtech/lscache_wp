@@ -1151,7 +1151,7 @@ h3 .litespeed-learn-more {
 	color: #fff;
 }
 
-body:not(.branch-7) .litespeed-wrap .button:not(.litespeed-btn-large) .dashicons {
+body:not([class^="branch-7"]):not([class*=" branch-7"]) .litespeed-wrap .button:not(.litespeed-btn-large) .dashicons {
 	position: relative;
 	top: -0.075em;
 	vertical-align: middle;
@@ -1980,9 +1980,9 @@ input.litespeed-input-warning {
 	top: 0;
 }
 
-body:not(.branch-7) .litespeed-form-action.button .dashicons,
-body:not(.branch-7) .litespeed-link-with-icon.button .dashicons,
-body:not(.branch-7) .litespeed-collection-button.button .dashicons {
+body:not([class^="branch-7"]):not([class*=" branch-7"]) .litespeed-form-action.button .dashicons,
+body:not([class^="branch-7"]):not([class*=" branch-7"]) .litespeed-link-with-icon.button .dashicons,
+body:not([class^="branch-7"]):not([class*=" branch-7"]) .litespeed-collection-button.button .dashicons {
 	line-height: 1.2;
 }
 
