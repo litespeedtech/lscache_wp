@@ -613,18 +613,30 @@ abstract class Root {
 	 * Dropin with prefix for WP's update_option
 	 *
 	 * @since 3.0
+	 * @return bool Whether the requested value can be read back.
 	 */
 	public static function update_option( $id, $v ) {
-		update_option(self::name($id), self::_maybe_encode($v));
+		$name    = self::name( $id );
+		$encoded = self::_maybe_encode( $v );
+		update_option( $name, $encoded );
+		$missing = new \stdClass();
+		$stored  = get_option( $name, $missing );
+		return $stored === $encoded || ( is_scalar( $stored ) && is_scalar( $encoded ) && (string) $stored === (string) $encoded );
 	}
 
 	/**
 	 * Dropin with prefix for WP's update_site_option
 	 *
 	 * @since 3.0
+	 * @return bool Whether the requested value can be read back.
 	 */
 	public static function update_site_option( $id, $v ) {
-		update_site_option(self::name($id), self::_maybe_encode($v));
+		$name    = self::name( $id );
+		$encoded = self::_maybe_encode( $v );
+		update_site_option( $name, $encoded );
+		$missing = new \stdClass();
+		$stored  = get_site_option( $name, $missing );
+		return $stored === $encoded || ( is_scalar( $stored ) && is_scalar( $encoded ) && (string) $stored === (string) $encoded );
 	}
 
 	/**

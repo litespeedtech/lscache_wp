@@ -149,7 +149,8 @@ class Core extends Root {
 				$this->http_header( $purge_queue );
 				Debug2::debug( '[Core] Purge2 Queue found&sent: ' . $purge_queue );
 			}
-			if ( '-1' !== $purge_queue ) {
+			// An upgrade queues this during Conf::init(); keep it for a later request in case this response aborts.
+			if ( '-1' !== $purge_queue && ! ( defined( 'LSCWP_UPGRADE_PURGE_QUEUED' ) && Purge::UPGRADE_PURGE_HEADER === $purge_queue ) ) {
 				Purge::update_option( Purge::DB_QUEUE2, '-1' );
 			}
 		}

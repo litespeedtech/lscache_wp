@@ -144,9 +144,14 @@ class Data extends Root {
 		// Update related files.
 		$this->cls( 'Activation' )->update_files();
 
-		// Update version to latest.
-		Conf::delete_option( Base::_VER );
-		Conf::add_option( Base::_VER, Core::VER );
+		if ( ! Purge::queue_upgrade_invalidation() ) {
+			return;
+		}
+
+		// Update version to latest only after the page-cache purge is durable.
+		if ( ! Conf::update_option( Base::_VER, Core::VER ) ) {
+			return;
+		}
 
 		self::debug( 'Updated version to ' . Core::VER );
 
@@ -155,7 +160,11 @@ class Data extends Root {
 		if ( ! defined( 'LSWCP_EMPTYCACHE' ) ) {
 			define( 'LSWCP_EMPTYCACHE', true );
 		}
-		Purge::purge_all();
+		try {
+			Purge::purge_all();
+		} catch ( \Throwable $e ) {
+			$this->_report_post_upgrade_purge_error( $e );
+		}
 
 		return 'upgrade';
 	}
@@ -167,11 +176,11 @@ class Data extends Root {
 	 * @access public
 	 *
 	 * @param string $ver Currently stored version string.
-	 * @return void
+	 * @return bool Whether the upgrade completed.
 	 */
 	public function conf_site_upgrade( $ver ) {
 		if ( $this->_get_upgrade_lock() ) {
-			return;
+			return false;
 		}
 
 		$this->_set_upgrade_lock( true );
@@ -190,8 +199,13 @@ class Data extends Root {
 		// Reload options.
 		$this->cls( 'Conf' )->load_site_options();
 
-		Conf::delete_site_option( Base::_VER );
-		Conf::add_site_option( Base::_VER, Core::VER );
+		if ( ! Purge::queue_upgrade_invalidation() ) {
+			return false;
+		}
+
+		if ( ! Conf::update_site_option( Base::_VER, Core::VER ) ) {
+			return false;
+		}
 
 		self::debug( 'Updated site_version to ' . Core::VER );
 
@@ -200,7 +214,31 @@ class Data extends Root {
 		if ( ! defined( 'LSWCP_EMPTYCACHE' ) ) {
 			define( 'LSWCP_EMPTYCACHE', true );
 		}
-		Purge::purge_all();
+		try {
+			Purge::purge_all();
+		} catch ( \Throwable $e ) {
+			$this->_report_post_upgrade_purge_error( $e );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Keep a completed version while surfacing a failed non-critical post-commit purge.
+	 *
+	 * @since 7.9.2
+	 * @param \Throwable $error Failure from a purge hook or backend.
+	 */
+	private function _report_post_upgrade_purge_error( $error ) {
+		self::debugErr( 'Post-upgrade purge failed: ' . $error->getMessage() );
+		$notice = function () {
+			Admin_Display::error( __( 'LiteSpeed Cache upgraded, but the follow-up purge failed. The page-cache invalidation remains queued.', 'litespeed-cache' ) );
+		};
+		if ( did_action( 'after_setup_theme' ) ) {
+			$notice();
+		} else {
+			add_action( 'after_setup_theme', $notice );
+		}
 	}
 
 	/**

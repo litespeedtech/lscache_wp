@@ -46,10 +46,28 @@ class Purge extends Base {
 	 */
 	protected $_purge_single = false;
 
-	const X_HEADER  = 'X-LiteSpeed-Purge';
-	const X_HEADER2 = 'X-LiteSpeed-Purge2';
-	const DB_QUEUE  = 'queue';
-	const DB_QUEUE2 = 'queue2';
+	const X_HEADER             = 'X-LiteSpeed-Purge';
+	const X_HEADER2            = 'X-LiteSpeed-Purge2';
+	const DB_QUEUE             = 'queue';
+	const DB_QUEUE2            = 'queue2';
+	const UPGRADE_PURGE_HEADER = 'X-LiteSpeed-Purge2: public,*';
+
+	/**
+	 * Persist a full page-cache invalidation before an upgrade version is committed.
+	 * This path must not run filters or actions from the ordinary purge flow.
+	 *
+	 * @since 7.9.2
+	 * @return bool Whether the pending header can be read back.
+	 */
+	public static function queue_upgrade_invalidation() {
+		if ( ! self::update_option( self::DB_QUEUE2, self::UPGRADE_PURGE_HEADER ) ) {
+			return false;
+		}
+		if ( ! defined( 'LSCWP_UPGRADE_PURGE_QUEUED' ) ) {
+			define( 'LSCWP_UPGRADE_PURGE_QUEUED', true );
+		}
+		return true;
+	}
 
 	const TYPE_PURGE_ALL          = 'purge_all';
 	const TYPE_PURGE_ALL_LSCACHE  = 'purge_all_lscache';

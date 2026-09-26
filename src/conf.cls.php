@@ -86,7 +86,8 @@ class Conf extends Base {
 			$this->cls( 'Debug2' )->init();
 		}
 
-		$ver = $this->conf( self::_VER );
+		$ver               = $this->conf( self::_VER );
+		$upgrade_completed = false;
 
 		/**
 		 * Version is less than v3.0, or, is a new installation
@@ -103,14 +104,15 @@ class Conf extends Base {
 			if ( Core::VER !== $ver ) {
 				// Plugin version will be set inside
 				// Site plugin upgrade & version change will do in load_site_conf
-				$ver_check_tag = Data::cls()->conf_upgrade( $ver );
+				$ver_check_tag     = Data::cls()->conf_upgrade( $ver );
+				$upgrade_completed = 'upgrade' === $ver_check_tag;
 			}
 		}
 
 		/**
 		 * Sync latest new options
 		 */
-		if ( ! $ver || Core::VER !== $ver ) {
+		if ( ! $ver || ( Core::VER !== $ver && $upgrade_completed ) ) {
 			// Load default values
 			$this->load_default_vals();
 
@@ -154,7 +156,7 @@ class Conf extends Base {
 			define( 'LITESPEED_CONF_LOADED', true );
 		}
 
-		if ( ! $ver || Core::VER !== $ver ) {
+		if ( ! $ver || ( Core::VER !== $ver && $upgrade_completed ) ) {
 			// Only trigger once in upgrade progress, don't run always
 			$this->update_confs(); // Files only get corrected in activation or saving settings actions.
 		}
@@ -326,15 +328,16 @@ class Conf extends Base {
 		/**
 		 * Upgrade conf
 		 */
+		$upgrade_completed = false;
 		if ( $ver && Core::VER !== $ver ) {
 			// Site plugin version will change inside
-			Data::cls()->conf_site_upgrade( $ver );
+			$upgrade_completed = Data::cls()->conf_site_upgrade( $ver );
 		}
 
 		/**
 		 * Is a new installation
 		 */
-		if ( ! $ver || Core::VER !== $ver ) {
+		if ( ! $ver || ( Core::VER !== $ver && $upgrade_completed ) ) {
 			// Load default values
 			$this->load_default_site_vals();
 
