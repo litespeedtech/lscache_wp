@@ -44,15 +44,17 @@ class Cloudflare extends Base {
 		}
 
 		$zone = $this->fetch_zone();
-		if ($zone) {
+		if ( false === $zone ) {
+			Debug2::debug('[Cloudflare] Zone lookup failed; saved configuration unchanged');
+		} elseif ( ! $zone ) {
+			$this->cls('Conf')->update(self::O_CDN_CLOUDFLARE_ZONE, '');
+			Debug2::debug('[Cloudflare] Zone lookup succeeded with no active zones; cleared the saved zone');
+		} else {
 			$this->cls('Conf')->update(self::O_CDN_CLOUDFLARE_NAME, $zone['name']);
 
 			$this->cls('Conf')->update(self::O_CDN_CLOUDFLARE_ZONE, $zone['id']);
 
 			Debug2::debug("[Cloudflare] Get zone successfully \t\t[ID] " . $zone['id']);
-		} else {
-			// Keep the last known zone: a failed lookup means the API was unusable (timeout, rate limit, outage), not that the saved zone is wrong.
-			Debug2::debug('[Cloudflare] ❌ Get zone failed, keep last known zone');
 		}
 	}
 
@@ -209,9 +211,13 @@ class Cloudflare extends Base {
 		// Can't find, try to get default one
 		$zones = $this->cloudflare_call($url, 'GET', false, false);
 
-		if (!$zones) {
+		if ( false === $zones ) {
 			Debug2::debug('[Cloudflare] fetch_zone no zone');
 			return false;
+		}
+		if ( ! $zones ) {
+			Debug2::debug('[Cloudflare] fetch_zone empty zone list');
+			return [];
 		}
 
 		if (!$kw) {
@@ -291,7 +297,7 @@ class Cloudflare extends Base {
 
 		$json = \json_decode($result, true);
 
-		if ($json && $json['success'] && $json['result']) {
+		if ( is_array( $json ) && ! empty( $json['success'] ) && isset( $json['result'] ) && is_array( $json['result'] ) ) {
 			Debug2::debug('[Cloudflare] cloudflare_call called successfully');
 			if ($show_msg) {
 				$msg = __('Communicated with Cloudflare successfully.', 'litespeed-cache');
