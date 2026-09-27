@@ -100,6 +100,7 @@ class Htaccess extends Root {
 	const MARKER_NONLS               = 'NON_LSCACHE';
 	const MARKER_LOGIN_COOKIE        = '### marker LOGIN COOKIE';
 	const MARKER_ASYNC               = '### marker ASYNC';
+	const MARKER_REST_AUTH           = '### marker REST AUTH';
 	const MARKER_CRAWLER             = '### marker CRAWLER';
 	const MARKER_MOBILE              = '### marker MOBILE';
 	const MARKER_NOCACHE_COOKIES     = '### marker NOCACHE COOKIES';
@@ -631,6 +632,18 @@ class Htaccess extends Root {
 		$new_rules[] = 'RewriteCond %{QUERY_STRING} action=async_litespeed';
 		$new_rules[] = 'RewriteRule .* - [E=noabort:1]';
 		$new_rules[] = self::MARKER_ASYNC . self::MARKER_END;
+		$new_rules[] = '';
+
+		// Prevent an authenticated REST request from reading an anonymous cache entry before WordPress runs.
+		$rest_prefix = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : 'wp-json';
+		$rest_prefix = is_string( $rest_prefix ) && preg_match( '/^[A-Za-z0-9._~-]+(?:\/[A-Za-z0-9._~-]+)*$/', $rest_prefix ) && ! preg_match( '/(?:^|\/)\.{1,2}(?:\/|$)/', $rest_prefix ) ? $rest_prefix : 'wp-json';
+		$rest_prefix = preg_quote( $rest_prefix, '/' );
+		$new_rules[] = self::MARKER_REST_AUTH . self::MARKER_START;
+		$new_rules[] = 'RewriteCond %{HTTP:Authorization} !^$';
+		$new_rules[] = 'RewriteCond %{REQUEST_URI} /' . $rest_prefix . '(?:/|$) [OR]';
+		$new_rules[] = 'RewriteCond %{QUERY_STRING} (^|&)rest_route=';
+		$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]';
+		$new_rules[] = self::MARKER_REST_AUTH . self::MARKER_END;
 		$new_rules[] = '';
 
 		// mobile agents.

@@ -714,9 +714,9 @@ class Control extends Root {
 			// return;
 		// }
 
-		// REST requests carrying HTTP credentials (e.g. Application Passwords) are authenticated by WP only after `init`, so the login state sampled there reads as guest; never cache them.
-		if ( $this->cls( 'REST' )->is_rest() && ( isset( $_SERVER['PHP_AUTH_USER'] ) || ! empty( $_SERVER['HTTP_AUTHORIZATION'] ) || ! empty( $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ) ) ) {
-			self::set_nocache( 'REST with HTTP auth' );
+		// REST authentication may finish after the early vary check; inspect the current user again before sending cache headers.
+		if ( $this->cls( 'REST' )->is_rest() && ( is_user_logged_in() || isset( $_SERVER['PHP_AUTH_USER'] ) || ! empty( $_SERVER['HTTP_AUTHORIZATION'] ) || ! empty( $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ) ) ) {
+			self::set_nocache_hard( 'authenticated REST request' );
 			return;
 		}
 

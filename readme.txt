@@ -268,7 +268,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 = 7.9.2 - Coming soon 2026 =
 * **Purge** Queued page-cache invalidation before marking a plugin upgrade complete and preserved it for the next request.
 * **CDN** Kept the saved Cloudflare zone when an API lookup fails and cleared it when a successful lookup returns no active zones. (nathaningram)
-* **Cache** Bypassed cache for REST requests authenticated by HTTP credentials such as Application Passwords. (Ionut Platon #419630)
+* **Cache** Added a rewrite guard for REST requests with HTTP credentials and made authenticated REST responses hard no-cache, including under Force Public. (Ionut Platon #419630)
 * **3rd** Checked product editing permissions and request data before WooCommerce Advanced Bulk Edit cache purges.
 * **3rd** Bypassed page cache for WooCommerce Store API requests and purged each edited product once per Advanced Bulk Edit request.
 * **3rd** Required site settings permission before saving WCML crawler options.
