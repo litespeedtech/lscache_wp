@@ -801,6 +801,7 @@ class Media extends Root {
 	 * Run lazyload replacement for images in buffer.
 	 *
 	 * @since  1.4
+	 * @since 7.9.2 Removed `fetchpriority="high"` from images that are lazy loaded.
 	 * @access private
 	 * @return void
 	 */
@@ -857,6 +858,9 @@ class Media extends Root {
 			foreach ( $html_list as $k => $v ) {
 				$size = $placeholder_list[ $k ];
 				$src  = $src_list[ $k ];
+
+				// Lazy loaded images are not high priority: drop fetchpriority="high" (e.g. added by WP core to the first content image).
+				$v = preg_replace( '#\s+fetchpriority\s*=\s*(["\']?)high\1(?=[\s/>])#i', '', $v );
 
 				$html_list[ $k ] = $__placeholder->replace( $v, $src, $size );
 			}
