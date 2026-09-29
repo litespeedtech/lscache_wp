@@ -266,6 +266,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
 = 7.9.2 - Coming soon 2026 =
+* **CLI** Required HTTPS for remote option imports and removed their temporary files after use.
 * **Purge** Queued page-cache invalidation before marking a plugin upgrade complete and preserved it for the next request.
 * **CDN** Kept the saved Cloudflare zone when an API lookup fails and cleared it when a successful lookup returns no active zones. (nathaningram)
 * **Cache** Added a rewrite guard for REST requests with HTTP credentials and made authenticated REST responses hard no-cache, including under Force Public. (Ionut Platon #419630)

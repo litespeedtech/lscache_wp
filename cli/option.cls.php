@@ -386,16 +386,25 @@ class Option extends Base {
 	 * @param array $args Positional arguments (url).
 	 */
 	public function import_remote( $args ) {
-		$file = $args[0];
+		$file  = $args[0];
+		$valid = wp_http_validate_url( $file );
+		if ( ! $valid || 'https' !== strtolower( (string) wp_parse_url( $valid, PHP_URL_SCHEME ) ) ) {
+			WP_CLI::error( 'Remote option imports require a valid HTTPS URL.' );
+			return;
+		}
 
-		$tmp_file = download_url( $file );
+		$tmp_file = download_url( $valid );
 
 		if ( is_wp_error( $tmp_file ) ) {
 			WP_CLI::error( 'Failed to download file.' );
 			return;
 		}
 
-		$res = $this->cls( 'Import' )->import( $tmp_file );
+		try {
+			$res = $this->cls( 'Import' )->import( $tmp_file );
+		} finally {
+			wp_delete_file( $tmp_file );
+		}
 
 		if ( ! $res ) {
 			WP_CLI::error( 'Failed to parse serialized data from file.' );
