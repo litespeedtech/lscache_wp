@@ -57,7 +57,7 @@
 	"util-no_https_vary": "",
 	"debug-disable_all": "",
 	"debug": "",
-	"debug-ips": "127.0.0.1",
+	"debug-ips": "",
 	"debug-level": "",
 	"debug-filesize": "3",
 	"debug-collapse_qs": "",
