@@ -108,12 +108,12 @@ input[type='checkbox'].litespeed-tiny-toggle:checked:after {
 	border: 0 !important;
 }
 
-.block-editor__container input[type='checkbox'].litespeed-tiny-toggle:before {
+body:not([class^="branch-7"]):not([class*=" branch-7"]) .block-editor__container input[type='checkbox'].litespeed-tiny-toggle:before {
 	top: 5px;
 	left: 7px;
 }
 
-.block-editor__container input[type='checkbox'].litespeed-tiny-toggle:checked:before {
+body:not([class^="branch-7"]):not([class*=" branch-7"]) .block-editor__container input[type='checkbox'].litespeed-tiny-toggle:checked:before {
 	left: 23px;
 }
 
