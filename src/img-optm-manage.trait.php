@@ -78,8 +78,9 @@ trait Img_Optm_Manage {
 			// Get min post id to mark
 			$q = "SELECT MIN(post_id) FROM `$this->_table_img_optming`";
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-			$min_pid = $wpdb->get_var( $q ) - 1;
-			if ( $this->_summary['next_post_id'] > $min_pid ) {
+			$min_pid = $wpdb->get_var( $q );
+			if ( null !== $min_pid && false !== $min_pid && is_numeric( $min_pid ) && $this->_summary['next_post_id'] > (int) $min_pid - 1 ) {
+				$min_pid                        = (int) $min_pid - 1;
 				$this->_summary['next_post_id'] = $min_pid;
 				self::save_summary();
 			}
