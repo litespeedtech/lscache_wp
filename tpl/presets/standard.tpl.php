@@ -93,6 +93,17 @@ $presets = array(
 	<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/presets/#standard-presets-tab' ); ?>
 </h3>
 
+<?php if ( is_dir( Preset::LEGACY_DIR ) ) : ?>
+	<div class="litespeed-callout notice notice-warning inline">
+		<p>
+			<?php
+			/* translators: %s: Legacy preset backup directory. */
+			printf( esc_html__( 'The legacy preset backup directory %s may contain sensitive settings accessible over the web; save any backups you need in a secure location, then manually delete this directory.', 'litespeed-cache' ), esc_html( Preset::LEGACY_DIR ) );
+			?>
+		</p>
+	</div>
+<?php endif; ?>
+
 <p><?php esc_html_e( 'Use an official LiteSpeed-designed Preset to configure your site in one click. Try no-risk caching essentials, extreme optimization, or something in between.', 'litespeed-cache' ); ?></p>
 
 <div class="litespeed-comparison-cards">
@@ -141,16 +152,17 @@ $presets = array(
 $summary = Preset::get_summary();
 $backups = array();
 foreach ( Preset::get_backups() as $backup ) {
-	$backup = explode( '-', $backup );
-	if ( empty( $backup[1] ) ) {
+	$parts = [];
+	if ( ! preg_match( Preset::PATTERN_BACKUP_NAME, $backup, $parts ) ) {
 		continue;
 	}
-	$timestamp  = $backup[1];
+	$timestamp  = $parts[1];
 	$time       = trim( Utility::readable_time( $timestamp ) );
-	$name       = empty( $backup[3] ) ? null : $backup[3];
+	$name       = $parts[2];
 	$curr_title = empty( $presets[ $name ]['title'] ) ? $name : $presets[ $name ]['title'];
 	$curr_title = null === $curr_title ? esc_html__( 'unknown', 'litespeed-cache' ) : $curr_title;
 	$backups[]  = array(
+		'name'      => $backup,
 		'timestamp' => $timestamp,
 		'time'      => $time,
 		'title'     => $curr_title,
@@ -188,7 +200,7 @@ if ( ! empty( $summary['preset'] ) || ! empty( $backups ) ) :
 	<p>
 		<?php printf( esc_html__( 'Backup created %1$s before applying the %2$s preset', 'litespeed-cache' ), esc_html( $backup['time'] ), esc_html( $backup['title'] ) ); ?>
 		<a
-			href="<?php echo esc_url( Utility::build_url( Router::ACTION_PRESET, Preset::TYPE_RESTORE, false, null, array( 'timestamp' => $backup['timestamp'] ) ) ); ?>"
+			href="<?php echo esc_url( Utility::build_url( Router::ACTION_PRESET, Preset::TYPE_RESTORE, false, null, array( 'backup' => $backup['name'] ) ) ); ?>"
 			class="litespeed-left10"
 			data-litespeed-cfm="<?php echo esc_attr( sprintf( __( 'This will restore the backup settings created %1$s before applying the %2$s preset. Any changes made since then will be lost. Do you want to continue?', 'litespeed-cache' ), $backup['time'], $backup['title'] ) ); ?>"
 		>

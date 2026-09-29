@@ -57,7 +57,9 @@ class Presets {
 			return;
 		}
 
-		return $this->preset->apply( $preset );
+		if ( ! $this->preset->apply( $preset ) ) {
+			WP_CLI::error( 'Failed to apply the preset. Check the preset name and backup directory permissions.' );
+		}
 	}
 
 	/**
@@ -79,28 +81,28 @@ class Presets {
 	}
 
 	/**
-	 * Restores settings from the backup file with the given timestamp, then deletes the file.
+	 * Restores settings from a backup name or legacy timestamp, then deletes the file.
 	 *
 	 * ## OPTIONS
 	 *
-	 * <timestamp>
-	 * : The timestamp of the backup to restore.
+	 * <backup>
+	 * : The name returned by get_backups, or a legacy backup timestamp.
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # Restore the backup with the timestamp 1667485245
-	 *     $ wp litespeed-presets restore 1667485245
+	 *     # Restore one exact backup
+	 *     $ wp litespeed-presets restore backup-1667485245-before-basic
 	 *
-	 * @param array $args Positional arguments (timestamp).
+	 * @param array $args Positional arguments (backup name or timestamp).
 	 */
 	public function restore( $args ) {
-		$timestamp = $args[0];
+		$backup = $args[0];
 
-		if ( empty( $timestamp ) ) {
-			WP_CLI::error( 'Please specify a timestamp to restore.' );
+		if ( empty( $backup ) ) {
+			WP_CLI::error( 'Please specify a backup name or timestamp to restore.' );
 			return;
 		}
 
-		return $this->preset->restore( $timestamp );
+		return $this->preset->restore( $backup );
 	}
 }

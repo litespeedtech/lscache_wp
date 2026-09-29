@@ -279,7 +279,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Conf** Moved runtime configuration to a PHP-protected file and updated Guest Mode and Object Cache to read it.
 * **Object Cache** Automatically purged object cache when switching between QUIC.cloud development and live environments.
 * **Conf** Validated settings written to .htaccess to prevent directive injection.
-* **Presets** Prevented path traversal in presets and excluded sensitive settings from automatic preset backups.
+* **Presets** Prevented path traversal, isolated automatic backups by site in guarded PHP files, excluded sensitive settings from new backups, and added a reminder to manually remove the legacy backup directory.
 * **Cache** Prevented authenticated responses from being cached under an incorrect visitor context.
 * **Crawler** Hardened the role simulation hash check and removed the unused flash hash path. (#866256)
 * **Debug** Kept cache vary values and URL tags hashed when debug logging is enabled, and removed cookie values from page comments.

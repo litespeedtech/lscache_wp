@@ -373,7 +373,7 @@ HTACCESS;
 		if (!$binary) {
 			$data = self::remove_zero_space($data);
 		}
-		$temp = self::temp_file($folder);
+		$temp = '.php' === substr( $filename, -4 ) ? self::_temp_php_file( $folder ) : self::temp_file($folder);
 		if (!$temp) {
 			return false;
 		}
@@ -384,6 +384,32 @@ HTACCESS;
 			return false;
 		}
 		return self::publish_temp_file($temp, $filename);
+	}
+
+	/**
+	 * A staged PHP target must itself have a PHP suffix, so a web server cannot
+	 * serve its contents as a static temporary file before the atomic rename.
+	 *
+	 * @since 7.9.2
+	 * @param string $dir Existing destination directory.
+	 * @return string|false Exclusive empty staging file, or false.
+	 */
+	private static function _temp_php_file( $dir ) {
+		$dir = realpath( $dir );
+		if ( ! $dir || ! is_dir( $dir ) ) {
+			return false;
+		}
+		try {
+			$file = $dir . '/.lscwp-' . bin2hex( random_bytes( 16 ) ) . '.php';
+		} catch ( \Throwable $e ) {
+			return false;
+		}
+		$handle = @fopen( $file, 'x' );
+		if ( false === $handle ) {
+			return false;
+		}
+		fclose( $handle );
+		return $file;
 	}
 
 	/**

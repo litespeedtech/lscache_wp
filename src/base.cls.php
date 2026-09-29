@@ -1017,7 +1017,7 @@ class Base extends Root {
 	 * @return bool
 	 */
 	protected function _conf_secret( $id ) {
-		return $this->_conf_pswd( $id ) || in_array( $id, [ self::HASH, self::O_API_KEY ], true );
+		return $this->_conf_pswd( $id ) || in_array( $id, [ self::HASH, self::O_API_KEY, self::O_CDN_CLOUDFLARE_EMAIL, self::O_OBJECT_USER, self::O_CRAWLER_COOKIES ], true );
 	}
 
 	/**
