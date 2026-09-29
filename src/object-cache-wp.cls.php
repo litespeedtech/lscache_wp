@@ -156,7 +156,9 @@ class WP_Object_Cache {
 		 * @since  1.8.2
 		 */
 		if ( ! defined( 'LSOC_PREFIX' ) ) {
-			define( 'LSOC_PREFIX', substr( md5( __FILE__ ), -5 ) );
+			global $table_prefix;
+			$identity = ( defined( 'WP_CACHE_KEY_SALT' ) ? WP_CACHE_KEY_SALT : '' ) . "\0" . ( defined( 'DB_NAME' ) ? DB_NAME : '' ) . "\0" . (string) $table_prefix;
+			define( 'LSOC_PREFIX', hash( 'sha256', $identity ) );
 		}
 	}
 
@@ -273,7 +275,8 @@ class WP_Object_Cache {
 
 		$prefix = $this->_object_cache->is_global( $group ) ? '' : $this->blog_prefix;
 
-		return LSOC_PREFIX . $prefix . $group . '.' . $key;
+		// Hash length-prefixed fields to avoid ambiguous names and Memcached's 250-byte key limit.
+		return LSOC_PREFIX . ':' . hash( 'sha256', strlen( $prefix ) . ':' . $prefix . strlen( $group ) . ':' . $group . ':' . $key );
 	}
 
 	/**

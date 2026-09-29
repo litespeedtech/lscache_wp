@@ -266,6 +266,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
 = 7.9.2 - Coming soon 2026 =
+* **Object Cache** Namespaced cache keys by installation identity to reduce collisions on shared cache backends.
 * **Image Optimize** Kept the scan cursor unchanged when cleanup finds no unfinished images.
 * **Database Optimize** Limited table optimization and its count to the current site's tables, and safely quoted table names for InnoDB conversion.
 * **Task** Kept asynchronous request tokens out of debug logs and compared them with constant-time checks.
