@@ -161,11 +161,13 @@ class DB_Optm extends Root {
 				);
 
 			case 'optimize_tables':
+				$like = $wpdb->esc_like( $wpdb->prefix ) . '%';
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				return (int) $wpdb->get_var(
 					$wpdb->prepare(
-						"SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_SCHEMA = %s AND ENGINE <> 'InnoDB' AND DATA_FREE > 0",
-						DB_NAME
+						"SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_SCHEMA = %s AND TABLE_NAME LIKE %s AND ENGINE <> 'InnoDB' AND DATA_FREE > 0",
+						DB_NAME,
+						$like
 					)
 				);
 		}
@@ -320,17 +322,20 @@ class DB_Optm extends Root {
 				return __( 'Clean all transients successfully.', 'litespeed-cache' );
 
 			case 'optimize_tables':
+			$like = $wpdb->esc_like( $wpdb->prefix ) . '%';
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$result = (array) $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT table_name, DATA_FREE FROM information_schema.tables WHERE TABLE_SCHEMA = %s AND ENGINE <> 'InnoDB' AND DATA_FREE > 0",
-					DB_NAME
+					"SELECT table_name, DATA_FREE FROM information_schema.tables WHERE TABLE_SCHEMA = %s AND TABLE_NAME LIKE %s AND ENGINE <> 'InnoDB' AND DATA_FREE > 0",
+					DB_NAME,
+					$like
 				)
 			);
 			if ( $result ) {
 				foreach ( $result as $row ) {
+					$table = str_replace( '`', '``', $row->table_name );
 					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					$wpdb->query( 'OPTIMIZE TABLE ' . esc_sql( $row->table_name ) );
+					$wpdb->query( "OPTIMIZE TABLE `$table`" );
 				}
 			}
 				return __( 'Optimized all tables.', 'litespeed-cache' );
