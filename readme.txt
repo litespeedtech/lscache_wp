@@ -266,6 +266,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
 = 7.9.2 - Coming soon 2026 =
+* **Task** Kept asynchronous request tokens out of debug logs and compared them with constant-time checks.
 * **Debug** Removed the default trusted loopback IP for new installations.
 * **CLI** Required HTTPS for remote option imports and removed their temporary files after use.
 * **Purge** Queued page-cache invalidation before marking a plugin upgrade complete and preserved it for the next request.

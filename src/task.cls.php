@@ -194,12 +194,12 @@ class Task extends Root {
 	public static function async_litespeed_handler() {
 		$hash_data = self::get_option( 'async_call-hash', [] );
 		if ( ! $hash_data || ! is_array( $hash_data ) || empty( $hash_data['hash'] ) || empty( $hash_data['ts'] ) ) {
-			self::debug( 'async_litespeed_handler no hash data', $hash_data );
+			self::debug( 'async_litespeed_handler no hash data' );
 			return;
 		}
 
 		$nonce = isset( $_GET['nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['nonce'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( 120 < time() - (int) $hash_data['ts'] || '' === $nonce || $nonce !== $hash_data['hash'] ) {
+		if ( 120 < time() - (int) $hash_data['ts'] || '' === $nonce || ! is_string( $hash_data['hash'] ) || ! hash_equals( $hash_data['hash'], $nonce ) ) {
 			self::debug( 'async_litespeed_handler nonce mismatch' );
 			return;
 		}
@@ -261,7 +261,7 @@ class Task extends Root {
 		];
 
 		$url = add_query_arg( $qs, admin_url( 'admin-ajax.php' ) );
-		self::debug( 'async call to ' . $url );
+		self::debug( 'async call dispatched [type] ' . $type );
 		wp_safe_remote_post( esc_url_raw( $url ), $args );
 	}
 
