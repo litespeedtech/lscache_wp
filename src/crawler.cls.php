@@ -53,6 +53,13 @@ class Crawler extends Root {
 	private $_resetfile;
 
 	/**
+	 * Whether lane cleanup has been registered for request shutdown.
+	 *
+	 * @var bool
+	 */
+	private $_lane_shutdown_registered = false;
+
+	/**
 	 * Reason that ended current run.
 	 *
 	 * @var string
@@ -368,9 +375,7 @@ class Crawler extends Root {
 		if ( ! defined( 'LITESPEED_LANE_HASH' ) ) {
 			define( 'LITESPEED_LANE_HASH', Str::rrand( 8 ) );
 		}
-		if ( $this->_check_valid_lane() ) {
-			$this->_take_over_lane();
-		} else {
+		if ( ! $this->_check_valid_lane() || ! $this->_take_over_lane() ) {
 			self::debug( '⚠️ lane in use' );
 			return;
 		}
@@ -425,9 +430,10 @@ class Crawler extends Root {
 
 		try {
 			$this->_engine_start();
-			$this->Release_lane();
 		} catch ( \Exception $e ) {
 			self::debug( '🛑 ' . $e->getMessage() );
+		} finally {
+			$this->Release_lane();
 		}
 	}
 
@@ -672,11 +678,45 @@ class Crawler extends Root {
 	 * Take over lane.
 	 *
 	 * @since 6.1
-	 * @return void
+	 * @return bool True when the lane was acquired or was already owned by this request.
 	 */
 	private function _take_over_lane() {
-		self::debug( 'Take over lane as lane is free: ' . $this->json_local_path() . '.pid' );
-		File::save( $this->json_local_path() . '.pid', LITESPEED_LANE_HASH );
+		$lane_file = $this->json_local_path() . '.pid';
+		$owner     = File::read( $lane_file );
+
+		if ( LITESPEED_LANE_HASH !== $owner ) {
+			// The crawler/ dir is otherwise only created later, by save_summary().
+			$lane_dir = dirname( $lane_file );
+			if ( ! is_dir( $lane_dir ) && ! wp_mkdir_p( $lane_dir ) ) {
+				return false;
+			}
+
+			// Exclusive creation prevents two requests from taking the same free lane.
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen, WordPress.PHP.NoSilencedErrors.Discouraged
+			$handle = @fopen( $lane_file, 'x' );
+			if ( false === $handle ) {
+				return false;
+			}
+
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
+			$written = fwrite( $handle, LITESPEED_LANE_HASH );
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+			fclose( $handle );
+
+			if ( strlen( LITESPEED_LANE_HASH ) !== $written ) {
+				$this->Release_lane( true );
+				return false;
+			}
+		}
+
+		self::debug( 'Take over lane as lane is free: ' . $lane_file );
+
+		if ( ! $this->_lane_shutdown_registered ) {
+			register_shutdown_function( [ $this, 'Release_lane' ] );
+			$this->_lane_shutdown_registered = true;
+		}
+
+		return true;
 	}
 
 	/**
@@ -694,24 +734,36 @@ class Crawler extends Root {
 	 * Release lane file.
 	 *
 	 * @since 6.1
-	 * @return void
+	 * @param bool $force Release the lane even when another request owns it.
+	 * @param string|false|null $expected_owner Only release if the lane file still holds this owner (null = no check).
+	 * @return bool True if no lane file remains; false if another request owns the lane, the file no longer holds $expected_owner, or unlink failed.
 	 */
-	public function Release_lane() {
+	public function Release_lane( $force = false, $expected_owner = null ) {
 		$lane_file = $this->json_local_path() . '.pid';
 		if ( ! file_exists( $lane_file ) ) {
-			return;
+			return true;
+		}
+
+		$owner = File::read( $lane_file );
+		if ( ! $force && ( ! defined( 'LITESPEED_LANE_HASH' ) || LITESPEED_LANE_HASH !== $owner ) ) {
+			self::debug( 'Skip releasing lane owned by another crawler' );
+			return false;
+		}
+		if ( null !== $expected_owner && $expected_owner !== $owner ) {
+			self::debug( 'Skip releasing lane taken over by another crawler' );
+			return false;
 		}
 
 		self::debug( 'Release lane' );
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
-		unlink( $lane_file );
+		return unlink( $lane_file );
 	}
 
 	/**
 	 * Check if lane is used by other crawlers.
 	 *
 	 * @since 6.1
-	 * @param bool $strict_mode Strict check that file must exist.
+	 * @param bool $strict_mode Strict check that file must exist and be owned by this request; never releases the lane.
 	 * @return bool True if valid lane.
 	 */
 	private function _check_valid_lane( $strict_mode = false ) {
@@ -721,14 +773,24 @@ class Crawler extends Root {
 				self::debug( 'lane file not existed, strict mode is false [file] ' . $lane_file );
 				return false;
 			}
+			// Mid-run ownership check only: never reclaim here, or two crawlers could run.
+			return LITESPEED_LANE_HASH === File::read( $lane_file );
+		}
+		if ( ! file_exists( $lane_file ) ) {
+			return true;
 		}
 		$pid = File::read( $lane_file );
-		if ( $pid && LITESPEED_LANE_HASH !== $pid ) {
-			// If lane file is older than 1h, ignore.
-			if ( ( time() - filemtime( $lane_file ) ) > 3600 ) {
-				self::debug( 'Lane file is older than 1h, releasing lane' );
-				$this->Release_lane();
-				return true;
+		if ( LITESPEED_LANE_HASH !== $pid ) {
+			// Foreign, empty or unreadable lane: reclaim only once stale (>1h old, or >60s in the future from clock skew).
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- the owner may unlink it after file_exists().
+			$mtime = @filemtime( $lane_file );
+			if ( false === $mtime ) {
+				return true; // Lane file vanished: lane is free.
+			}
+			$age = time() - $mtime;
+			if ( $age > 3600 || $age < -60 ) {
+				self::debug( 'Lane file is stale (age ' . $age . 's), releasing lane' );
+				return $this->Release_lane( true, $pid );
 			}
 			return false;
 		}
