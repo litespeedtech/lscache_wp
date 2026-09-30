@@ -177,12 +177,14 @@ trait Img_Optm_Notify {
 		$pending       = [];
 		$total_reduced = 0;
 		$write_error   = '';
+		$has_notified  = false;
 		foreach ( $rows as $row_id => $row ) {
 			$result      = $results[ $row_id ];
 			$server_info = $result['server_info'];
 			$old_status  = (int) $row->optm_status;
 			if ( self::STATUS_NOTIFIED === $old_status ) {
-				$q = "UPDATE `$this->_table_img_optming` SET server_info = %s WHERE id = %d AND optm_status = %d";
+				$has_notified = true;
+				$q            = "UPDATE `$this->_table_img_optming` SET server_info = %s WHERE id = %d AND optm_status = %d";
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 				if ( false === $wpdb->query( $wpdb->prepare( $q, [ wp_json_encode( $server_info ), $row_id, self::STATUS_NOTIFIED ] ) ) ) {
 					$write_error = 'failed to refresh image result';
@@ -197,6 +199,7 @@ trait Img_Optm_Notify {
 				$write_error = 'image row changed';
 				continue;
 			}
+			$has_notified = true;
 
 			$post_id = (int) $row->post_id;
 			if ( ! isset( $pending[ $post_id ] ) ) {
@@ -225,10 +228,13 @@ trait Img_Optm_Notify {
 		if ( $total_reduced ) {
 			self::reload_summary();
 			$this->_summary['reduced'] = ! empty( $this->_summary['reduced'] ) ? (int) $this->_summary['reduced'] + $total_reduced : $total_reduced;
-			self::save_summary();
+			if ( ! self::save_summary() ) {
+				$write_error = 'failed to update image reduction summary';
+			}
 		}
-		if ( $rows ) {
-			self::update_option( self::DB_NEED_PULL, self::STATUS_NOTIFIED );
+		// Statistics are best-effort; completed images must remain eligible for pulling.
+		if ( $has_notified && ! self::update_option( self::DB_NEED_PULL, self::STATUS_NOTIFIED ) ) {
+			$write_error = 'failed to schedule image pull';
 		}
 
 		return $write_error ? Cloud::err( $write_error ) : Cloud::ok( [ 'count' => count( $rows ) ] );

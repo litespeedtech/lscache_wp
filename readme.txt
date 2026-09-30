@@ -266,6 +266,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
 = 7.9.2 - Coming soon 2026 =
+* **Image Optimize** Reported failed savings-summary and pull-scheduling writes while keeping completed images eligible for pulling.
 * **Image Optimize** Skipped image group metadata writes when the existing-record lookup fails, avoiding duplicate postmeta entries.
 * **Image Optimize** Kept the scan cursor unchanged when cleanup finds no unfinished images.
 * **Object Cache** Namespaced cache keys by installation identity to reduce collisions on shared cache backends.
