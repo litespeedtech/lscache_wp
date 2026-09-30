@@ -415,7 +415,11 @@ trait Img_Optm_Send {
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 		$existed_meta = $wpdb->get_results( "SELECT * FROM `$wpdb->postmeta` WHERE post_id IN ('" . implode( "','", $pid_list ) . "') AND meta_key='" . self::DB_SET . "'" );
-		$existed_pid  = [];
+		if ( ! empty( $wpdb->last_error ) ) {
+			self::debug( 'Failed to read image group metadata; skipped metadata publication' );
+			return;
+		}
+		$existed_pid = [];
 		if ( $existed_meta ) {
 			foreach ( $existed_meta as $v ) {
 				$existed_pid[] = $v->post_id;
