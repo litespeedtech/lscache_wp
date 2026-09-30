@@ -712,6 +712,7 @@ abstract class Root {
 	 * Save summary
 	 *
 	 * @since  3.0
+	 * @return bool Whether the merged summary can be read back.
 	 * @access public
 	 */
 	public static function save_summary( $data = false, $reload = false, $overwrite = false ) {
@@ -727,7 +728,7 @@ abstract class Root {
 		// self::debug2('Save after Reloaded summary', $new_summary);
 		static::cls()->_summary = $new_summary;
 
-		self::update_option('_summary', $new_summary);
+		return self::update_option('_summary', $new_summary);
 	}
 
 	/**
