@@ -125,7 +125,8 @@ class CSS extends Cloud_Queue_Svc {
 	 * @return string
 	 */
 	public function prepare_html_lazy() {
-		return '<style>' . implode( ',', $this->conf( self::O_OPTM_HTML_LAZY ) ) . '{content-visibility:auto;contain-intrinsic-size:1px 1000px;}</style>';
+		$selectors = str_ireplace( '</style', '<\\/style', implode( ',', $this->conf( self::O_OPTM_HTML_LAZY ) ) );
+		return '<style>' . $selectors . '{content-visibility:auto;contain-intrinsic-size:1px 1000px;}</style>';
 	}
 
 	/**
@@ -151,6 +152,7 @@ class CSS extends Cloud_Queue_Svc {
 
 		// Append default critical css
 		$rules .= $this->conf( self::O_OPTM_CCSS_CON );
+		$rules  = str_ireplace( '</style', '<\\/style', $rules );
 
 		return '<style id="litespeed-ccss"' . $error_tag . '>' . $rules . '</style>';
 	}
