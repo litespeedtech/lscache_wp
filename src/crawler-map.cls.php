@@ -535,7 +535,6 @@ class Crawler_Map extends Root {
 			return false;
 		}
 
-		$offset  = strlen( $this->_site_url );
 		$sitemap = Utility::sanitize_lines( $sitemap );
 
 		try {
@@ -547,13 +546,23 @@ class Crawler_Map extends Root {
 		}
 
 		if ( is_array( $this->_urls ) && ! empty( $this->_urls ) ) {
-			if ( defined( 'LITESPEED_CRAWLER_DROP_DOMAIN' ) && constant( 'LITESPEED_CRAWLER_DROP_DOMAIN' ) ) {
-				foreach ( $this->_urls as $k => $v ) {
+			$crawler_drop_domain = defined( 'LITESPEED_CRAWLER_DROP_DOMAIN' ) && constant( 'LITESPEED_CRAWLER_DROP_DOMAIN' );
+			$site                = wp_parse_url( $this->_site_url );
+			$site_port           = isset( $site['port'] ) ? (int) $site['port'] : ( 'https' === strtolower( $site['scheme'] ) ? 443 : 80 );
+			foreach ( $this->_urls as $k => $v ) {
+				$url      = wp_parse_url( $v );
+				$url_port = is_array( $url ) && isset( $url['port'] ) ? (int) $url['port'] : ( is_array( $url ) && isset( $url['scheme'] ) && 'https' === strtolower( $url['scheme'] ) ? 443 : 80 );
+				if ( ! is_array( $url ) || empty( $url['scheme'] ) || empty( $url['host'] ) || strtolower( $url['scheme'] ) !== strtolower( $site['scheme'] ) || strtolower( $url['host'] ) !== strtolower( $site['host'] ) || $url_port !== $site_port ) {
+					unset( $this->_urls[ $k ] );
+					continue;
+				}
+				// Preserve the relative URL contract used by Crawler::_multi_request().
+				if ( $crawler_drop_domain ) {
 					if ( 0 !== stripos( $v, $this->_site_url ) ) {
 						unset( $this->_urls[ $k ] );
 						continue;
 					}
-					$this->_urls[ $k ] = substr( $v, $offset );
+					$this->_urls[ $k ] = substr( $v, strlen( $this->_site_url ) );
 				}
 			}
 

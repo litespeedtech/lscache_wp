@@ -266,6 +266,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
 = 7.9.2 - Coming soon 2026 =
+* **Crawler** Restricted sitemap entries to URLs matching the site's scheme, host, and effective port.
 * **CDN** Validated CDN mapping URLs and escaped rewritten asset URLs.
 * **Report** Limited diagnostic report data and redacted sensitive settings and environment directives.
 * **Import** Preserved site identity, trusted IPs, and object cache settings when importing configurations.
