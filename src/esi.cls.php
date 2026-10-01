@@ -568,7 +568,7 @@ class ESI extends Root {
 	}
 
 	/**
-	 * Generate ESI hash md5
+	 * Generate the ESI request MAC.
 	 *
 	 * @since  2.9.6
 	 * @access private
@@ -587,11 +587,12 @@ class ESI extends Root {
 				return false;
 			}
 
-			$str .= $params[$v];
+			$str .= strlen( $v ) . ':' . $v . ':' . strlen( $params[$v] ) . ':' . $params[$v] . ';';
 		}
-		self::debug2('md5_string=' . $str);
+		self::debug2( 'ESI request MAC input digest=' . hash( 'sha256', $str ) );
 
-		return md5($this->conf(Base::HASH) . $str);
+		$key = hash_hmac( 'sha256', 'lscwp:esi-request:v1', (string) $this->conf( Base::HASH ), true );
+		return hash_hmac( 'sha256', $str, $key );
 	}
 
 	/**
