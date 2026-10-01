@@ -124,7 +124,14 @@ class Import extends Base {
 			Debug2::debug('[Import] ❌ Failed to import, no data');
 			return false;
 		} else {
-			Debug2::debug('[Import] Importing data', $ori_data);
+			Debug2::debug('[Import] Importing settings');
+		}
+
+		// Imports are portable performance profiles, not a channel for identity, debug trust, or object-cache credentials/endpoints.
+		foreach ( array_keys( $ori_data ) as $id ) {
+			if ( in_array( $id, [ Base::HASH, Base::_VER, Base::O_API_KEY, Base::O_DEBUG_IPS, Base::O_SERVER_IP ], true ) || 0 === strpos( $id, 'object-' ) ) {
+				unset( $ori_data[ $id ] );
+			}
 		}
 
 		$this->cls('Conf')->update_confs($ori_data);
