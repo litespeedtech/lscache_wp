@@ -234,6 +234,7 @@ trait Cloud_Auth_Callback {
 		$option_name = $prefix . hash( 'sha256', $this->_summary['pk_b64'] . "\n" . $nonce );
 		$now         = time();
 		$expires_at  = (int) $qc_ts + self::SIGN_MAX_AGE + 1;
+		$claim_value = $expires_at . ':' . Str::rrand( 32 );
 
 		$cleanup = "DELETE FROM `$wpdb->options` WHERE option_name LIKE %s AND CAST( option_value AS UNSIGNED ) < %d";
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
@@ -242,14 +243,19 @@ trait Cloud_Auth_Callback {
 			return $this->_callback_error( self::CALLBACK_ERR_STORAGE, 'Failed to clean the callback replay cache: ' . (string) $wpdb->last_error, true, 503 );
 		}
 
-		$q = "INSERT INTO `$wpdb->options` ( option_name, option_value, autoload ) VALUES ( %s, %d, 'no' )
+		$q = "INSERT INTO `$wpdb->options` ( option_name, option_value, autoload ) VALUES ( %s, %s, 'no' )
 			ON DUPLICATE KEY UPDATE option_value = IF( CAST( option_value AS UNSIGNED ) < %d, VALUES( option_value ), option_value )";
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-		$claimed = $wpdb->query( $wpdb->prepare( $q, [ $option_name, $expires_at, $now ] ) );
+		$claimed = $wpdb->query( $wpdb->prepare( $q, [ $option_name, $claim_value, $now ] ) );
 		if ( false === $claimed ) {
 			return $this->_callback_error( self::CALLBACK_ERR_STORAGE, 'Failed to write the callback replay cache: ' . (string) $wpdb->last_error, true, 503 );
 		}
-		if ( 0 === $claimed ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+		$stored_claim = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM `$wpdb->options` WHERE option_name = %s", $option_name ) );
+		if ( null === $stored_claim && ! empty( $wpdb->last_error ) ) {
+			return $this->_callback_error( self::CALLBACK_ERR_STORAGE, 'Failed to confirm the callback replay claim: ' . (string) $wpdb->last_error, true, 503 );
+		}
+		if ( ! is_string( $stored_claim ) || ! hash_equals( $claim_value, $stored_claim ) ) {
 			return $this->_callback_error( self::CALLBACK_ERR_REPLAY, 'Replayed callback signature.' );
 		}
 
@@ -261,9 +267,9 @@ trait Cloud_Auth_Callback {
 		}
 		$count = (int) $count;
 		if ( $count > self::SIGN_NONCE_MAX ) {
-			$delete_q = "DELETE FROM `$wpdb->options` WHERE option_name = %s AND option_value = %d";
+			$delete_q = "DELETE FROM `$wpdb->options` WHERE option_name = %s AND option_value = %s";
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-			$deleted = $wpdb->query( $wpdb->prepare( $delete_q, [ $option_name, $expires_at ] ) );
+			$deleted = $wpdb->query( $wpdb->prepare( $delete_q, [ $option_name, $claim_value ] ) );
 			if ( false === $deleted ) {
 				return $this->_callback_error( self::CALLBACK_ERR_STORAGE, 'Failed to roll back an over-capacity callback nonce: ' . (string) $wpdb->last_error, true, 503 );
 			}
