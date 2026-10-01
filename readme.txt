@@ -266,6 +266,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
 = 7.9.2 - Coming soon 2026 =
+* **Cloud** Restricted cached and discovered service nodes to trusted QUIC.cloud origins.
 * **Core** Preserved array-content file writes while detecting incomplete writes and restoring error handlers after failures.
 * **Cloud** Preserved callback replay protection when MySQL reports matched rows.
 * **Page Optimize** Prevented critical CSS and HTML lazy selectors from breaking out of style elements.

@@ -63,11 +63,11 @@ trait Cloud_Node {
 				! empty( $this->_summary[ 'server_date.' . $service ] ) &&
 				(int) $this->_summary[ 'server_date.' . $service ] > time() - 86400 * self::TTL_NODE
 			) {
-				$server = $this->_summary[ 'server.' . $service ];
-				if ( false === strpos( $this->_cloud_server, 'preview.' ) && false === strpos( $server, 'preview.' ) ) {
+				$server = Img::normalize_cloud_url( $this->_summary[ 'server.' . $service ], true );
+				if ( $server && false === strpos( $this->_cloud_server, 'preview.' ) && false === strpos( $server, 'preview.' ) ) {
 					return $server;
 				}
-				if ( false !== strpos( $this->_cloud_server, 'preview.' ) && false !== strpos( $server, 'preview.' ) ) {
+				if ( $server && false !== strpos( $this->_cloud_server, 'preview.' ) && false !== strpos( $server, 'preview.' ) ) {
 					return $server;
 				}
 			}
@@ -161,6 +161,10 @@ trait Cloud_Node {
 	private function _get_closest_nodes( $nodes_list, $service ) {
 		$speed_list = [];
 		foreach ( $nodes_list as $v ) {
+			$v = Img::normalize_cloud_url( $v, true );
+			if ( false === $v ) {
+				continue;
+			}
 			// Exclude possible failed 503 nodes
 			if ( ! empty( $this->_summary['disabled_node'] ) && ! empty( $this->_summary['disabled_node'][ $v ] ) && time() - (int) $this->_summary['disabled_node'][ $v ] < 86400 ) {
 				continue;
