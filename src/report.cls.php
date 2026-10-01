@@ -99,8 +99,9 @@ class Report extends Base {
 	 * @param int $flags Flags passed to phpinfo().
 	 * @return string
 	 */
-	public function generate_php_report( $flags = INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES ) {
+	public function generate_php_report( $flags = INFO_GENERAL | INFO_CONFIGURATION ) {
 		// INFO_ENVIRONMENT
+		$flags &= ~INFO_MODULES;
 		$report = '';
 
 		ob_start();
@@ -154,9 +155,13 @@ class Report extends Base {
 		];
 
 		$extras['active plugins'] = $active_plugins;
-		$extras['cloud']          = Cloud::get_summary();
-		foreach ([ 'mini_html', 'pk_b64', 'sk_b64', 'cdn_dash', 'ips' ] as $v) {
-			unset($extras['cloud'][$v]);
+		$extras['cloud']          = [];
+		$cloud                    = Cloud::get_summary();
+		// Report only known diagnostic scalars; new cloud fields must not silently expose credentials.
+		foreach ([ 'qc_activated', 'main_domain', 'conf_md5', 'version.dev' ] as $key) {
+			if (isset($cloud[$key]) && is_scalar($cloud[$key])) {
+				$extras['cloud'][$key] = $cloud[$key];
+			}
 		}
 
 		if (is_null($options)) {
@@ -189,11 +194,11 @@ class Report extends Base {
 			}
 		}
 
-		// Security: Remove cf key in report
-		$secure_fields = [ self::O_CDN_CLOUDFLARE_KEY, self::O_OBJECT_PSWD ];
-		foreach ($secure_fields as $v) {
-			if (!empty($options[$v])) {
-				$options[$v] = str_repeat('*', strlen($options[$v]));
+		// Redact both network values and per-site overrides before formatting the report.
+		foreach ($options as $id => $value) {
+			$setting = 0 === strpos($id, '[Overwritten] ') ? substr($id, strlen('[Overwritten] ')) : $id;
+			if ($this->_conf_secret($setting)) {
+				$options[$id] = '' === $value || null === $value || false === $value || [] === $value ? '' : '********';
 			}
 		}
 
@@ -245,7 +250,8 @@ class Report extends Base {
 				$buf .= $path . " returned false for file_get_contents.\n";
 				continue;
 			}
-			$buf .= $path . " contents:\n" . $content . "\n\n";
+			$content = preg_replace( '/^(\s*(?:SetEnv|SetEnvIf|SetEnvIfNoCase)\s+\S+)(?:\s+.*)?$/mi', '$1 [redacted]', $content );
+			$buf    .= $path . " contents:\n" . $content . "\n\n";
 		}
 		return $buf;
 	}

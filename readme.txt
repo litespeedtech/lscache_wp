@@ -266,6 +266,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
 = 7.9.2 - Coming soon 2026 =
+* **Report** Limited diagnostic report data and redacted sensitive settings and environment directives.
 * **Import** Preserved site identity, trusted IPs, and object cache settings when importing configurations.
 * **ESI** Signed requests with SHA-256 HMAC and unambiguous field boundaries.
 * **Cloud** Restricted cached and discovered service nodes to trusted QUIC.cloud origins.
