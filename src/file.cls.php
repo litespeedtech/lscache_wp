@@ -55,7 +55,7 @@ Options -Indexes
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Block dotfiles (.litespeed_conf.dat, .htaccess, etc.) anywhere in the tree
+    # Block dotfiles (runtime configuration, queues, .htaccess) anywhere in the tree
     RewriteRule (^|/)\.[^/]+$ - [F,L]
 
     # Whitelisted root-level public files
@@ -277,7 +277,7 @@ HTACCESS;
 	 * @since 1.1.5
 	 * @access public
 	 * @param string  $filename
-	 * @param string  $data
+	 * @param string|array $data
 	 * @param boolean $mkdir
 	 * @param boolean $silence Used to avoid WP's functions are used
 	 */
@@ -296,7 +296,7 @@ HTACCESS;
 	 * @param boolean $silence Used to avoid WP's functions are used
 	 */
 	public static function save( $filename, $data, $mkdir = false, $append = false, $silence = true ) {
-		if (is_null($filename)) {
+		if (!is_string($filename) || '' === $filename) {
 			return $silence ? false : __('Filename is empty!', 'litespeed-cache');
 		}
 
@@ -315,9 +315,9 @@ HTACCESS;
 				mkdir($folder, 0755, true);
 			} catch (\ErrorException $ex) {
 				return $silence ? false : sprintf(__('Can not create folder: %1$s. Error: %2$s', 'litespeed-cache'), $folder, $ex->getMessage());
+			} finally {
+				restore_error_handler();
 			}
-
-			restore_error_handler();
 		}
 
 		if (strpos($filename, LITESPEED_STATIC_DIR . '/') === 0) {
@@ -333,16 +333,20 @@ HTACCESS;
 				touch($filename);
 			} catch (\ErrorException $ex) {
 				return $silence ? false : sprintf(__('File %s is not writable.', 'litespeed-cache'), $filename);
+			} finally {
+				restore_error_handler();
 			}
-			restore_error_handler();
 		} elseif (!is_writable($filename)) {
 			return $silence ? false : sprintf(__('File %s is not writable.', 'litespeed-cache'), $filename);
 		}
 
 		$data = self::remove_zero_space($data);
+		if (is_array($data)) {
+			$data = implode('', $data);
+		}
 
 		$ret = file_put_contents($filename, $data, $append ? FILE_APPEND : LOCK_EX);
-		if ($ret === false) {
+		if ($ret === false || $ret !== strlen($data)) {
 			return $silence ? false : sprintf(__('Failed to write to %s.', 'litespeed-cache'), $filename);
 		}
 

@@ -266,6 +266,8 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
 = 7.9.2 - Coming soon 2026 =
+* **Core** Preserved array-content file writes while detecting incomplete writes and restoring error handlers after failures.
+* **Cloud** Preserved callback replay protection when MySQL reports matched rows.
 * **Page Optimize** Prevented critical CSS and HTML lazy selectors from breaking out of style elements.
 * **Image Optimize** Returned the savings-summary persistence result to avoid false callback write errors.
 * **Image Optimize** Reported failed savings-summary and pull-scheduling writes while keeping completed images eligible for pulling.
