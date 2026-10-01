@@ -131,7 +131,11 @@ class CDN extends Root {
 			if ( ! $v[ Base::CDN_MAPPING_URL ] ) {
 				continue;
 			}
-			$this_url  = $v[ Base::CDN_MAPPING_URL ];
+			$this_url = $v[ Base::CDN_MAPPING_URL ];
+			if ( ! is_string( $this_url ) || ! wp_http_validate_url( $this_url ) || 0 !== strpos( $this_url, 'https://' ) || preg_match( '/[\s\x00-\x1f\x7f\'"<>]/', $this_url ) ) {
+				self::debug( 'Bypassed an invalid CDN mapping URL' );
+				continue;
+			}
 			$this_host = wp_parse_url( $this_url, PHP_URL_HOST );
 			// Check img/css/js
 			foreach ( $mapping_to_check as $to_check ) {
@@ -348,7 +352,7 @@ class CDN extends Root {
 					continue;
 				}
 
-				$attr_str      = str_replace( $url, $url2, $matches[0][ $k2 ] );
+				$attr_str      = str_replace( $url, esc_url( $url2 ), $matches[0][ $k2 ] );
 				$this->content = str_replace( $matches[0][ $k2 ], $attr_str, $this->content );
 			}
 		}
@@ -379,7 +383,7 @@ class CDN extends Root {
 				continue;
 			}
 
-			$html_snippet  = sprintf( '<img %1$s src=%2$s %3$s>', $matches[1][ $k ], $matches[2][ $k ] . $url2 . $matches[4][ $k ], $matches[5][ $k ] );
+			$html_snippet  = sprintf( '<img %1$s src=%2$s %3$s>', $matches[1][ $k ], $matches[2][ $k ] . esc_url( $url2 ) . $matches[4][ $k ], $matches[5][ $k ] );
 			$this->content = str_replace( $matches[0][ $k ], $html_snippet, $this->content );
 		}
 	}
@@ -432,7 +436,7 @@ class CDN extends Root {
 				continue;
 			}
 
-			$attr          = str_replace( $matches[1][ $k ], $url2, $matches[0][ $k ] );
+			$attr          = str_replace( $matches[1][ $k ], esc_url( $url2 ), $matches[0][ $k ] );
 			$this->content = str_replace( $matches[0][ $k ], $attr, $this->content );
 		}
 
