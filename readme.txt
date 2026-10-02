@@ -266,6 +266,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
 = 7.9.2 - Coming soon 2026 =
+* **Object Cache** Preserved unverified drop-ins and skipped environment purges before initialization.
 * **ESI** Made WooCommerce nonce fragments private by default.
 * **Cache** Added WooCommerce Store API to the predefined no-cache URI list.
 * **CLI** Prevented browser redirects after command-line purge actions.

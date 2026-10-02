@@ -380,7 +380,8 @@ class Object_Cache extends Root {
 		if ( ! file_exists( $file ) ) {
 			return 'absent';
 		}
-		if ( md5_file( $file ) === md5_file( LSCWP_DIR . 'lib/object-cache.php' ) ) {
+		$digest = md5_file( $file );
+		if ( false !== $digest && md5_file( LSCWP_DIR . 'lib/object-cache.php' ) === $digest ) {
 			return 'current';
 		}
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
@@ -398,11 +399,10 @@ class Object_Cache extends Root {
 	 */
 	public function del_file() {
 		// NOTE: When included in oc.php, `LSCWP_DIR` will show undefined, so this must be assigned/generated when used.
-		$_oc_ori_file = LSCWP_DIR . 'lib/object-cache.php';
-		$_oc_wp_file  = WP_CONTENT_DIR . '/object-cache.php';
+		$_oc_wp_file = WP_CONTENT_DIR . '/object-cache.php';
 
 		$state = $this->dropin_state();
-		if ( 'current' === $state || 'stale' === $state ) {
+		if ( 'current' === $state ) {
 			$this->debug_oc( 'removing ' . $_oc_wp_file );
 			wp_delete_file( $_oc_wp_file );
 		}
@@ -794,7 +794,7 @@ class Object_Cache extends Root {
 	 * @since 7.9.2
 	 */
 	public function purge_on_environment_change() {
-		if ( ! $this->_cfg_enabled ) {
+		if ( ! $this->_cfg_enabled || ! defined( 'LSOC_PREFIX' ) || ! isset( $GLOBALS['wp_object_cache'] ) || ! is_callable( [ $GLOBALS['wp_object_cache'], 'flush_runtime' ] ) ) {
 			return;
 		}
 
