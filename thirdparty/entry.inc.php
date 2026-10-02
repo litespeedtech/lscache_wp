@@ -50,6 +50,7 @@ add_action('litespeed_init', 'LiteSpeed\Thirdparty\WooCommerce::preload');
 add_action('litespeed_init', 'LiteSpeed\Thirdparty\NextGenGallery::preload');
 add_action('litespeed_init', 'LiteSpeed\Thirdparty\AMP::preload');
 add_action('litespeed_init', 'LiteSpeed\Thirdparty\Elementor::preload');
+add_action('litespeed_init', 'LiteSpeed\Thirdparty\Cornerstone::preload');
 add_action('litespeed_init', 'LiteSpeed\Thirdparty\Gravity_Forms::preload');
 add_action('litespeed_init', 'LiteSpeed\Thirdparty\Perfmatters::preload');
 add_action('litespeed_init', 'LiteSpeed\Thirdparty\Rank_Math::preload');
