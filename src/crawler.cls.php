@@ -53,6 +53,13 @@ class Crawler extends Root {
 	private $_resetfile;
 
 	/**
+	 * Whether lane cleanup has been registered for request shutdown.
+	 *
+	 * @var bool
+	 */
+	private $_lane_shutdown_registered = false;
+
+	/**
 	 * Reason that ended current run.
 	 *
 	 * @var string
@@ -368,10 +375,12 @@ class Crawler extends Root {
 		if ( ! defined( 'LITESPEED_LANE_HASH' ) ) {
 			define( 'LITESPEED_LANE_HASH', Str::rrand( 8 ) );
 		}
-		if ( $this->_check_valid_lane() ) {
-			$this->_take_over_lane();
-		} else {
-			self::debug( '⚠️ lane in use' );
+		if ( ! $this->_check_valid_lane( false, $manually_run ) || ! $this->_take_over_lane() ) {
+			$lane_file = $this->json_local_path() . '.pid';
+			clearstatcache( true, $lane_file ); // _check_valid_lane()'s cached stat may predate a takeover.
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- the lane may vanish meanwhile.
+			$mtime = @filemtime( $lane_file );
+			self::debug( '⚠️ lane in use [file] ' . $lane_file . ' [owner] ' . wp_json_encode( File::read( $lane_file ) ) . ' [age] ' . ( false === $mtime ? 'n/a' : ( time() - $mtime ) . 's' ) );
 			return;
 		}
 		self::debug( '......crawler started......' );
@@ -425,9 +434,17 @@ class Crawler extends Root {
 
 		try {
 			$this->_engine_start();
-			$this->Release_lane();
 		} catch ( \Exception $e ) {
 			self::debug( '🛑 ' . $e->getMessage() );
+			// Not 'end': _terminate_running() may itself have thrown after advancing to the next crawler.
+			$this->_end_reason = 'exception';
+			try {
+				$this->_terminate_running(); // No-op once another crawler owns the lane, e.g. after lane_invalid.
+			} catch ( \Exception $e2 ) {
+				self::debug( '🛑 terminate failed: ' . $e2->getMessage() );
+			}
+		} finally {
+			$this->Release_lane();
 		}
 	}
 
@@ -672,63 +689,172 @@ class Crawler extends Root {
 	 * Take over lane.
 	 *
 	 * @since 6.1
-	 * @return void
+	 * @return bool True when the lane was acquired or was already owned by this request.
 	 */
 	private function _take_over_lane() {
-		self::debug( 'Take over lane as lane is free: ' . $this->json_local_path() . '.pid' );
-		File::save( $this->json_local_path() . '.pid', LITESPEED_LANE_HASH );
+		$lane_file = $this->json_local_path() . '.pid';
+		$owner     = File::read( $lane_file );
+
+		if ( LITESPEED_LANE_HASH !== $owner ) {
+			// The crawler/ dir is otherwise only created later, by save_summary().
+			$lane_dir = dirname( $lane_file );
+			if ( ! is_dir( $lane_dir ) && ! wp_mkdir_p( $lane_dir ) ) {
+				self::debug( 'Cannot create lane dir: ' . $lane_dir );
+				return false;
+			}
+
+			// Exclusive creation prevents two requests from taking the same free lane.
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen, WordPress.PHP.NoSilencedErrors.Discouraged
+			$handle = @fopen( $lane_file, 'x' );
+			if ( false === $handle ) {
+				return false;
+			}
+
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
+			$written = fwrite( $handle, LITESPEED_LANE_HASH );
+			if ( strlen( LITESPEED_LANE_HASH ) !== $written ) {
+				self::debug( 'Short write on lane file, releasing it: ' . $lane_file );
+				// Delete only the file this request created: compare inodes while our handle is open (no inode reuse), so a lane taken over meanwhile is kept.
+				$mine = fstat( $handle );
+				clearstatcache( true, $lane_file );
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- the lane may be gone already.
+				$now = @stat( $lane_file );
+				if ( $mine && $now && $mine['ino'] === $now['ino'] && $mine['dev'] === $now['dev'] ) {
+					// Expect what this request itself wrote, not a fresh read that could already show a successor's content.
+					$this->Release_lane( true, false === $written ? '' : substr( LITESPEED_LANE_HASH, 0, $written ) );
+				}
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+				fclose( $handle );
+				return false;
+			}
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+			fclose( $handle ); // Always true for plain files, so its result is not checked.
+
+			self::debug( 'Take over lane as lane is free: ' . $lane_file );
+		}
+
+		if ( ! $this->_lane_shutdown_registered ) {
+			register_shutdown_function( [ $this, 'Release_lane' ] );
+			$this->_lane_shutdown_registered = true;
+		}
+
+		return true;
 	}
 
 	/**
-	 * Update lane file mtime.
+	 * Refresh the lane file mtime while this request still owns it.
+	 *
+	 * Never creates the file, so a lane released after the strict check stays released.
 	 *
 	 * @since 6.1
-	 * @return void
+	 * @return bool True if this request's lane file was refreshed.
 	 */
 	private function _touch_lane() {
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_touch
-		touch( $this->json_local_path() . '.pid' );
+		$lane_file = $this->json_local_path() . '.pid';
+		// 'r+' never creates; verify and rewrite on one handle so only the inode holding our hash is touched.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen, WordPress.PHP.NoSilencedErrors.Discouraged
+		$handle = @fopen( $lane_file, 'r+' );
+		if ( false === $handle ) {
+			return false;
+		}
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+		$owned = LITESPEED_LANE_HASH === fread( $handle, strlen( LITESPEED_LANE_HASH ) + 1 );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
+		$ok = $owned && rewind( $handle ) && strlen( LITESPEED_LANE_HASH ) === fwrite( $handle, LITESPEED_LANE_HASH );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+		fclose( $handle );
+		return $ok;
+	}
+
+	/**
+	 * Seconds without a lane mtime update after which a manual run may take over the lane.
+	 *
+	 * Before its first chunk a live crawler runs, back to back: one sitemap fetch (map timeout), then the
+	 * port test (two cURL timeouts); each later chunk takes at most one cURL timeout, as its requests run
+	 * in parallel. 60s covers DB writes and the run delay. Floor 120s (the default gap without a sitemap
+	 * fetch) so zero or negative constants cannot make takeover more aggressive; cap 1h (the cron limit).
+	 *
+	 * @since 7.9.2
+	 * @return int
+	 */
+	private function _lane_stall_limit() {
+		$timeout     = defined( 'LITESPEED_CRAWLER_TIMEOUT' ) ? (int) constant( 'LITESPEED_CRAWLER_TIMEOUT' ) : 30;
+		$map_timeout = defined( 'LITESPEED_CRAWLER_MAP_TIMEOUT' ) ? (int) constant( 'LITESPEED_CRAWLER_MAP_TIMEOUT' ) : 180;
+		return min( 3600, max( 120, max( 0, $map_timeout ) + 2 * max( 0, $timeout ) + 60 ) );
 	}
 
 	/**
 	 * Release lane file.
 	 *
 	 * @since 6.1
-	 * @return void
+	 * @param bool              $force          Release the lane even when another request owns it.
+	 * @param string|false|null $expected_owner Only release if the lane file still holds this owner (null = no check).
+	 * @return bool True if no lane file remains; false if another request owns the lane, the file no longer holds $expected_owner, or unlink failed.
 	 */
-	public function Release_lane() {
+	public function Release_lane( $force = false, $expected_owner = null ) {
 		$lane_file = $this->json_local_path() . '.pid';
 		if ( ! file_exists( $lane_file ) ) {
-			return;
+			return true;
+		}
+
+		$owner = File::read( $lane_file );
+		if ( ! $force && ( ! defined( 'LITESPEED_LANE_HASH' ) || LITESPEED_LANE_HASH !== $owner ) ) {
+			self::debug( 'Skip releasing lane owned by another crawler' );
+			return false;
+		}
+		if ( null !== $expected_owner && $expected_owner !== $owner ) {
+			self::debug( 'Skip releasing lane taken over by another crawler' );
+			return false;
 		}
 
 		self::debug( 'Release lane' );
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
-		unlink( $lane_file );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink, WordPress.PHP.NoSilencedErrors.Discouraged
+		if ( @unlink( $lane_file ) ) {
+			return true;
+		}
+		// Either the file vanished after file_exists() (fine), or unlink really failed (e.g. permissions): log that.
+		clearstatcache( true, $lane_file );
+		if ( file_exists( $lane_file ) ) {
+			self::debug( 'Failed to release lane: ' . $lane_file );
+			return false;
+		}
+		return true;
 	}
 
 	/**
 	 * Check if lane is used by other crawlers.
 	 *
 	 * @since 6.1
-	 * @param bool $strict_mode Strict check that file must exist.
+	 * @param bool $strict_mode  Strict check that file must exist and be owned by this request; never releases the lane.
+	 * @param bool $manually_run Manual run: also take over a lane idle for _lane_stall_limit() seconds.
 	 * @return bool True if valid lane.
 	 */
-	private function _check_valid_lane( $strict_mode = false ) {
+	private function _check_valid_lane( $strict_mode = false, $manually_run = false ) {
 		$lane_file = $this->json_local_path() . '.pid';
 		if ( $strict_mode ) {
 			if ( ! file_exists( $lane_file ) ) {
 				self::debug( 'lane file not existed, strict mode is false [file] ' . $lane_file );
 				return false;
 			}
+			// Mid-run ownership check only: never reclaim here, or two crawlers could run.
+			return LITESPEED_LANE_HASH === File::read( $lane_file );
+		}
+		if ( ! file_exists( $lane_file ) ) {
+			return true;
 		}
 		$pid = File::read( $lane_file );
-		if ( $pid && LITESPEED_LANE_HASH !== $pid ) {
-			// If lane file is older than 1h, ignore.
-			if ( ( time() - filemtime( $lane_file ) ) > 3600 ) {
-				self::debug( 'Lane file is older than 1h, releasing lane' );
-				$this->Release_lane();
-				return true;
+		if ( LITESPEED_LANE_HASH !== $pid ) {
+			// Foreign, empty or unreadable lane: reclaim only once stale (>1h old, or >60s in the future from clock skew).
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- the owner may unlink it after file_exists().
+			$mtime = @filemtime( $lane_file );
+			if ( false === $mtime ) {
+				return true; // Lane file vanished: lane is free.
+			}
+			$age     = time() - $mtime;
+			$max_age = $manually_run ? $this->_lane_stall_limit() : 3600;
+			if ( $age > $max_age || $age < -60 ) {
+				self::debug( 'Lane file is stale (age ' . $age . 's), releasing lane' );
+				return $this->Release_lane( true, $pid );
 			}
 			return false;
 		}
@@ -1214,6 +1340,12 @@ class Crawler extends Root {
 	 * @return void
 	 */
 	private function _terminate_running() {
+		// A crawler displaced from the lane (lane_invalid, takeover) must not overwrite the new owner's map status or summary.
+		if ( ! $this->_check_valid_lane( true ) ) {
+			self::debug( 'Skip terminating: lane is owned by another crawler' );
+			return;
+		}
+
 		$this->_map_status_list = $this->cls( 'Crawler_Map' )->save_map_status( $this->_map_status_list, $this->_summary['curr_crawler'] );
 
 		if ( 'end' === $this->_end_reason ) {
