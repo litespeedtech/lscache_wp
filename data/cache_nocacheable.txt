@@ -6,5 +6,8 @@
 # WP v6.6 Official Site Editor (Appearance >> Editor)
 ^/wp-json/wp/v2
 
+# WooCommerce Store API contains session-bound cart and checkout data
+^/wp-json/wc/store
+
 # Elementor API
 ^/wp-json/elementor/v1
