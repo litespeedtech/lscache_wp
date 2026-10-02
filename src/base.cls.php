@@ -329,6 +329,7 @@ class Base extends Root {
 	 * @var string[]
 	 */
 	protected static $single_site_options = [
+		self::HASH,
 		self::O_CRAWLER,
 		self::O_CRAWLER_SITEMAP,
 		self::O_CDN,

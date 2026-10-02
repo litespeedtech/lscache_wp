@@ -266,6 +266,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
 = 7.9.2 - Coming soon 2026 =
+* **Conf** Protected site identity during settings updates and multisite sharing, and omitted setting values from debug logs.
 * **Database Optimize** Escaped database and table identifiers when converting tables to InnoDB.
 * **Object Cache** Preserved unverified drop-ins and skipped environment purges before initialization.
 * **ESI** Made WooCommerce nonce fragments private by default.

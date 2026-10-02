@@ -545,7 +545,7 @@ class Conf extends Base {
 		// return;
 		// }
 
-		if ( self::_VER === $id ) {
+		if ( in_array( $id, [ self::HASH, self::_VER, self::O_API_KEY ], true ) ) {
 			return;
 		}
 
@@ -726,11 +726,9 @@ class Conf extends Base {
 			if ( is_array( $v ) && is_array( $this->conf( $id ) ) ) {
 				$v = array_merge( $this->conf( $id ), $v );
 
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
-				Debug2::debug( '[Conf] Appended to settings [' . $id . ']: ' . var_export( $v, true ) );
+				Debug2::debug( '[Conf] Appended to setting [' . $id . ']' );
 			} else {
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
-				Debug2::debug( '[Conf] Set setting [' . $id . ']: ' . var_export( $v, true ) );
+				Debug2::debug( '[Conf] Set setting [' . $id . ']' );
 			}
 
 			$the_matrix[ $id ] = $v;
