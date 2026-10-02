@@ -77,8 +77,8 @@ af_form_nonce
 af_submission_*
 
 # Woo nonce
-woocommerce-*
-woocommerce_*
+woocommerce-* private
+woocommerce_* private
 
 # Premium Addons for Elementor
 pa-blog-widget-nonce
