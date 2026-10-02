@@ -351,7 +351,7 @@ class Core extends Root {
 				$msg = $this->cls( 'Router' )->handler( $action );
 				break;
 		}
-		if ( $msg && ! Router::is_ajax() ) {
+		if ( $msg && ! Router::is_ajax() && ! defined( 'LITESPEED_CLI' ) ) {
 			Admin_Display::add_notice( Admin_Display::NOTICE_GREEN, $msg );
 			Admin::redirect();
 			return;
