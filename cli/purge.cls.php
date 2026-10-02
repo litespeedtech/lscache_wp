@@ -46,27 +46,24 @@ class Purge {
 	}
 
 	/**
-	 * Sends an AJAX request to the site.
+	 * Dispatch a purge through the loaded plugin instance.
 	 *
 	 * @param string $action The action to perform.
 	 * @param array  $extra  Additional data to include in the request.
-	 * @return object The HTTP response.
+	 * @return void
 	 * @since 1.0.14
 	 */
-	private function send_request( $action, $extra = array() ) {
-		$data = array(
-			Router::ACTION => $action,
-			Router::NONCE => wp_create_nonce( $action ),
-		);
-		if ( ! empty( $extra ) ) {
-			$data = array_merge( $data, $extra );
+	private function dispatch( $action, $extra = [] ) {
+		// WP-CLI invokes this method directly; no browser request or nonce is involved.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$previous_request = $_REQUEST;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$_REQUEST = array_merge( $_REQUEST, $extra );
+		try {
+			Core::cls()->proceed_action( $action );
+		} finally {
+			$_REQUEST = $previous_request;
 		}
-
-		$url = admin_url( 'admin-ajax.php' );
-		WP_CLI::debug( 'URL is ' . $url );
-
-		$out = WP_CLI\Utils\http_request( 'GET', $url, $data );
-		return $out;
 	}
 
 	/**
@@ -80,13 +77,8 @@ class Purge {
 	public function all() {
 		$action = is_multisite() ? Core::ACTION_QS_PURGE_EMPTYCACHE : Core::ACTION_QS_PURGE_ALL;
 
-		$purge_ret = $this->send_request( $action );
-
-		if ( $purge_ret->success ) {
-			WP_CLI::success( __( 'Purged All!', 'litespeed-cache' ) );
-		} else {
-			WP_CLI::error( 'Something went wrong! Got ' . $purge_ret->status_code );
-		}
+		$this->dispatch( $action );
+		WP_CLI::success( __( 'Purged All!', 'litespeed-cache' ) );
 	}
 
 	/**
@@ -128,12 +120,8 @@ class Purge {
 
 		switch_to_blog( $blogid );
 
-		$purge_ret = $this->send_request( Core::ACTION_QS_PURGE_ALL );
-		if ( $purge_ret->success ) {
-			WP_CLI::success( __( 'Purged the blog!', 'litespeed-cache' ) );
-		} else {
-			WP_CLI::error( 'Something went wrong! Got ' . $purge_ret->status_code );
-		}
+		$this->dispatch( Core::ACTION_QS_PURGE_ALL );
+		WP_CLI::success( __( 'Purged the blog!', 'litespeed-cache' ) );
 	}
 
 	/**
@@ -229,12 +217,8 @@ class Purge {
 			Admin_Display::PURGEBYOPT_LIST   => $str,
 		);
 
-		$purge_ret = $this->send_request( Core::ACTION_PURGE_BY, $data );
-		if ( $purge_ret->success ) {
-			WP_CLI::success( __( 'Purged!', 'litespeed-cache' ) );
-		} else {
-			WP_CLI::error( 'Something went wrong! Got ' . $purge_ret->status_code );
-		}
+		$this->dispatch( Core::ACTION_PURGE_BY, $data );
+		WP_CLI::success( __( 'Purged!', 'litespeed-cache' ) );
 	}
 
 	/**
