@@ -396,8 +396,11 @@ class DB_Optm extends Root {
 			return;
 		}
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.SchemaChange
-		$wpdb->query( 'ALTER TABLE ' . esc_sql( DB_NAME ) . '.' . esc_sql( $tb ) . ' ENGINE = InnoDB' );
+		$db = str_replace( '`', '``', DB_NAME );
+		$tb = str_replace( '`', '``', $tb );
+		// Identifiers cannot use placeholders on the supported WordPress 6.0 minimum, so escape backticks before quoting them.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$wpdb->query( 'ALTER TABLE `' . $db . '`.`' . $tb . '` ENGINE = InnoDB' );
 
 		Debug2::debug( "[DB] Converted $tb to InnoDB" );
 
