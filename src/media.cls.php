@@ -924,7 +924,16 @@ class Media extends Root {
 			return;
 		}
 
-		$content = preg_replace( [ '#<!--.*-->#sU', '#<noscript([^>]*)>.*</noscript>#isU' ], '', $this->content );
+		$content = preg_replace(
+			[
+				'#<!--.*-->#sU',
+				'#<noscript([^>]*)>.*</noscript>#isU',
+				'#<script([^>]*)>.*</script>#isU',
+			],
+			'',
+			$this->content
+		);
+		
 		if ( ! $content ) {
 			return;
 		}
