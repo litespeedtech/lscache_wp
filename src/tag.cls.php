@@ -77,7 +77,7 @@ class Tag extends Root {
 
 		self::add(self::TYPE_LOGIN);
 
-		// we need to send lsc-cookie manually to make it be sent to all other users when is cacheable
+		// Replay only WordPress's non-personal test cookie on cached login pages.
 		$list = headers_list();
 		if (empty($list)) {
 			return;
@@ -85,7 +85,9 @@ class Tag extends Root {
 		foreach ($list as $hdr) {
 			if (strncasecmp($hdr, 'set-cookie:', 11) == 0) {
 				$cookie = substr($hdr, 12);
-				@header('lsc-cookie: ' . $cookie, false);
+				if ( 0 === stripos( $cookie, 'wordpress_test_cookie=' ) ) {
+					@header('lsc-cookie: ' . $cookie, false);
+				}
 			}
 		}
 	}
@@ -324,7 +326,7 @@ class Tag extends Root {
 			self::$_tags = array_merge(self::$_tags, $type_tags);
 		}
 
-		if (defined('LITESPEED_GUEST') && LITESPEED_GUEST) {
+		if (defined('LITESPEED_GUEST') && LITESPEED_GUEST && !Router::is_logged_in()) {
 			self::$_tags[] = 'guest';
 		}
 
