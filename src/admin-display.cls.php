@@ -201,7 +201,7 @@ class Admin_Display extends Base {
 		],
 		// Page Optimization - Media.
 		self::O_MEDIA_ADD_MISSING_SIZES => [
-			'filter' => 'litespeed_media_ignore_remote_missing_sizes',
+			'filter' => 'litespeed_media_add_missing_sizes',
 			'type'   => 'boolean',
 		],
 		// Page Optimization - Media Exclude.
