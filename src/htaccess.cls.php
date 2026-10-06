@@ -419,12 +419,16 @@ class Htaccess extends Root {
 	 *
 	 * @since 1.1.0
 	 *
+	 * @param bool $allow_empty Whether an absent rule is expected after filtering every entry.
 	 * @return string The user agent regex for mobile detection.
 	 * @throws \Exception If the rule cannot be found.
 	 */
-	public function current_mobile_agents() {
+	public function current_mobile_agents( $allow_empty = false ) {
 		$rules = $this->_get_rule_by( self::MARKER_MOBILE );
 		if ( ! isset( $rules[0] ) ) {
+			if ( $allow_empty ) {
+				return '';
+			}
 			Error::t( 'HTA_DNF', self::MARKER_MOBILE );
 		}
 
@@ -432,6 +436,9 @@ class Htaccess extends Root {
 		$match = substr( $rule, strlen( 'RewriteCond %{HTTP_USER_AGENT} ' ), -strlen( ' [NC]' ) );
 
 		if ( ! $match ) {
+			if ( $allow_empty ) {
+				return '';
+			}
 			Error::t( 'HTA_DNF', __( 'Mobile Agent Rules', 'litespeed-cache' ) );
 		}
 
@@ -529,7 +536,7 @@ class Htaccess extends Root {
 		 * @since 1.6.3
 		 */
 		$id    = Base::O_CACHE_TTL_BROWSER;
-		$ttl   = $cfg[ $id ];
+		$ttl   = (int) $cfg[ $id ];
 		$rules = array(
 			self::EXPIRES_MODULE_START,
 			'ExpiresActive on',
@@ -594,16 +601,28 @@ class Htaccess extends Root {
 	 * @since 7.9.2
 	 * @param mixed  $values  Setting value.
 	 * @param string $pattern Allowlist regex an entry must match in full.
+	 * @param string $id Setting identifier for diagnostics.
+	 * @param bool   $notify Whether to add an admin notice for rejected entries.
 	 * @return array
 	 */
-	private function _htaccess_list( $values, $pattern ) {
-		$clean = [];
+	public function filter_list( $values, $pattern, $id, $notify = true ) {
+		$clean   = [];
+		$dropped = false;
 		foreach ( (array) $values as $v ) {
 			if ( is_string( $v ) && preg_match( $pattern, trim( $v ) ) ) {
 				$clean[] = trim( $v );
 			} else {
-				self::debug( 'Dropped an invalid .htaccess list entry' );
+				$dropped = true;
+				self::debug( 'Dropped an invalid .htaccess list entry [setting] ' . $id . ' [value] ' . wp_json_encode( $v ) );
 			}
+		}
+		if ( $dropped && $notify ) {
+			$title = 'litespeed_vary_cookies' === $id ? 'litespeed_vary_cookies filter' : Lang::title( $id );
+			Admin_Display::error( sprintf(
+				/* translators: %s: Setting title. */
+				__( 'Some entries in %s cannot be written to .htaccess and were omitted. Review this setting; omitted exclusions do not prevent caching.', 'litespeed-cache' ),
+				esc_html( $title )
+			) );
 		}
 		return array_values( array_unique( $clean ) );
 	}
@@ -619,7 +638,7 @@ class Htaccess extends Root {
 	 */
 	private function _generate_rules( $cfg ) {
 		foreach ( [ Base::O_CACHE_MOBILE_RULES => self::PATTERN_REGEX_LITERAL, Base::O_CACHE_EXC_COOKIES => self::PATTERN_REGEX_LITERAL, Base::O_CACHE_EXC_USERAGENTS => self::PATTERN_REGEX_LITERAL, Base::O_CACHE_DROP_QS => self::PATTERN_DROP_QS ] as $list_id => $pattern ) {
-			$cfg[ $list_id ] = $this->_htaccess_list( isset( $cfg[ $list_id ] ) ? $cfg[ $list_id ] : [], $pattern );
+			$cfg[ $list_id ] = $this->filter_list( isset( $cfg[ $list_id ] ) ? $cfg[ $list_id ] : [], $pattern, $list_id );
 		}
 		$new_rules               = array();
 		$new_rules_nonls         = array();
@@ -677,10 +696,10 @@ class Htaccess extends Root {
 		}
 
 		// check login cookie.
-		$vary_cookies = $cfg[ Base::O_CACHE_VARY_COOKIES ];
+		$vary_cookies = $this->filter_list( $cfg[ Base::O_CACHE_VARY_COOKIES ], self::PATTERN_COOKIE_NAME, Base::O_CACHE_VARY_COOKIES );
 		$id           = Base::O_CACHE_LOGIN_COOKIE;
 		if ( ! empty( $cfg[ $id ] ) ) {
-			$vary_cookies[] = $cfg[ $id ];
+			$vary_cookies = array_merge( $vary_cookies, $this->filter_list( [ $cfg[ $id ] ], self::PATTERN_COOKIE_NAME, $id ) );
 		}
 		if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
 			// Need to keep this due to different behavior of OLS when handling response vary header @Sep/22/2018.
@@ -689,7 +708,7 @@ class Htaccess extends Root {
 			}
 		}
 		$vary_cookies = apply_filters( 'litespeed_vary_cookies', $vary_cookies ); // todo: test if response vary header can work in latest OLS, drop the above two lines.
-		$vary_cookies = $this->_htaccess_list( $vary_cookies, self::PATTERN_COOKIE_NAME );
+		$vary_cookies = $this->filter_list( $vary_cookies, self::PATTERN_COOKIE_NAME, 'litespeed_vary_cookies' );
 		// frontend and backend.
 		if ( $vary_cookies ) {
 			$env                 = 'Cache-Vary:' . implode( ',', $vary_cookies );
@@ -947,7 +966,7 @@ class Htaccess extends Root {
 		clearstatcache();
 		$path = $this->htaccess_path( $kind );
 		if ( ! $this->_readable( $kind ) ) {
-			Error::t( 'E_HTA_R' );
+			Error::t( 'HTA_R' );
 		}
 
 		$rules       = File::extract_from_markers( $path, self::MARKER );
