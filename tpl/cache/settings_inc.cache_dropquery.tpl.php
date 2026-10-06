@@ -28,6 +28,7 @@ defined( 'WPINC' ) || exit;
 				'v5.2.3+'
 			);
 			?>
+			<?php echo esc_html__( 'Matching parameters are removed from current-page URLs in cacheable output. PHP request parameters and the browser URL are unchanged.', 'litespeed-cache' ); ?>
 			<?php
 			printf(
 				/* translators: %1$s: Example query string, %2$s: Example wildcard */

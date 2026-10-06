@@ -211,6 +211,7 @@ class Core extends Root {
 		do_action( 'litespeed_initing' );
 
 		ob_start( [ $this, 'send_headers_force' ] );
+		add_filter( 'litespeed_buffer_after', [ $this, 'drop_query_strings' ], 99 );
 		add_action( 'shutdown', [ $this, 'send_headers' ], 0 );
 		add_action( 'wp_footer', [ $this, 'footer_hook' ] );
 
@@ -549,6 +550,69 @@ class Core extends Root {
 		Debug2::ended();
 
 		return $buffer;
+	}
+
+	/**
+	 * Remove ignored query arguments from quoted current-page URLs in cacheable output.
+	 * Request input and other URLs are preserved.
+	 *
+	 * @since 7.9.2
+	 * @param string $buffer Final response body.
+	 * @return string
+	 */
+	public function drop_query_strings( $buffer ) {
+		if ( ! defined( 'LITESPEED_ON' ) || ! Control::is_cacheable() || empty( $_SERVER['REQUEST_URI'] ) ||
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Existing public hook.
+			( defined( 'DONOTCACHEPAGE' ) && apply_filters( 'litespeed_const_DONOTCACHEPAGE', DONOTCACHEPAGE ) ) ) {
+			return $buffer;
+		}
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Raw URL comparison; only removes arguments.
+		$request_uri = wp_unslash( $_SERVER['REQUEST_URI'] );
+		$uri         = explode( '?', $request_uri, 2 );
+		if ( ! isset( $uri[1] ) || '' === $uri[1] ) {
+			return $buffer;
+		}
+		// Use the same option values as the cache-key rules.
+		$options  = $this->get_options();
+		$patterns = [];
+		foreach ( (array) $options[ Base::O_CACHE_DROP_QS ] as $rule ) {
+			if ( ! is_string( $rule ) ) {
+				continue;
+			}
+			$rule = trim( $rule );
+			if ( '' === $rule ) {
+				continue;
+			}
+			// CacheKeyModify uses case-sensitive names and a trailing '*' prefix.
+			$prefix     = '*' === substr( $rule, -1 );
+			$patterns[] = preg_quote( $prefix ? substr( $rule, 0, -1 ) : $rule, '/' ) . ( $prefix ? '' : '(?:=|\z)' );
+		}
+		if ( ! $patterns ) {
+			return $buffer;
+		}
+		$pattern = '/\A(?:' . implode( '|', $patterns ) . ')/';
+		$parts   = preg_split( '/(?<=&)/', $uri[1], -1, PREG_SPLIT_NO_EMPTY );
+		$kept    = [];
+		foreach ( $parts as $part ) {
+			if ( ! preg_match( $pattern, $part ) ) {
+				$kept[] = $part;
+			}
+		}
+		$query = implode( '', $kept );
+		if ( $query === $uri[1] ) {
+			return $buffer;
+		}
+		$query = '&' === substr( $query, -1 ) ? substr( $query, 0, -1 ) : $query;
+		$map   = [];
+		foreach ( [ get_self_link(), $request_uri ] as $source ) {
+			$target = explode( '?', $source, 2 )[0] . ( '' !== $query ? '?' . $query : '' );
+			foreach ( [ [ $source, $target ], [ esc_url( $source ), esc_url( $target ) ], [ esc_attr( $source ), esc_attr( $target ) ] ] as $urls ) {
+				foreach ( [ '"', "'" ] as $quote ) {
+					$map[ $quote . $urls[0] . $quote ] = $quote . $urls[1] . $quote;
+				}
+			}
+		}
+		return strtr( $buffer, $map );
 	}
 
 	/**
