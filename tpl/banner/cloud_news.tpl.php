@@ -35,8 +35,8 @@ defined( 'WPINC' ) || exit;
 							?>
 						</a>
 					<?php endif; ?>
-					<?php if ( ! empty( $this->_summary['news.zip'] ) ) : ?>
-						<?php $install_link = Utility::build_url( Router::ACTION_ACTIVATION, Activation::TYPE_INSTALL_ZIP ); ?>
+					<?php if ( ! empty( $this->_summary['news.zip'] ) && current_user_can( 'update_plugins' ) ) : ?>
+						<?php $install_link = Utility::build_url( Router::ACTION_ACTIVATION, Activation::TYPE_INSTALL_ZIP, false, 'admin.php?page=litespeed-dash' ); ?>
 						<a href="<?php echo esc_url( $install_link ); ?>" class="button litespeed-btn-success">
 							<?php esc_html_e( 'Install', 'litespeed-cache' ); ?>
 						</a>

@@ -380,7 +380,11 @@ class Activation extends Base {
 		$data = self::parse_conf_file( File::read( $legacy ), true );
 		if ( false !== $data && false === self::parse_conf_file( File::read( self::$data_file ) ) ) {
 			$content = self::encode_conf_file( $data );
-			if ( false === $content || ! self::_write_conf_file( $content ) ) {
+			if ( false === $content ) {
+				Admin_Display::error( __( 'LiteSpeed Cache could not encode its runtime configuration. Please check the settings for invalid text.', 'litespeed-cache' ) );
+				return;
+			}
+			if ( ! self::_write_conf_file( $content ) ) {
 				return;
 			}
 		}
@@ -395,9 +399,21 @@ class Activation extends Base {
 	 * @return bool
 	 */
 	private static function _write_conf_file( $content ) {
-		$temp = self::$data_file . '.' . bin2hex( random_bytes( 6 ) ) . '.php';
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents, WordPress.WP.AlternativeFunctions.rename_rename
-		if ( strlen( $content ) === file_put_contents( $temp, $content, LOCK_EX ) && rename( $temp, self::$data_file ) ) {
+		try {
+			$temp = self::$data_file . '.' . bin2hex( random_bytes( 6 ) ) . '.php';
+		} catch ( \Exception $e ) {
+			Admin_Display::error( __( 'LiteSpeed Cache could not create a temporary runtime configuration file.', 'litespeed-cache' ) );
+			return false;
+		}
+		$previous = file_exists( self::$data_file ) ? self::$data_file : LSCWP_CONTENT_DIR . '/' . self::CONF_FILE_LEGACY;
+		// Preserve a restricted mode when replacing either configuration format.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fileperms
+		$mode = file_exists( $previous ) ? fileperms( $previous ) : false;
+		$mode = false === $mode ? 0600 : $mode & 0777;
+		// Add owner-write only while publishing, then restore the inherited mode before the file becomes visible.
+		$write_mode = $mode | 0200;
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents, WordPress.WP.AlternativeFunctions.file_system_operations_chmod, WordPress.WP.AlternativeFunctions.rename_rename
+		if ( 0 === file_put_contents( $temp, '', LOCK_EX ) && chmod( $temp, $write_mode ) && strlen( $content ) === file_put_contents( $temp, $content, LOCK_EX ) && chmod( $temp, $mode ) && rename( $temp, self::$data_file ) ) {
 			return true;
 		}
 		wp_delete_file( $temp );
@@ -441,6 +457,13 @@ class Activation extends Base {
 		foreach ( [ self::CONF_FILE, self::CONF_FILE_LEGACY ] as $name ) {
 			if ( $wp_filesystem->exists( LSCWP_CONTENT_DIR . '/' . $name ) ) {
 				$wp_filesystem->delete( LSCWP_CONTENT_DIR . '/' . $name );
+			}
+		}
+		// Interrupted publications use this exact owned filename shape and must leave with the configuration.
+		$temporary_files = glob( LSCWP_CONTENT_DIR . '/' . self::CONF_FILE . '.*.php' );
+		foreach ( $temporary_files ? $temporary_files : [] as $temp ) {
+			if ( preg_match( '/\.[a-f0-9]{12}\.php$/D', $temp ) ) {
+				$wp_filesystem->delete( $temp );
 			}
 		}
 	}
@@ -490,6 +513,7 @@ class Activation extends Base {
 		}
 		$content = self::encode_conf_file( $data );
 		if ( false === $content ) {
+			Admin_Display::error( __( 'LiteSpeed Cache could not encode its runtime configuration. Please check the settings for invalid text.', 'litespeed-cache' ) );
 			return;
 		}
 
@@ -541,6 +565,9 @@ class Activation extends Base {
 		if ( ! $content ) {
 			throw new \Exception( 'wp-config file content is empty: ' . wp_kses_post( $conf_file ) );
 		}
+		if ( 1 !== preg_match( '/^<\?php/', $content ) ) {
+			throw new \Exception( 'wp-config.php does not start with the required PHP opening tag.' );
+		}
 
 		// Remove the line `define('WP_CACHE', true/false);` first
 		if ( defined( 'WP_CACHE' ) ) {
@@ -552,7 +579,7 @@ class Activation extends Base {
 			$content = preg_replace( '/^<\?php/', "<?php\ndefine( 'WP_CACHE', true );", $content );
 		}
 
-		$res = File::save( $conf_file, $content, false, false, false );
+		$res = File::save_atomic( $conf_file, $content, true );
 
 		if ( true !== $res ) {
 			throw new \Exception( 'wp-config.php operation failed when changing `WP_CACHE` const: ' . wp_kses_post( $res ) );
@@ -609,6 +636,11 @@ class Activation extends Base {
 	 * @access public
 	 */
 	public function upgrade() {
+		if ( ! current_user_can( 'update_plugins' ) ) {
+			Admin_Display::error( __( 'Sorry, you are not allowed to update plugins for this site.', 'litespeed-cache' ) );
+			return;
+		}
+
 		$plugin = Core::PLUGIN_FILE;
 
 		/**
@@ -705,6 +737,11 @@ class Activation extends Base {
 	 * @access public
 	 */
 	public function dash_notifier_install_3rd() {
+		if ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) ) {
+			Admin_Display::error( __( 'Sorry, you are not allowed to install plugins on this site.', 'litespeed-cache' ) );
+			return;
+		}
+
 		! defined( 'SILENCE_INSTALL' ) && define( 'SILENCE_INSTALL', true );
 
 		// phpcs:ignore
@@ -774,12 +811,16 @@ class Activation extends Base {
 				break;
 
 			case self::TYPE_INSTALL_ZIP:
+				if ( ! current_user_can( 'update_plugins' ) ) {
+					Admin_Display::error( __( 'Sorry, you are not allowed to update plugins for this site.', 'litespeed-cache' ) );
+					break;
+				}
 				Cloud::reload_summary();
 				$summary = Cloud::get_summary();
 				if ( ! empty( $summary['news.zip'] ) ) {
 					Cloud::save_summary( [ 'news.new' => 0 ] );
 
-					$this->cls( 'Debug2' )->beta_test( $summary['zip'] );
+					$this->cls( 'Debug2' )->beta_test( $summary['news.zip'] );
 				}
 				break;
 

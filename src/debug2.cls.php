@@ -129,6 +129,10 @@ class Debug2 extends Root {
 	 * @access private
 	 */
 	private function _maybe_init_folder() {
+		$deny = "<IfModule mod_authz_core.c>\nRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\nOrder allow,deny\nDeny from all\n</IfModule>\n";
+		if ( ! file_exists( self::$log_path_prefix . '.htaccess' ) ) {
+			File::save( self::$log_path_prefix . '.htaccess', $deny, true );
+		}
 		if ( file_exists( self::$log_path_prefix . 'index.php' ) ) {
 			return;
 		}
@@ -168,8 +172,8 @@ class Debug2 extends Root {
 		if ( 'debug.purge' === $type ) {
 			$type = 'purge';
 		}
-		$key  = defined( 'AUTH_KEY' ) ? AUTH_KEY : md5( __FILE__ );
-		$rand = substr( md5( substr( $key, -16 ) ), -16 );
+		$key  = defined( 'AUTH_KEY' ) && false === strpos( AUTH_KEY, 'put your unique phrase here' ) ? AUTH_KEY : (string) Conf::get_option( Base::HASH, '' );
+		$rand = substr( hash( 'sha256', $key ), -16 );
 		return $type . $rand . '.log';
 	}
 
@@ -201,11 +205,16 @@ class Debug2 extends Root {
 	 * @return bool
 	 */
 	public static function validate_package_url( $url ) {
+		// The exact built-in URL needs no DNS lookup to establish publisher identity.
+		if ( self::BETA_TEST_URL_WP === $url ) {
+			return true;
+		}
 		if ( ! is_string( $url ) || ! wp_http_validate_url( $url ) || 'https' !== strtolower( (string) wp_parse_url( $url, PHP_URL_SCHEME ) ) ) {
 			return false;
 		}
-		if ( self::BETA_TEST_URL_WP === $url ) {
-			return true;
+		$path = (string) wp_parse_url( $url, PHP_URL_PATH );
+		if ( preg_match( '#(^|/)\.\.?(/|$)|\\\\|%2e|%2f|%5c#i', $path ) ) {
+			return false;
 		}
 		$host = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
 		foreach ( [ 'quic.cloud', 'litespeedtech.com' ] as $trusted ) {
@@ -217,8 +226,7 @@ class Debug2 extends Root {
 			'github.com'          => [ '/litespeedtech/lscache_wp/archive/refs/heads/', '/litespeedtech/lscache_wp/archive/refs/tags/' ],
 			'codeload.github.com' => [ '/litespeedtech/lscache_wp/zip/refs/heads/', '/litespeedtech/lscache_wp/zip/refs/tags/' ],
 		];
-		$path     = (string) wp_parse_url( $url, PHP_URL_PATH );
-		if ( empty( $prefixes[ $host ] ) || preg_match( '#(^|/)\.\.?(/|$)|\\\\|%2e|%2f|%5c#i', $path ) ) {
+		if ( empty( $prefixes[ $host ] ) ) {
 			return false;
 		}
 		foreach ( $prefixes[ $host ] as $prefix ) {
@@ -239,6 +247,11 @@ class Debug2 extends Root {
 	 * @return void
 	 */
 	public function beta_test( $zip = false ) {
+		if ( ! current_user_can( 'update_plugins' ) ) {
+			Admin_Display::error( __( 'Sorry, you are not allowed to update plugins for this site.', 'litespeed-cache' ) );
+			return;
+		}
+
 		if ( ! $zip ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( empty( $_REQUEST[ self::BETA_TEST_URL ] ) ) {
@@ -278,17 +291,25 @@ class Debug2 extends Root {
 		$plugin_info->url         = 'https://wordpress.org/plugins/litespeed-cache/';
 
 		// Offered to the upgrader's single read only; never stored in the shared transient.
-		$inject = function ( $value ) use ( &$inject, $plugin_info ) {
+		$inject_short_circuit = null;
+		$inject               = function ( $value ) use ( &$inject, &$inject_short_circuit, $plugin_info ) {
 			remove_filter( 'site_transient_update_plugins', $inject );
+			remove_filter( 'pre_site_transient_update_plugins', $inject_short_circuit, PHP_INT_MAX );
 			$value                                = is_object( $value ) ? clone $value : new \stdClass();
 			$value->response[ Core::PLUGIN_FILE ] = $plugin_info;
 			return $value;
 		};
+		// Hosts may bypass the ordinary transient filter; scope that path to the same single read.
+		$inject_short_circuit = function ( $value ) use ( $inject ) {
+			return false === $value ? $value : $inject( $value );
+		};
 		add_filter( 'site_transient_update_plugins', $inject );
+		add_filter( 'pre_site_transient_update_plugins', $inject_short_circuit, PHP_INT_MAX );
 		try {
 			Activation::cls()->upgrade();
 		} finally {
 			remove_filter( 'site_transient_update_plugins', $inject );
+			remove_filter( 'pre_site_transient_update_plugins', $inject_short_circuit, PHP_INT_MAX );
 		}
 	}
 
@@ -439,6 +460,7 @@ class Debug2 extends Root {
 		$param = sprintf('💓 ------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok($server['REQUEST_URI'], '?'));
 
 		$qs = !empty($server['QUERY_STRING']) ? $server['QUERY_STRING'] : '';
+		$qs = preg_replace( '/(^|&)([^=&]*(?:nonce|password|passwd|token|api[_-]?key|secret|_hash)[^=&]*)=[^&]*/i', '$1$2=[redacted]', $qs );
 		if ( $this->conf( Base::O_DEBUG_COLLAPSE_QS ) ) {
 			$qs = $this->_omit_long_message( $qs );
 			if ( $qs ) {
@@ -506,6 +528,7 @@ class Debug2 extends Root {
 	 * @return string Formatted line.
 	 */
 	private static function format_message( $msg ) {
+		$msg = preg_replace( '/[\r\n]+/', ' ', (string) $msg );
 		if ( ! defined( 'LSCWP_LOG_TAG' ) ) {
 			return $msg . "\n";
 		}
