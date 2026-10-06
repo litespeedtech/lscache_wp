@@ -801,6 +801,7 @@ class Media extends Root {
 	 * Run lazyload replacement for images in buffer.
 	 *
 	 * @since  1.4
+	 * @since 7.9.2 Remove high fetch priority from images selected for lazy loading.
 	 * @access private
 	 * @return void
 	 */
@@ -857,6 +858,8 @@ class Media extends Root {
 			foreach ( $html_list as $k => $v ) {
 				$size = $placeholder_list[ $k ];
 				$src  = $src_list[ $k ];
+
+				$v = Utility::remove_attr( $v, 'fetchpriority', 'high' );
 
 				$html_list[ $k ] = $__placeholder->replace( $v, $src, $size );
 			}
@@ -924,15 +927,14 @@ class Media extends Root {
 			return;
 		}
 
-		$content = preg_replace( [ '#<!--.*-->#sU', '#<noscript([^>]*)>.*</noscript>#isU' ], '', $this->content );
-		if ( ! $content ) {
-			return;
-		}
-
-		$vpi_fp_search  = [];
-		$vpi_fp_replace = [];
-		preg_match_all('#<img\s+([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER);
-		foreach ($matches as $match) {
+		$replacements = [];
+		// Keep source offsets and skip non-rendered markup, even when it contains the same image tag.
+		preg_match_all( '#<!--.*?-->|<(?P<raw>script|noscript|style|textarea|title)\b[^>]*>.*?</(?P=raw)\s*>|<img\s+(?P<attrs>(?:=\s*"[^"]*"|=\s*\'[^\']*\'|[^>])*)>#is', $this->content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE );
+		foreach ($matches as $source_match) {
+			if ( ! isset( $source_match['attrs'] ) || -1 === $source_match['attrs'][1] || ! preg_match( '//u', $source_match['attrs'][0] ) ) {
+				continue;
+			}
+			$match = [ $source_match[0][0], $source_match['attrs'][0] ];
 			$attrs = Utility::parse_attr($match[1]);
 
 			if ( empty( $attrs['src'] ) ) {
@@ -974,17 +976,14 @@ class Media extends Root {
 			}
 
 			if ( $new_html ) {
-				$vpi_fp_search[]  = $match[1];
-				$vpi_fp_replace[] = implode( ' ', $new_html);
+				$replacements[] = [ $source_match[0][1], strlen( $match[0] ), '<img ' . implode( ' ', $new_html ) . '>' ];
 			}
 		}
 
-		// if VPI fetchpriority changes, do the replacement
-		if ( $vpi_fp_search && $vpi_fp_replace ) {
-			$this->content = str_replace( $vpi_fp_search, $vpi_fp_replace, $this->content );
+		// Replace from the end so earlier source offsets remain valid.
+		foreach ( array_reverse( $replacements ) as $replacement ) {
+			$this->content = substr_replace( $this->content, $replacement[2], $replacement[0], $replacement[1] );
 		}
-		unset( $vpi_fp_search );
-		unset( $vpi_fp_replace );
 	}
 
 	/**
@@ -1159,6 +1158,10 @@ class Media extends Root {
 
 		if ( 0 === strpos( $src, '//' ) ) {
 			$src = 'https:' . $src;
+		}
+		$scheme = wp_parse_url( $src, PHP_URL_SCHEME );
+		if ( ! $pathinfo && ! in_array( strtolower( (string) $scheme ), [ 'http', 'https' ], true ) ) {
+			return false;
 		}
 
 		try {

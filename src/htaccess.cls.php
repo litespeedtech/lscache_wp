@@ -725,6 +725,9 @@ class Htaccess extends Root {
 			// Check for WebP/AVIF support via HTTP_ACCEPT.
 			$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} image/' . $next_gen_format . ' [OR]';
 
+			// Match Media's crawler support when page requests omit explicit image types in Accept.
+			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} (chrome-lighthouse|googlebot|page\ speed) [NC,OR]';
+
 			// Check for iPhone browsers (version > 13).
 			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} iPhone\ OS\ (1[4-9]|[2-9][0-9]) [OR]';
 			

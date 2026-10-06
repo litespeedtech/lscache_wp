@@ -304,36 +304,58 @@ class Utility extends Root {
 	}
 
 	/**
-	 * Remove an attribute from an HTML attribute string using wp_kses_hair.
+	 * Remove an HTML attribute without rebuilding its neighboring source bytes.
 	 *
 	 * @since 7.8
+	 * @since 7.9.2 Match raw attribute spans because wp_kses_hair() reconstructs them on WordPress 7.0+.
 	 *
-	 * @param string $attr_str  Raw attribute string (e.g. ' type="text/javascript" src="..."').
-	 * @param string $attr_name Attribute name to remove (e.g. 'type', 'async').
+	 * @param string      $attr_str       Raw attribute string or opening tag.
+	 * @param string      $attr_name      Attribute name to remove.
+	 * @param string|null $required_value Remove only this value when provided, ignoring case.
 	 * @return string Attribute string with the named attribute removed.
 	 */
-	public static function remove_attr( $attr_str, $attr_name ) {
-		$parsed = wp_kses_hair( $attr_str, self::_kses_protocols() );
-		if ( ! isset( $parsed[ $attr_name ] ) ) {
-			return $attr_str;
+	public static function remove_attr( $attr_str, $attr_name, $required_value = null ) {
+		$offset = 0;
+		$length = strlen( $attr_str );
+		if ( preg_match( '/\A<[a-zA-Z][a-zA-Z0-9:-]*/', $attr_str, $tag ) ) {
+			$offset = strlen( $tag[0] );
 		}
 
-		$whole = $parsed[ $attr_name ]['whole'];
+		while ( $offset < $length ) {
+			$gap_start = $offset;
+			// Consume one complete attribute; stop at malformed markup instead of scanning inside its quoted text.
+			if ( ! preg_match( '/\G(\s*+)([_a-zA-Z][-_a-zA-Z0-9:.]*+)(?:\s*+=\s*+("[^"]*"|\'[^\']*\'|(?!["\'])[^\s>]*+)|(?!\s*=))/', $attr_str, $match, 0, $offset ) ) {
+				break;
+			}
+			$offset    += strlen( $match[0] );
+			$name_start = $gap_start + strlen( $match[1] );
+			$has_value  = isset( $match[3] );
+			$value      = $has_value ? $match[3] : '';
+			if ( '' !== $value && ( '"' === $value[0] || "'" === $value[0] ) ) {
+				$value = substr( $value, 1, -1 );
+			}
 
-		// For valueless attrs (e.g. async), use word boundary to avoid partial match (e.g. async-fallback)
-		if ( 'y' === $parsed[ $attr_name ]['vless'] ) {
-			return preg_replace( '# ' . preg_quote( $whole, '#' ) . '(?=\s|>|/|$)#i', '', $attr_str, 1 );
+			if ( 0 !== strcasecmp( $match[2], $attr_name ) || ( null !== $required_value && ( ! $has_value || 0 !== strcasecmp( $value, $required_value ) ) ) ) {
+				continue;
+			}
+
+			$remove_from = $gap_start;
+			$remove_end  = $offset;
+			if ( 0 === $gap_start ) {
+				while ( $remove_end < $length && ctype_space( $attr_str[ $remove_end ] ) ) {
+					++$remove_end;
+				}
+				// Attribute-only callers concatenate the leading whitespace after the tag name.
+				if ( $name_start > 0 && $remove_end < $length && '>' !== $attr_str[ $remove_end ] ) {
+					$remove_from = $name_start;
+				}
+			}
+			$attr_str = substr_replace( $attr_str, '', $remove_from, $remove_end - $remove_from );
+			$length   = strlen( $attr_str );
+			$offset   = $gap_start;
 		}
 
-		// For attrs with value (e.g. type="text/javascript"), straight replace is safe
-		$result = str_replace( ' ' . $whole, '', $attr_str );
-
-		// Handle edge case: attr at the very start of string (no leading space)
-		if ( $result === $attr_str && 0 === strpos( $attr_str, $whole ) ) {
-			$result = ltrim( substr( $attr_str, strlen( $whole ) ) );
-		}
-
-		return $result;
+		return $attr_str;
 	}
 
 	/**
