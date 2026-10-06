@@ -70,7 +70,7 @@ class Cloud extends Base {
 	const SVC_CDN              = 'cdn';
 	const SVC_OPTIMAX          = 'optimax';
 
-	const IMG_OPTM_DEFAULT_GROUP = 200;
+	const IMG_OPTM_DEFAULT_GROUP = 10;
 
 	const IMGOPTM_TAKEN = 'img_optm-taken';
 

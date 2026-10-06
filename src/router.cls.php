@@ -271,7 +271,7 @@ class Router extends Base {
 		$server_ip = $this->conf(self::O_SERVER_IP);
 		if (!$server_ip || self::get_ip() !== $server_ip) {
 			self::debug('❌❌ Role simulate uid denied! Not localhost visit!');
-			Control::set_nocache('Role simulate uid denied');
+			Control::set_nocache_hard('Role simulate uid denied');
 			return;
 		}
 
@@ -290,6 +290,7 @@ class Router extends Base {
 		}
 
 		self::debug('❌ WARNING: role simulator hash not match');
+		Control::set_nocache_hard('Role simulator hash not match');
 	}
 
 	/**
@@ -575,8 +576,10 @@ class Router extends Base {
 
 		switch ($action) {
 			case self::ACTION_TMP_DISABLE: // Disable LSC for 24H
-				Debug2::tmp_disable();
-				Admin::redirect("?page=litespeed-toolbox#settings-debug");
+				if ( $_can_network_option || ( ! $_is_multisite && $_can_option ) ) {
+					Debug2::tmp_disable();
+					Admin::redirect("?page=litespeed-toolbox#settings-debug");
+				}
 				return;
 
 			case self::ACTION_SAVE_SETTINGS_NETWORK: // Save network settings
@@ -586,14 +589,13 @@ class Router extends Base {
 				return;
 
 			case Core::ACTION_PURGE_BY:
-            if (defined('LITESPEED_ON') && ($_can_network_option || $_can_option || self::is_ajax())) {
-					// here may need more security
+				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || $_can_option ) ) {
 					self::$_action = $action;
 				}
 				return;
 
 			case self::ACTION_DB_OPTM:
-            if ($_can_network_option || $_can_option) {
+			if ($_can_network_option || ( ! $_is_multisite && $_can_option )) {
 					self::$_action = $action;
 				}
 				return;
@@ -640,9 +642,16 @@ class Router extends Base {
 				}
 				return;
 
-			case self::ACTION_PURGE:
 			case self::ACTION_DEBUG2:
-            if ($_can_network_option || $_can_option) {
+			if ( $_can_network_option || ( ! $_is_multisite && $_can_option ) ) {
+					self::$_action = $action;
+				}
+				return;
+
+			case self::ACTION_PURGE:
+				$type = isset( $_REQUEST[ self::TYPE ] ) && is_string( $_REQUEST[ self::TYPE ] ) ? sanitize_key( wp_unslash( $_REQUEST[ self::TYPE ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$network_only = in_array( $type, [ Purge::TYPE_PURGE_ALL_OBJECT, Purge::TYPE_PURGE_ALL_OPCACHE ], true );
+				if ( $_can_network_option || ( $_can_option && ( ! $_is_multisite || ! $network_only ) ) ) {
 					self::$_action = $action;
 				}
 				return;
@@ -654,7 +663,9 @@ class Router extends Base {
              * @since  2.9
              */
             // if ( self::is_ajax() ) {
-            self::$_action = $action;
+            if ( $_can_option || $_can_network_option ) {
+                self::$_action = $action;
+            }
             // }
 				return;
 

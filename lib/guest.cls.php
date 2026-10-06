@@ -92,7 +92,8 @@ class Guest {
 		}
 		$file = $dir . '/' . self::CONF_FILE_LEGACY;
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- No WP available
-		return is_file( $file ) ? json_decode( file_get_contents( $file ), true ) : false;
+		$data = is_file( $file ) ? json_decode( file_get_contents( $file ), true ) : false;
+		return is_array( $data ) ? $data : false;
 	}
 
 	/**
@@ -110,22 +111,27 @@ class Guest {
 		header( 'Pragma: no-cache' );
 
 		if ( $this->always_guest() ) {
+			header( 'X-LiteSpeed-Guest: always-guest' );
 			echo '[]';
 			exit;
 		}
 
 		// If contains vary already, don't reload to avoid infinite loop when parent page having browser cache
 		if ( $this->_conf && self::has_vary() ) {
+			header( 'X-LiteSpeed-Guest: already-varied' );
 			echo '[]';
 			exit;
 		}
 
 		// Send vary cookie, always hashed; without a site hash no cookie can be issued.
 		if ( ! is_array( $this->_conf ) || empty( $this->_conf[ self::HASH ] ) ) {
+			header( 'X-LiteSpeed-Guest: missing-configuration' );
 			echo '[]';
 			exit;
 		}
-		$vary = md5( $this->_conf[ self::HASH ] . 'guest_mode:1' );
+		$plain = 'guest_mode:1';
+		$key   = hash_hmac( 'sha256', 'lscwp:vary:v1', (string) $this->_conf[ self::HASH ], true );
+		$vary  = hash_hmac( 'sha256', strlen( $plain ) . ':' . $plain, $key );
 
 		$expire = time() + 2 * 86400;
 		$is_ssl = ! empty( $this->_conf[ self::O_UTIL_NO_HTTPS_VARY ] ) ? false : $this->is_ssl();

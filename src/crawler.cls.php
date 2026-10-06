@@ -1163,6 +1163,8 @@ class Crawler extends Root {
 			CURLOPT_HEADER           => true,
 			CURLOPT_CUSTOMREQUEST    => 'GET',
 			CURLOPT_FOLLOWLOCATION   => false,
+			CURLOPT_PROTOCOLS        => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+			CURLOPT_REDIR_PROTOCOLS  => CURLPROTO_HTTP | CURLPROTO_HTTPS,
 			CURLOPT_ENCODING         => 'gzip',
 			CURLOPT_CONNECTTIMEOUT   => 10,
 			CURLOPT_TIMEOUT          => $crawler_timeout, // Larger timeout to avoid incorrect blacklist addition #900171.
@@ -1264,7 +1266,7 @@ class Crawler extends Root {
 			$vary_name = $this->cls( 'Vary' )->get_vary_name();
 			// Always hashed, matching Vary::finalize_default_vary() and guest.vary.php in every mode.
 			$crawler_factors[ 'cookie:' . $vary_name ] = [
-				md5( $this->conf( Base::HASH ) . 'guest_mode:1' ) => '',
+				hash_hmac( 'sha256', '12:guest_mode:1', hash_hmac( 'sha256', 'lscwp:vary:v1', (string) $this->conf( Base::HASH ), true ) ) => '',
 				'_null'   => '<font data-balloon-pos="up" aria-label="Guest Mode">👒</font>',
 			];
 		}

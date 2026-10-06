@@ -725,6 +725,15 @@ class Control extends Root {
 			return;
 		}
 
+		// Public logged-in caching is safe only for published objects without a password.
+		if ( is_user_logged_in() && function_exists( 'get_queried_object' ) ) {
+			$queried = get_queried_object();
+			if ( is_object( $queried ) && isset( $queried->post_status ) && ( 'publish' !== $queried->post_status || ! empty( $queried->post_password ) ) ) {
+				self::set_nocache_hard( 'logged-in non-public object' );
+				return;
+			}
+		}
+
 		// Check if has metabox non-cacheable setting or not.
 		if ( file_exists( LSCWP_DIR . 'src/metabox.cls.php' ) && $this->cls( 'Metabox' )->setting( 'litespeed_no_cache' ) ) {
 			self::set_nocache( 'per post metabox setting' );
@@ -735,7 +744,7 @@ class Control extends Root {
 		$excludes = $this->conf( Base::O_CACHE_FORCE_PUB_URI );
 		$req_uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 		$hit      = REST::str_hit_uri( $req_uri, $excludes, true );
-		if ( $hit ) {
+		if ( $hit && ! defined( 'LSCACHE_IS_ESI' ) && ! is_user_logged_in() ) {
 			list( $result, $this_ttl ) = $hit;
 			self::set_public_forced( 'Setting: ' . $result );
 			self::debug( 'Forced public cacheable due to setting: ' . $result );
@@ -800,9 +809,6 @@ class Control extends Root {
 		}
 
 		$env_vary = isset( $_SERVER['LSCACHE_VARY_VALUE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['LSCACHE_VARY_VALUE'] ) ) : '';
-		if ( !$env_vary && isset( $_SERVER['HTTP_X_LSCACHE_VARY_VALUE'] ) ) {
-			$env_vary = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_LSCACHE_VARY_VALUE'] ) );
-		}
 		if ( $env_vary && false !== strpos( $env_vary, 'ismobile' ) ) {
 			if ( ! wp_is_mobile() && ! $is_mobile_conf ) {
 				self::set_nocache( 'is not mobile' ); // todo: no need to uncache, it will correct vary value in vary finalize anyways.

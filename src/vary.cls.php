@@ -116,6 +116,10 @@ class Vary extends Root {
 
 		// Logged-in user.
 		if ( Router::is_logged_in() ) {
+			// Cookie-authenticated REST responses can contain user-specific data in any namespace.
+			if ( $this->cls( 'REST' )->is_rest() ) {
+				Control::set_nocache_hard( 'logged-in REST request' );
+			}
 			// If not ESI, check cache logged-in user setting.
 			if ( ! $this->cls( 'Router' )->esi_enabled() ) {
 				// Cache logged-in => private cache.
@@ -425,11 +429,8 @@ class Vary extends Root {
 			return;
 		}
 
-		// ESI shouldn't change vary (main page only).
-		if ( defined( 'LSCACHE_IS_ESI' ) && LSCACHE_IS_ESI ) {
-			self::debug2( '_update_default_vary bypassed due to ESI' );
-			return;
-		}
+		// ESI must validate the request identity without changing the main page's cookies.
+		$is_esi = defined( 'LSCACHE_IS_ESI' ) && LSCACHE_IS_ESI;
 
 		$vary         = $this->finalize_default_vary( $uid );
 		$current_vary = self::has_vary();
@@ -445,7 +446,7 @@ class Vary extends Root {
 			}
 			// An authenticated render must never be stored in the shared commenter bucket; clear the commenter cookie on this path and issue the real vary so the next request recovers.
 			Control::set_nocache_hard( 'authenticated user carrying commenter vary' );
-			if ( $this->can_change_vary() ) {
+			if ( ! $is_esi && $this->can_change_vary() ) {
 				$this->remove_commenter();
 				$this->_cookie( $vary, (int) $expire );
 			}
@@ -453,11 +454,17 @@ class Vary extends Root {
 		}
 
 		if ( $current_vary !== $vary ) {
+			// The response cookie cannot change the cache key of the current request.
+			if ( $authenticated || $current_vary ) {
+				Control::set_nocache_hard( 'vary mismatch with an existing identity' );
+			}
+			if ( $is_esi ) {
+				return;
+			}
 			if ( $this->can_change_vary() ) {
 				$this->_cookie( $vary, (int) $expire );
 			} else {
-				// Without a corrected cookie the response would be stored under the wrong key.
-				Control::set_nocache_hard( 'vary mismatch, cookie not updatable' );
+				Control::set_nocache( 'vary mismatch, cookie not updatable' );
 			}
 		}
 	}
@@ -516,7 +523,7 @@ class Vary extends Root {
 	 */
 	public function finalize_default_vary( $uid = false ) {
 		// Bypass vary for guests where applicable (avoid non-guest filenames for assets).
-		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && ! ( $uid > 0 || Router::is_logged_in() ) ) {
 			return false;
 		}
 
@@ -534,6 +541,11 @@ class Vary extends Root {
 
 		// Get user role/group.
 		$role = Router::get_role( $uid );
+		if ( $role ) {
+			$roles = array_filter( array_map( 'trim', explode( ',', $role ) ) );
+			sort( $roles, SORT_STRING );
+			$role = implode( ',', array_unique( $roles ) );
+		}
 
 		if ( $uid > 0 ) {
 			$vary['logged-in'] = 1;
@@ -543,6 +555,8 @@ class Vary extends Root {
 				$role_group = $this->in_vary_group( $role );
 				if ( $role_group ) {
 					$vary['role'] = $role_group;
+				} else {
+					$vary['role'] = $role;
 				}
 			}
 
@@ -580,8 +594,9 @@ class Vary extends Root {
 
 		$res = implode( ';', $list );
 		self::debug2( 'default vary plain: ' . $res );
-		// Always hashed: a plaintext vary would let any visitor pick another role's cache bucket.
-		return md5( $this->conf( Base::HASH ) . $res );
+		// Domain-separated HMAC prevents boundary ambiguity and keeps the role bucket unforgeable.
+		$key = hash_hmac( 'sha256', 'lscwp:vary:v1', (string) $this->conf( Base::HASH ), true );
+		return hash_hmac( 'sha256', strlen( $res ) . ':' . $res, $key );
 	}
 
 	/**
@@ -605,9 +620,6 @@ class Vary extends Root {
 	 */
 	public function get_env_vary() {
 		$env_vary = isset( $_SERVER['LSCACHE_VARY_VALUE'] ) ? wp_unslash( (string) $_SERVER['LSCACHE_VARY_VALUE'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( ! $env_vary ) {
-			$env_vary = isset( $_SERVER['HTTP_X_LSCACHE_VARY_VALUE'] ) ? wp_unslash( (string) $_SERVER['HTTP_X_LSCACHE_VARY_VALUE'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		}
 		return $env_vary;
 	}
 
@@ -685,7 +697,7 @@ class Vary extends Root {
 	 */
 	public function finalize() {
 		// Finalize default vary for non-guest.
-		if ( ! defined( 'LITESPEED_GUEST' ) || ! LITESPEED_GUEST ) {
+		if ( ! defined( 'LITESPEED_GUEST' ) || ! LITESPEED_GUEST || Router::is_logged_in() ) {
 			$this->_update_default_vary();
 		}
 
@@ -764,7 +776,7 @@ class Vary extends Root {
 	/**
 	 * Set or clear the vary cookie.
 	 *
-	 * If the vary cookie changed, mark page as non-cacheable for this response.
+	 * Callers own cacheability: changing a response cookie does not change the request's cache key.
 	 *
 	 * @since 1.0.4
 	 *
