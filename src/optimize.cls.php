@@ -1146,6 +1146,11 @@ class Optimize extends Base {
 					continue;
 				}
 
+				// Combining is the only path that embeds media into generated CSS.
+				if (isset($attrs['media']) && !Optimizer::is_media_safe($attrs['media'])) {
+					continue;
+				}
+
 				if (!empty($attrs['media']) && $attrs['media'] !== 'all') {
 					$this_src_arr['media'] = $attrs['media'];
 				}
@@ -1160,6 +1165,9 @@ class Optimize extends Base {
 
 				$attrs = Utility::parse_attr($match[2]);
 
+				if (isset($attrs['media']) && !Optimizer::is_media_safe($attrs['media'])) {
+					continue;
+				}
 				if (!empty($attrs['data-no-optimize'])) {
 					continue;
 				}
@@ -1256,7 +1264,7 @@ class Optimize extends Base {
 
 		if ($this->cfg_js_defer === 2 || Utility::str_hit_array($src, $this->cfg_js_delay_inc)) {
 			$ori = Utility::remove_attr( $ori, 'type' );
-			return str_replace(' src=', ' type="litespeed/javascript" data-src=', $ori);
+			return preg_replace( '/\A(<script\b(?:"[^"]*"|\'[^\']*\'|[^\'">])*?)\ssrc=/i', '$1 type="litespeed/javascript" data-src=', $ori, 1 );
 		}
 
 		return str_replace('></script>', ' defer data-deferred="1"></script>', $ori);
@@ -1287,6 +1295,6 @@ class Optimize extends Base {
 		}
 
 		$ori = Utility::remove_attr( $ori, 'type' );
-		return str_replace(' src=', ' type="litespeed/javascript" data-src=', $ori);
+		return preg_replace( '/\A(<script\b(?:"[^"]*"|\'[^\']*\'|[^\'">])*?)\ssrc=/i', '$1 type="litespeed/javascript" data-src=', $ori, 1 );
 	}
 }

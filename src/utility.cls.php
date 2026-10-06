@@ -815,7 +815,7 @@ class Utility extends Root {
 			define( 'LITESPEED_FRONTEND_HOST', (string) wp_parse_url( $home_host, PHP_URL_HOST ) );
 		}
 
-		if ( LITESPEED_FRONTEND_HOST === $host ) {
+		if ( LITESPEED_FRONTEND_HOST === $host || ( is_multisite() && wp_parse_url( home_url(), PHP_URL_HOST ) === $host ) ) {
 			return true;
 		}
 
@@ -858,6 +858,12 @@ class Utility extends Root {
 		if ( empty( $url_parsed['path'] ) ) {
 			return false;
 		}
+		// Resolve URL-encoded names and relative segments before checking filesystem containment.
+		$url_parsed['path'] = rawurldecode( $url_parsed['path'] );
+		if ( false !== strpos( $url_parsed['path'], "\0" ) ) {
+			return false;
+		}
+		$docroot = isset( $_SERVER['DOCUMENT_ROOT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) : '';
 
 		// Replace child blog path for assets (multisite).
 		if ( is_multisite() && defined( 'PATH_CURRENT_SITE' ) ) {
@@ -868,7 +874,6 @@ class Utility extends Root {
 
 		// Parse file path.
 		if ( '/' === substr( $url_parsed['path'], 0, 1 ) ) {
-			$docroot = isset( $_SERVER['DOCUMENT_ROOT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) : '';
 			if ( defined( 'LITESPEED_WP_REALPATH' ) ) {
 				$file_path_ori = $docroot . constant( 'LITESPEED_WP_REALPATH' ) . $url_parsed['path'];
 			} else {
@@ -883,9 +888,22 @@ class Utility extends Root {
 			$file_path_ori .= '.' . $addition_postfix;
 		}
 
-		$file_path_ori = apply_filters( 'litespeed_realpath', $file_path_ori );
+		$mapped_path = apply_filters( 'litespeed_realpath', $file_path_ori );
+		if ( ! is_string( $mapped_path ) || false !== strpos( $mapped_path, "\0" ) ) {
+			return false;
+		}
+		// A server-owned mapping may explicitly relocate content outside DOCUMENT_ROOT, including under system cron.
+		$is_mapped     = $mapped_path !== $file_path_ori;
+		$file_path_ori = $mapped_path;
 
 		$file_path = realpath( $file_path_ori );
+		if ( ! $file_path && is_link( $file_path_ori ) ) {
+			return false;
+		}
+		// Missing sidecars may be created only inside an existing, contained parent directory.
+		if ( ! $is_mapped && ( '' === $docroot || ! File::within( $file_path ? $file_path : dirname( $file_path_ori ), $docroot ) ) ) {
+			return false;
+		}
 		if ( ! $file_path && $allow_missing ) {
 			$file_path = $file_path_ori;
 		}

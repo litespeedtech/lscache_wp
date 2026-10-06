@@ -190,7 +190,7 @@ class Placeholder extends Base {
 	public function media_row_con( $post_id ) {
 		$meta_value = wp_get_attachment_metadata( $post_id );
 
-		if ( empty( $meta_value['file'] ) ) {
+		if ( empty( $meta_value['file'] ) || ! is_string( $meta_value['file'] ) ) {
 			return;
 		}
 
@@ -198,17 +198,23 @@ class Placeholder extends Base {
 
 		// List all sizes.
 		$all_sizes = [ $meta_value['file'] ];
-		$size_path = pathinfo( $meta_value['file'], PATHINFO_DIRNAME ) . '/';
+		$size_path = pathinfo( $meta_value['file'], PATHINFO_DIRNAME );
+		$size_path = '.' === $size_path || '' === $size_path ? '' : trailingslashit( $size_path );
 		if ( ! empty( $meta_value['sizes'] ) && is_array( $meta_value['sizes'] ) ) {
 			foreach ( $meta_value['sizes'] as $v ) {
-				if ( ! empty( $v['file'] ) ) {
+				if ( ! empty( $v['file'] ) && is_string( $v['file'] ) ) {
 					$all_sizes[] = $size_path . $v['file'];
 				}
 			}
 		}
 
+		$uploads = wp_upload_dir();
 		foreach ( $all_sizes as $short_path ) {
-			$lqip_folder = LITESPEED_STATIC_DIR . '/lqip/' . $short_path;
+			$short_path = Utility::att_short_path( trailingslashit( $uploads['baseurl'] ) . $short_path );
+			if ( false === $short_path ) {
+				continue;
+			}
+			$lqip_folder = LITESPEED_STATIC_DIR . $this->_build_filepath_prefix( 'lqip' ) . $short_path;
 
 			if ( is_dir( $lqip_folder ) ) {
 				Debug2::debug( '[LQIP] Found folder: ' . $short_path );
@@ -219,8 +225,8 @@ class Placeholder extends Base {
 						continue;
 					}
 
+					$file = Str::trim_quotes( File::read( $lqip_folder . '/' . $v ) );
 					if ( 0 === $total_files ) {
-						$file = Str::trim_quotes( File::read( $lqip_folder . '/' . $v ) );
 						echo '<div class="litespeed-media-lqip"><img src="' . 
 							esc_attr( $file ) .
 							'" alt="' .
@@ -262,21 +268,11 @@ class Placeholder extends Base {
 
 		$snippet = ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_NOSCRIPT_RM ) ) ? '' : '<noscript>' . $html . '</noscript>';
 
+		foreach ( [ 'src', 'srcset', 'sizes' ] as $attr ) {
+			$html = preg_replace( '/\A(<img\b(?:"[^"]*"|\'[^\']*\'|[^\'">])*?)\s(' . $attr . ')=/i', '$1 data-$2=', $html, 1 );
+		}
 		$html = preg_replace(
-			[
-				'/\s+src=/i',
-				'/\s+srcset=/i',
-				'/\s+sizes=/i',
-			],
-			[
-				' data-src=',
-				' data-srcset=',
-				' data-sizes=',
-			],
-			$html
-		);
-		$html = preg_replace(
-			'/<img\s+/i',
+			'/\A<img\s+/i',
 			'<img data-lazyloaded="1"' . $additional_attr . ' src="' . Str::trim_quotes($this_placeholder) . '" ',
 			$html
 		);

@@ -150,6 +150,10 @@ class Optimizer extends Root {
 				$is_min = $this->is_min($src_info['src']);
 			}
 			$content = $this->optm_snippet($content, $file_type, $minify && !$is_min, $src_info['src'], !empty($src_info['media']) ? $src_info['media'] : false);
+			if (false === $content) {
+				wp_delete_file($tmp_static_file);
+				return false;
+			}
 			// Write to file. Bail out on write failure (disk full / permission / etc.) so a partial tmp does not get hashed and persisted.
 			if (File::save($tmp_static_file, $content, true, true) === false) {
 				Debug2::debug('[Optmer] File::save append failed, aborting: ' . $tmp_static_file);
@@ -236,6 +240,16 @@ class Optimizer extends Root {
 	}
 
 	/**
+	 * Whether an HTML media attribute can be embedded in a generated CSS rule.
+	 *
+	 * @param string $media Media query.
+	 * @return bool
+	 */
+	public static function is_media_safe( $media ) {
+		return is_string($media) && !preg_match('#[{};]|/\*|\*/#', $media);
+	}
+
+	/**
 	 * Load a single file
 	 *
 	 * @since  4.0
@@ -243,6 +257,9 @@ class Optimizer extends Root {
 	public function optm_snippet( $content, $file_type, $minify, $src, $media = false ) {
 		// CSS related features
 		if ($file_type == 'css') {
+			if ($media && !self::is_media_safe($media)) {
+				return false;
+			}
 			// Font optimize
 			$content = $this->optm_font_face( $content );
 
@@ -291,7 +308,7 @@ class Optimizer extends Root {
 			File::rrmdir($to_be_deleted_folder);
 		}
 
-		$today_file = $folder_name . date('Ymd') . '/' . md5($url);
+		$today_file = $folder_name . date('Ymd') . '/' . md5($url) . '.' . ( 'js' === $file_type ? 'js' : 'css' );
 		if (file_exists($today_file)) {
 			return File::read($today_file);
 		}
