@@ -186,6 +186,13 @@ class Online {
 	 */
 	public function sync( $args, $assoc_args ) {
 		$json = $this->cloud->sync_usage();
+		if ( ! is_array( $json ) ) {
+			WP_CLI::error( 'Could not sync QUIC.cloud usage.' );
+			return;
+		}
+		$json = array_filter( $json, static function ( $key ) {
+			return is_string( $key ) && 0 === strpos( $key, 'usage.' );
+		}, ARRAY_FILTER_USE_KEY );
 
 		if ( ! empty( $assoc_args['format'] ) ) {
 			WP_CLI::print_value( $json, $assoc_args );

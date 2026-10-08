@@ -73,7 +73,7 @@ class Option extends Base {
 
 		// Contains child set
 		if ( false !== strpos( $key, '[' ) ) {
-			parse_str( $key . '=' . $val, $key2 );
+			parse_str( $key . '=' . rawurlencode( $val ), $key2 );
 			$raw_data = array_merge( $raw_data, $key2 );
 		} else {
 			$raw_data[ $key ] = $val;
