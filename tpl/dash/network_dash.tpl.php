@@ -15,7 +15,7 @@ $blogs           = Activation::get_network_ids();
 foreach ( $blogs as $network_blog_id ) {
 	switch_to_blog( $network_blog_id );
 	$cloud_summaries[ home_url() ] = Cloud::get_summary();
-	// May need restore_current_blog();
+	restore_current_blog();
 }
 
 ?>
@@ -51,11 +51,11 @@ foreach ( $blogs as $network_blog_id ) {
 
 			if ( ! empty( $cloud_summary[ 'usage.' . $svc ] ) ) {
 				$usage               = $cloud_summary[ 'usage.' . $svc ];
-				$finished_percentage = floor( $usage['used'] * 100 / $usage['quota'] );
-				$used                = $usage['used'];
-				$quota               = $usage['quota'];
-				$pag_used            = ! empty( $usage['pag_used'] ) ? $usage['pag_used'] : 0;
-				$pag_bal             = ! empty( $usage['pag_bal'] ) ? $usage['pag_bal'] : 0;
+				$used                = (int) $usage['used'];
+				$quota               = (int) $usage['quota'];
+				$finished_percentage = $quota > 0 ? floor( $used * 100 / $quota ) : 0;
+				$pag_used            = ! empty( $usage['pag_used'] ) ? (int) $usage['pag_used'] : 0;
+				$pag_bal             = ! empty( $usage['pag_bal'] ) ? (int) $usage['pag_bal'] : 0;
 				$pag_total           = $pag_used + $pag_bal;
 
 				if ( $pag_total ) {

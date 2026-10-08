@@ -274,7 +274,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Presets** Prevented path traversal, isolated backups by site in protected PHP files, excluded secrets from new backups, and added a legacy-backup cleanup reminder.
 * **Object Cache** Corrected Add/Replace conditions, forced reads, Redis/Memcached connections, timeouts, TTLs and flush results. Improved drop-in cleanup and disabled status, preserved runtime fallback, and removed the unused lifetime field.
 * **ESI** Hardened request signatures, made WooCommerce nonce fragments private by default, and preserved shortcode attributes. Clarified private-content requirements.
-* **Cloud** Restricted service nodes to trusted QUIC.cloud origins, preserved callback replay protection, isolated throttling by site, and corrected nonce parsing under strict SQL modes.
+* **Cloud** Restricted service nodes to trusted QUIC.cloud origins and preserved callback replay protection. Corrected nonce parsing under strict SQL modes, isolated throttling by site, and fixed dashboard activation, expiry, statistics, image request controls and multisite context.
 * **CDN** Validated mapping URLs, escaped rewritten URLs, and preserved Cloudflare zones after failed lookups. (nathaningram)
 * **Crawler** Restricted sitemap origins and role simulation, hardened hash checks, and corrected mobile/Guest variants and request isolation. Preserved successful child sitemaps and the previous map on total failure. (#866256)
 * **CLI** Corrected local and multisite URL purges, required HTTPS imports, validated blog IDs, preserved nested option values, and limited sync output to usage data.

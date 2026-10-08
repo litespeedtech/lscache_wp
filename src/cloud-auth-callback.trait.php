@@ -236,7 +236,7 @@ trait Cloud_Auth_Callback {
 		$expires_at  = (int) $qc_ts + self::SIGN_MAX_AGE + 1;
 		$claim_value = $expires_at . ':' . Str::rrand( 32 );
 
-		$cleanup = "DELETE FROM `$wpdb->options` WHERE option_name LIKE %s AND CAST( option_value AS UNSIGNED ) < %d";
+		$cleanup = "DELETE FROM `$wpdb->options` WHERE option_name LIKE %s AND CAST( SUBSTRING_INDEX( option_value, ':', 1 ) AS UNSIGNED ) < %d";
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 		$cleaned = $wpdb->query( $wpdb->prepare( $cleanup, [ $wpdb->esc_like( $prefix ) . '%', $now ] ) );
 		if ( false === $cleaned ) {
@@ -244,7 +244,7 @@ trait Cloud_Auth_Callback {
 		}
 
 		$q = "INSERT INTO `$wpdb->options` ( option_name, option_value, autoload ) VALUES ( %s, %s, 'no' )
-			ON DUPLICATE KEY UPDATE option_value = IF( CAST( option_value AS UNSIGNED ) < %d, VALUES( option_value ), option_value )";
+			ON DUPLICATE KEY UPDATE option_value = IF( CAST( SUBSTRING_INDEX( option_value, ':', 1 ) AS UNSIGNED ) < %d, VALUES( option_value ), option_value )";
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 		$claimed = $wpdb->query( $wpdb->prepare( $q, [ $option_name, $claim_value, $now ] ) );
 		if ( false === $claimed ) {
@@ -259,7 +259,7 @@ trait Cloud_Auth_Callback {
 			return $this->_callback_error( self::CALLBACK_ERR_REPLAY, 'Replayed callback signature.' );
 		}
 
-		$count_q = "SELECT COUNT(*) FROM `$wpdb->options` WHERE option_name LIKE %s AND CAST( option_value AS UNSIGNED ) >= %d";
+		$count_q = "SELECT COUNT(*) FROM `$wpdb->options` WHERE option_name LIKE %s AND CAST( SUBSTRING_INDEX( option_value, ':', 1 ) AS UNSIGNED ) >= %d";
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 		$count = $wpdb->get_var( $wpdb->prepare( $count_q, [ $wpdb->esc_like( $prefix ) . '%', $now ] ) );
 		if ( null === $count && ! empty( $wpdb->last_error ) ) {

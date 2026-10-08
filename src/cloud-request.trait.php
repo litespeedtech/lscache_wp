@@ -221,7 +221,11 @@ trait Cloud_Request {
 			wp_delete_file( $legacy_file );
 		}
 		$service_tag = preg_replace( '/[^a-zA-Z0-9]/', '', $service_tag );
-		return LITESPEED_STATIC_DIR . '/qc.' . $type . '.' . $service_tag;
+		$legacy_file = LITESPEED_STATIC_DIR . '/qc.' . $type . '.' . $service_tag;
+		if ( file_exists( $legacy_file ) ) {
+			wp_delete_file( $legacy_file );
+		}
+		return LITESPEED_STATIC_DIR . '/qc.' . $type . '.' . get_current_blog_id() . '.' . $service_tag;
 	}
 
 	/**
@@ -518,37 +522,37 @@ trait Cloud_Request {
 				if ( isset( $json['_carry_on'][ $v ] ) ) {
 					switch ( $v ) {
 						case 'usage':
-                        $usage_svc_tag                               = in_array( $service, [ self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI ], true ) ? self::SVC_PAGE_OPTM : $service;
-                        $this->_summary[ 'usage.' . $usage_svc_tag ] = $json['_carry_on'][ $v ];
+							$usage_svc_tag                               = in_array( $service, [ self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI ], true ) ? self::SVC_PAGE_OPTM : $service;
+							$this->_summary[ 'usage.' . $usage_svc_tag ] = $json['_carry_on'][ $v ];
 							break;
 
 						case 'promo':
-                        if ( empty( $this->_summary[ $v ] ) || ! is_array( $this->_summary[ $v ] ) ) {
+							if ( empty( $this->_summary[ $v ] ) || ! is_array( $this->_summary[ $v ] ) ) {
 								$this->_summary[ $v ] = [];
 							}
-                        $this->_summary[ $v ][] = $json['_carry_on'][ $v ];
+							$this->_summary[ $v ][] = $json['_carry_on'][ $v ];
 							break;
 
 						case 'mini_html':
-                        foreach ( $json['_carry_on'][ $v ] as $k2 => $v2 ) {
+							foreach ( $json['_carry_on'][ $v ] as $k2 => $v2 ) {
 								if ( 0 === strpos( $k2, 'ttl.' ) ) {
-                                $v2 += time();
-									}
+									$v2 = time() + ( is_numeric( $v2 ) ? (int) $v2 : 0 );
+								}
 								$this->_summary[ $v ][ $k2 ] = $v2;
 							}
 							break;
 
 						case 'partner':
-                        $this->_summary[ $v ] = $json['_carry_on'][ $v ];
+							$this->_summary[ $v ] = $json['_carry_on'][ $v ];
 							break;
 
 						case '_error':
 						case '_info':
 						case '_note':
 						case '_success':
-                        $color_mode = substr( $v, 1 );
-                        $msgs       = $json['_carry_on'][ $v ];
-                        Admin_Display::add_unique_notice( $color_mode, $msgs, true );
+							$color_mode = substr( $v, 1 );
+							$msgs       = $json['_carry_on'][ $v ];
+							Admin_Display::add_unique_notice( $color_mode, $msgs, true );
 							break;
 
 						default:

@@ -51,9 +51,9 @@ trait Cloud_Misc {
 
 		// Try to update dash content
 		$data = self::post( self::SVC_D_DASH, [ 'action2' => ( 'cdn_dash_mini' === $type ? 'cdn_dash' : $type ) ] );
-		if ( ! empty( $data['qc_activated'] ) ) {
+		if ( isset( $data['qc_activated'] ) && is_string( $data['qc_activated'] ) && in_array( $data['qc_activated'], [ 'anonymous', 'linked', 'cdn', 'deleted' ], true ) ) {
 			// Sync conf as changed
-			if ( empty( $this->_summary['qc_activated'] ) || $this->_summary['qc_activated'] !== $data['qc_activated'] ) {
+			if ( 'cdn' === $data['qc_activated'] && ( empty( $this->_summary['qc_activated'] ) || $this->_summary['qc_activated'] !== $data['qc_activated'] ) ) {
 				$msg = sprintf( __( 'Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache' ), 'QUIC.cloud' );
 				Admin_Display::success( '🎊 ' . $msg );
 				$this->_clear_reset_qc_reg_msg();
@@ -62,8 +62,12 @@ trait Cloud_Misc {
 				$this->cls( 'CDN\Quic' )->try_sync_conf( true );
 			}
 
-			$this->_summary['qc_activated'] = $data['qc_activated'];
-			$this->save_summary();
+			if ( 'deleted' === $data['qc_activated'] ) {
+				$this->_reset_qc_reg();
+			} else {
+				$this->_summary['qc_activated'] = $data['qc_activated'];
+				$this->save_summary();
+			}
 		}
 
 		// Show the info
@@ -399,7 +403,7 @@ trait Cloud_Misc {
 	 * @access private
 	 */
 	private function _clear_promo() {
-		if ( count( $this->_summary['promo'] ) > 1 ) {
+		if ( isset( $this->_summary['promo'] ) && is_array( $this->_summary['promo'] ) && count( $this->_summary['promo'] ) > 1 ) {
 			array_shift( $this->_summary['promo'] );
 		} else {
 			$this->_summary['promo'] = [];
