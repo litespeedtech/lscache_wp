@@ -321,22 +321,7 @@ class WP_Object_Cache {
 		if ( wp_suspend_cache_addition() ) {
 			return false;
 		}
-
-		if ( ! $this->is_valid_key( $key ) ) {
-			return false;
-		}
-
-		if ( empty( $group ) ) {
-			$group = 'default';
-		}
-
-		$id = $this->_key( $key, $group );
-
-		if ( array_key_exists( $id, $this->_cache ) ) {
-			return false;
-		}
-
-		return $this->set( $key, $data, $group, (int) $expire );
+		return $this->_store( $key, $data, $group, (int) $expire, 'add' );
 	}
 
 	/**
@@ -377,21 +362,7 @@ class WP_Object_Cache {
 	 * @return bool True if contents were replaced, false if original value does not exist.
 	 */
 	public function replace( $key, $data, $group = 'default', $expire = 0 ) {
-		if ( ! $this->is_valid_key( $key ) ) {
-			return false;
-		}
-
-		if ( empty( $group ) ) {
-			$group = 'default';
-		}
-
-		$id = $this->_key( $key, $group );
-
-		if ( ! array_key_exists( $id, $this->_cache ) ) {
-			return false;
-		}
-
-		return $this->set( $key, $data, $group, (int) $expire );
+		return $this->_store( $key, $data, $group, (int) $expire, 'replace' );
 	}
 
 	/**
@@ -418,6 +389,20 @@ class WP_Object_Cache {
 	 * @return bool True if contents were set, false if key is invalid.
 	 */
 	public function set( $key, $data, $group = 'default', $expire = 0 ) {
+		return $this->_store( $key, $data, $group, (int) $expire, 'set' );
+	}
+
+	/**
+	 * Store an unchanged wire envelope and update runtime state only after a conditional write succeeds.
+	 *
+	 * @param int|string $key    Cache key.
+	 * @param mixed      $data   Value to store.
+	 * @param string     $group  Cache group.
+	 * @param int        $expire TTL seconds.
+	 * @param string     $method Internal set, add or replace operation.
+	 * @return bool
+	 */
+	private function _store( $key, $data, $group, $expire, $method ) {
 		if ( ! $this->is_valid_key( $key ) ) {
 			return false;
 		}
@@ -426,10 +411,30 @@ class WP_Object_Cache {
 			$group = 'default';
 		}
 
-		$id = $this->_key( $key, $group );
+		$id             = $this->_key( $key, $group );
+		$persistent     = ! $this->_object_cache->is_non_persistent( $group );
+		$backend_usable = $persistent && ( 'set' === $method || $this->_object_cache->usable() );
+		if ( ! $backend_usable && ( ( 'add' === $method && array_key_exists( $id, $this->_cache ) ) || ( 'replace' === $method && ! array_key_exists( $id, $this->_cache ) ) ) ) {
+			return false;
+		}
 
 		if ( is_object( $data ) ) {
 			$data = clone $data;
+		}
+		if ( $backend_usable && 'set' !== $method ) {
+			// Serialize the same snapshot as set(), so custom clone hooks cannot diverge the two caches.
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- Preserve the existing drop-in payload format.
+			if ( ! $this->_object_cache->$method( $id, serialize( [ 'data' => $data ] ), $expire ) ) {
+				// A connection can fail after the usability check; only a genuine backend outage permits local fallback.
+				if ( $this->_object_cache->usable() ) {
+					unset( $this->_cache_404[ $id ] );
+					return false;
+				}
+				$backend_usable = false;
+				if ( ( 'add' === $method && array_key_exists( $id, $this->_cache ) ) || ( 'replace' === $method && ! array_key_exists( $id, $this->_cache ) ) ) {
+					return false;
+				}
+			}
 		}
 
 		$this->_cache[ $id ] = $data;
@@ -438,9 +443,12 @@ class WP_Object_Cache {
 			unset( $this->_cache_404[ $id ] );
 		}
 
-		if ( ! $this->_object_cache->is_non_persistent( $group ) ) {
-			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
-			$this->_object_cache->set( $id, serialize( [ 'data' => $data ] ), (int) $expire );
+		if ( $persistent ) {
+			if ( 'set' === $method || ! $backend_usable ) {
+				// Ordinary sets write through; an unavailable backend keeps the runtime conditional fallback.
+				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+				$this->_object_cache->set( $id, serialize( [ 'data' => $data ] ), $expire );
+			}
 			++$this->count_set;
 		}
 
@@ -483,8 +491,7 @@ class WP_Object_Cache {
 	 *
 	 * @param int|string $key   The key under which the cache contents are stored.
 	 * @param string     $group Optional. Where the cache contents are grouped. Default 'default'.
-	 * @param bool       $force Optional. Unused. Whether to force an update of the local cache
-	 *                          from the persistent cache. Default false.
+	 * @param bool       $force Optional. Force a backend lookup, including cached misses, for persistent groups.
 	 * @param bool       $found Optional. Whether the key was found in the cache (passed by reference).
 	 *                          Disambiguates a return of false, a storable value. Default null.
 	 * @return mixed|false The cache contents on success, false on failure to retrieve contents.
@@ -498,17 +505,18 @@ class WP_Object_Cache {
 			$group = 'default';
 		}
 
-		$id = $this->_key( $key, $group );
+		$id         = $this->_key( $key, $group );
+		$persistent = ! $this->_object_cache->is_non_persistent( $group );
 
 		$found       = false;
 		$found_in_oc = false;
 		$cache_val   = false;
 
-		if ( array_key_exists( $id, $this->_cache ) && ! $force ) {
+		if ( array_key_exists( $id, $this->_cache ) && ( ! $force || ! $persistent ) ) {
 			$found     = true;
 			$cache_val = $this->_cache[ $id ];
 			++$this->count_hit_incall;
-		} elseif ( ! array_key_exists( $id, $this->_cache_404 ) && ! $this->_object_cache->is_non_persistent( $group ) ) {
+		} elseif ( $persistent && ( $force || ! array_key_exists( $id, $this->_cache_404 ) ) ) {
 			$v = $this->_object_cache->get( $id, $group );
 
 			if ( false !== $v ) {
@@ -523,6 +531,7 @@ class WP_Object_Cache {
 				$cache_val   = $v['data'];
 			} else {
 				// Can't find key, cache it to 404.
+				unset( $this->_cache[ $id ] );
 				$this->_cache_404[ $id ] = 1;
 				++$this->count_miss;
 			}
@@ -536,6 +545,7 @@ class WP_Object_Cache {
 
 		if ( $found_in_oc ) {
 			$this->_cache[ $id ] = $cache_val;
+			unset( $this->_cache_404[ $id ] );
 		}
 
 		++$this->cache_total;
@@ -707,14 +717,12 @@ class WP_Object_Cache {
 	 * @since 1.8
 	 * @access public
 	 *
-	 * @return true Always returns true.
+	 * @return bool Whether the persistent cache was flushed.
 	 */
 	public function flush() {
 		$this->flush_runtime();
 
-		$this->_object_cache->flush();
-
-		return true;
+		return $this->_object_cache->flush();
 	}
 
 	/**

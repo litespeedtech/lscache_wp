@@ -20,7 +20,8 @@ require_once dirname( __DIR__ ) . '/autoload.php';
  * @since 1.8
  */
 class Object_Cache extends Root {
-	const LOG_TAG = '[Object_Cache]';
+	const LOG_TAG       = '[Object_Cache]';
+	const REDIS_TIMEOUT = 1.0;
 
 	/**
 	 * Debug option key.
@@ -346,7 +347,7 @@ class Object_Cache extends Root {
 	 * @access public
 	 *
 	 * @param array $options Options to apply after update.
-	 * @return void
+	 * @return bool Whether the drop-in was installed.
 	 */
 	public function update_file( $options ) {
 		$changed = false;
@@ -358,7 +359,10 @@ class Object_Cache extends Root {
 		// Update cls file.
 		if ( ! file_exists( $_oc_wp_file ) || md5_file( $_oc_wp_file ) !== md5_file( $_oc_ori_file ) ) {
 			$this->debug_oc( 'copying object-cache.php file to ' . $_oc_wp_file );
-			copy( $_oc_ori_file, $_oc_wp_file );
+			if ( ! copy( $_oc_ori_file, $_oc_wp_file ) ) {
+				Admin_Display::error( __( 'Could not write the object cache drop-in.', 'litespeed-cache' ) );
+				return false;
+			}
 			$changed = true;
 		}
 
@@ -368,6 +372,7 @@ class Object_Cache extends Root {
 		if ( $changed ) {
 			$this->_reconnect( $options );
 		}
+		return true;
 	}
 
 	/**
@@ -402,7 +407,7 @@ class Object_Cache extends Root {
 		$_oc_wp_file = WP_CONTENT_DIR . '/object-cache.php';
 
 		$state = $this->dropin_state();
-		if ( 'current' === $state ) {
+		if ( 'current' === $state || 'stale' === $state ) {
 			$this->debug_oc( 'removing ' . $_oc_wp_file );
 			wp_delete_file( $_oc_wp_file );
 		}
@@ -418,6 +423,15 @@ class Object_Cache extends Root {
 	 */
 	public function test_connection() {
 		return $this->_connect();
+	}
+
+	/**
+	 * Whether conditional writes can reach the backend, independently of admin read bypass.
+	 *
+	 * @return bool
+	 */
+	public function usable() {
+		return $this->_cfg_enabled && $this->_connect();
 	}
 
 	/**
@@ -453,6 +467,7 @@ class Object_Cache extends Root {
 	 * @access private
 	 *
 	 * @return bool|null False on failure, true on success, null if driver missing.
+	 * @throws \RuntimeException Internally caught if connection or timeout setup fails.
 	 */
 	private function _connect() {
 		if ( isset( $this->_conn ) ) {
@@ -487,16 +502,11 @@ class Object_Cache extends Root {
 				$this->_conn = new \Redis();
 				// error_log( 'Object: _connect Redis' );
 
-				if ( $this->_cfg_persistent ) {
-					if ( $this->_cfg_port ) {
-						$this->_conn->pconnect( $this->_cfg_host, $this->_cfg_port );
-					} else {
-						$this->_conn->pconnect( $this->_cfg_host );
-					}
-				} elseif ( $this->_cfg_port ) {
-					$this->_conn->connect( $this->_cfg_host, $this->_cfg_port );
-				} else {
-					$this->_conn->connect( $this->_cfg_host );
+				$method = $this->_cfg_persistent ? 'pconnect' : 'connect';
+				$port   = $this->_cfg_port ? (int) $this->_cfg_port : 6379;
+				// Bound both opening and reads, including reused persistent sockets, without a retry/backoff layer.
+				if ( ! $this->_conn->$method( $this->_cfg_host, $port, self::REDIS_TIMEOUT ) || ! $this->_conn->setOption( \Redis::OPT_READ_TIMEOUT, self::REDIS_TIMEOUT ) ) {
+					throw new \RuntimeException( 'Redis connection or read timeout setup failed.' );
 				}
 
 				if ( $this->_cfg_pswd ) {
@@ -518,11 +528,10 @@ class Object_Cache extends Root {
 					$this->_conn->setOption( \Redis::OPT_COMPRESSION, \Redis::COMPRESSION_ZSTD );
 				}
 
-				if ( $this->_cfg_db ) {
-					if ( ! $this->_conn->select( $this->_cfg_db ) ) {
-						$this->debug_oc( 'Database ID is invalid' );
-						$failed = true;
-					}
+				// A persistent socket may have been left on another database, including when our ID is zero.
+				if ( ( $this->_cfg_db || $this->_cfg_persistent ) && ! $this->_conn->select( (int) $this->_cfg_db ) ) {
+					$this->debug_oc( 'Database ID is invalid' );
+					$failed = true;
 				}
 
 				$res = $this->_conn->rawCommand('PING');
@@ -543,9 +552,15 @@ class Object_Cache extends Root {
 			// Connect to Memcached.
 			if ( $this->_cfg_persistent ) {
 				$this->_conn = new \Memcached( $this->_get_mem_id() );
+				$this->_set_mem_timeouts();
+				$servers = $this->_conn->getServerList();
+				$matches = 1 === count( $servers ) && $servers[0]['host'] === $this->_cfg_host && (int) $servers[0]['port'] === (int) $this->_cfg_port;
+				if ( $servers && ! $matches ) {
+					$this->_conn->resetServerList();
+				}
 
 				// Check memcached persistent connection.
-				if ( $this->_validate_mem_server() ) {
+				if ( $matches && $this->_validate_mem_server() ) {
 					// error_log( 'Object: _validate_mem_server' );
 					$this->debug_oc( 'Got persistent ' . $this->_oc_driver . ' connection' );
 					return true;
@@ -555,9 +570,12 @@ class Object_Cache extends Root {
 			} else {
 				// error_log( 'Object: new memcached!' );
 				$this->_conn = new \Memcached();
+				$this->_set_mem_timeouts();
 			}
 
-			$this->_conn->addServer( $this->_cfg_host, (int) $this->_cfg_port );
+			if ( ! $this->_conn->getServerList() ) {
+				$this->_conn->addServer( $this->_cfg_host, (int) $this->_cfg_port );
+			}
 
 			/**
 			 * Add SASL auth.
@@ -699,6 +717,43 @@ class Object_Cache extends Root {
 	 * @return bool
 	 */
 	public function set( $key, $data, $expire ) {
+		return $this->_store( $key, $data, $expire, 'set' );
+	}
+
+	/**
+	 * Store only if the shared key does not exist, without a separate read.
+	 *
+	 * @param string $key    Cache key.
+	 * @param mixed  $data   Serialized payload.
+	 * @param int    $expire TTL seconds.
+	 * @return bool
+	 */
+	public function add( $key, $data, $expire ) {
+		return (bool) $this->_store( $key, $data, $expire, 'add' );
+	}
+
+	/**
+	 * Replace only an existing shared key, without a separate read.
+	 *
+	 * @param string $key    Cache key.
+	 * @param mixed  $data   Serialized payload.
+	 * @param int    $expire TTL seconds.
+	 * @return bool
+	 */
+	public function replace( $key, $data, $expire ) {
+		return (bool) $this->_store( $key, $data, $expire, 'replace' );
+	}
+
+	/**
+	 * Share serialization-independent backend storage and expiration handling.
+	 *
+	 * @param string $key    Cache key.
+	 * @param mixed  $data   Serialized payload.
+	 * @param int    $expire TTL seconds.
+	 * @param string $method Internal set, add or replace operation.
+	 * @return bool|string Backend acknowledgement or false.
+	 */
+	private function _store( $key, $data, $expire, $method ) {
 		if ( ! $this->_cfg_enabled ) {
 			return false;
 		}
@@ -722,16 +777,36 @@ class Object_Cache extends Root {
 		if ( 'Redis' === $this->_oc_driver ) {
 			try {
 				$options = ( $ttl > 0 ) ? [ 'ex' => $ttl ] : [];
-				$res     = $this->_conn->set( $key, $data, $options );
+				if ( 'set' !== $method ) {
+					$options[] = 'add' === $method ? 'nx' : 'xx';
+				}
+				$res = $this->_conn->set( $key, $data, $options );
 			} catch ( \RedisException $ex ) {
 				$res = false;
 				$this->_redis_error( $ex );
 			}
 		} else {
-			$res = $this->_conn->set( $key, $data, $ttl );
+			// Memcached treats expirations above 30 days as Unix timestamps.
+			$res = $this->_conn->$method( $key, $data, $ttl > 30 * DAY_IN_SECONDS ? time() + $ttl : $ttl );
+			// A rejected value must not disable later invalidations on a healthy connection.
+			if ( false === $res && in_array( $this->_conn->getResultCode(), [ \Memcached::RES_CONNECTION_FAILURE, \Memcached::RES_CONNECTION_BIND_FAILURE, \Memcached::RES_READ_FAILURE, \Memcached::RES_UNKNOWN_READ_FAILURE, \Memcached::RES_WRITE_FAILURE, \Memcached::RES_HOST_LOOKUP_FAILURE, \Memcached::RES_TIMEOUT, \Memcached::RES_ERRNO, \Memcached::RES_FAIL_UNIX_SOCKET, \Memcached::RES_SERVER_MARKED_DEAD, \Memcached::RES_SERVER_TEMPORARILY_DISABLED, \Memcached::RES_CONNECTION_SOCKET_CREATE_FAILURE, \Memcached::RES_NO_SERVERS ], true ) ) {
+				$this->_cfg_enabled = false;
+			}
 		}
 
 		return $res;
+	}
+
+	/**
+	 * Bound Memcached connection, polling and socket I/O without persistent backoff.
+	 *
+	 * @return void
+	 */
+	private function _set_mem_timeouts() {
+		$this->_conn->setOption( \Memcached::OPT_CONNECT_TIMEOUT, (int) ( self::REDIS_TIMEOUT * 1000 ) );
+		$this->_conn->setOption( \Memcached::OPT_POLL_TIMEOUT, (int) ( self::REDIS_TIMEOUT * 1000 ) );
+		$this->_conn->setOption( \Memcached::OPT_SEND_TIMEOUT, (int) ( self::REDIS_TIMEOUT * 1000000 ) );
+		$this->_conn->setOption( \Memcached::OPT_RECV_TIMEOUT, (int) ( self::REDIS_TIMEOUT * 1000000 ) );
 	}
 
 	/**
@@ -833,11 +908,16 @@ class Object_Cache extends Root {
 		$this->debug_oc( 'flush!' );
 
 		if ( 'Redis' === $this->_oc_driver ) {
+			// A synchronous flush may take longer than an ordinary read; restore the request timeout afterwards.
+			$read_timeout = $this->_conn->getOption( \Redis::OPT_READ_TIMEOUT );
 			try {
+				$this->_conn->setOption( \Redis::OPT_READ_TIMEOUT, max( self::REDIS_TIMEOUT, (float) ini_get( 'default_socket_timeout' ) ) );
 				$res = $this->_conn->flushDb();
 			} catch ( \RedisException $ex ) {
 				$this->_redis_error( $ex );
 				return false;
+			} finally {
+				$this->_conn->setOption( \Redis::OPT_READ_TIMEOUT, $read_timeout );
 			}
 		} else {
 			$res = $this->_conn->flush();
