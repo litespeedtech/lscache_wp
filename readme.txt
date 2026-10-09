@@ -278,7 +278,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **CDN** Validated mapping URLs, escaped rewritten URLs, and preserved Cloudflare zones after failed lookups. (nathaningram)
 * **Crawler** Restricted sitemap origins and role simulation, hardened hash checks, and corrected mobile/Guest variants and request isolation. Preserved successful child sitemaps and the previous map on total failure. (#866256)
 * **CLI** Corrected local and multisite URL purges, required HTTPS imports, validated blog IDs, preserved nested option values, and limited sync output to usage data.
-* **Database Optimize** Scoped table operations to the current site, safely quoted identifiers, and improved bounded cleanup, cache invalidation and failure reporting. Restricted multisite management to network administrators.
+* **Database Optimize** Scoped table operations to the current site and safely quoted identifiers. Preserved recent auto drafts, bounded cleanup, invalidated caches, added confirmations, and reported cleanup, conversion and autoload failures. Restricted multisite management to network administrators.
 * **Debug** Restricted beta packages to trusted sources, protected logs, and redacted credentials from logs, reports and page comments while preserving useful diagnostics. Removed the default trusted loopback IP.
 * **Task** Isolated asynchronous tokens by job type, used constant-time validation, and excluded tokens from logs.
 * **Purge** Corrected unpublished-post and empty-archive purges, preserved encoded paths, and prevented site cron from flushing shared backends.

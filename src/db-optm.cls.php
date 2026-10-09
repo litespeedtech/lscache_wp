@@ -29,9 +29,9 @@ class DB_Optm extends Root {
 	 */
 	private static $types = [
 		'revision',
-		'orphaned_post_meta',
 		'auto_draft',
 		'trash_post',
+		'orphaned_post_meta',
 		'spam_comment',
 		'trash_comment',
 		'trackback-pingback',
@@ -43,7 +43,8 @@ class DB_Optm extends Root {
 	/**
 	 * Convert tables to InnoDB type identifier.
 	 */
-	const TYPE_CONV_TB = 'conv_innodb';
+	const TYPE_CONV_TB      = 'conv_innodb';
+	const DELETE_BATCH_SIZE = 500;
 
 	/**
 	 * Show if there are more sites in hidden.
@@ -122,11 +123,11 @@ class DB_Optm extends Root {
 				return (int) $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->postmeta` a LEFT JOIN `$wpdb->posts` b ON b.ID=a.post_id WHERE b.ID IS NULL" );
 
 			case 'auto_draft':
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-				return (int) $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_status = 'auto-draft'" );
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				return (int) $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_status = 'auto-draft' AND post_date < DATE_SUB( NOW(), INTERVAL 7 DAY )" );
 
 			case 'trash_post':
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				return (int) $wpdb->get_var( "SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_status = 'trash'" );
 
 			case 'spam_comment':
@@ -161,13 +162,13 @@ class DB_Optm extends Root {
 				);
 
 			case 'optimize_tables':
-				$like = $wpdb->esc_like( $wpdb->prefix ) . '%';
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$scope = $this->_table_scope();
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				return (int) $wpdb->get_var(
 					$wpdb->prepare(
-						"SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_SCHEMA = %s AND TABLE_NAME LIKE %s AND ENGINE <> 'InnoDB' AND DATA_FREE > 0",
-						DB_NAME,
-						$like
+						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- The scope is prepared in _table_scope().
+						"SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_SCHEMA = %s AND $scope AND ENGINE <> 'InnoDB' AND DATA_FREE > 0",
+						DB_NAME
 					)
 				);
 		}
@@ -182,12 +183,14 @@ class DB_Optm extends Root {
 	 * @since 3.0 changed to private
 	 * @access private
 	 * @param string $type Cleanup type.
-	 * @return string Status message.
+	 * @return string|false Status message or query failure.
 	 */
 	private function _db_clean( $type ) {
 		if ( 'all' === $type ) {
 			foreach ( self::$types as $v ) {
-				$this->_db_clean( $v );
+				if ( false === $this->_db_clean( $v ) ) {
+					return false;
+				}
 			}
 			return __( 'Clean all successfully.', 'litespeed-cache' );
 		}
@@ -196,19 +199,10 @@ class DB_Optm extends Root {
 
 		switch ( $type ) {
 			case 'revision':
-            $rev_max = (int) $this->conf( Base::O_DB_OPTM_REVISIONS_MAX );
-            $rev_age = (int) $this->conf( Base::O_DB_OPTM_REVISIONS_AGE );
+				$rev_max = (int) $this->conf( Base::O_DB_OPTM_REVISIONS_MAX );
+				$rev_age = (int) $this->conf( Base::O_DB_OPTM_REVISIONS_AGE );
 
-            $postmeta = "`$wpdb->postmeta`";
-            $posts    = "`$wpdb->posts`";
-
-            $sql_postmeta_join = function ( $table ) use ( $postmeta, $posts ) {
-					return "
-						$postmeta
-						CROSS JOIN $table
-						ON $posts.ID = $postmeta.post_id
-					";
-				};
+				$posts = "`$wpdb->posts`";
 
 				$sql_where = "WHERE $posts.post_type = 'revision'";
 
@@ -216,12 +210,10 @@ class DB_Optm extends Root {
 				$sql_add = $rev_age ? $wpdb->prepare( ' AND ' . $posts . '.post_modified < DATE_SUB( NOW(), INTERVAL %d DAY )', $rev_age ) : '';
 
 				if ( ! $rev_max ) {
-					$sql_where    = "$sql_where $sql_add";
-					$sql_postmeta = $sql_postmeta_join( $posts );
-					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					$wpdb->query( "DELETE $postmeta FROM $sql_postmeta $sql_where" );
-					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					$wpdb->query( "DELETE FROM $posts $sql_where" );
+					$sql_where = "$sql_where $sql_add";
+					if ( ! $this->_delete_posts( $sql_where ) ) {
+						return false;
+					}
 				} else {
 					// Has count limit.
 					$sql = "
@@ -234,53 +226,60 @@ class DB_Optm extends Root {
 						HAVING COUNT(*) > %d
 					";
 					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
-					$res          = (array) $wpdb->get_results( $wpdb->prepare( $sql, $rev_max, $rev_max ) );
-					$sql_where    = "
+					$res = (array) $wpdb->get_results( $wpdb->prepare( $sql, $rev_max, $rev_max ) );
+					if ( ! empty( $wpdb->last_error ) ) {
+						return false;
+					}
+					$sql_where = "
 						$sql_where
+						$sql_add
 						AND post_parent = %d
-						ORDER BY ID
-						LIMIT %d
 					";
-					$sql_postmeta = $sql_postmeta_join( "(SELECT ID FROM $posts $sql_where) AS $posts" );
 					foreach ( $res as $v ) {
-						$args = [ (int) $v->post_parent, (int) $v->del_max ];
-						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-						$wpdb->query( $wpdb->prepare( "DELETE $postmeta FROM $sql_postmeta", $args ) );
-						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-						$wpdb->query( $wpdb->prepare( "DELETE FROM $posts $sql_where", $args ) );
+						$args = [ (int) $v->post_parent ];
+						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+						if ( ! $this->_delete_posts( $wpdb->prepare( $sql_where, $args ), (int) $v->del_max ) ) {
+							return false;
+						}
 					}
 				}
 
 				return __( 'Clean post revisions successfully.', 'litespeed-cache' );
 
 			case 'orphaned_post_meta':
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-			$wpdb->query( "DELETE a FROM `$wpdb->postmeta` a LEFT JOIN `$wpdb->posts` b ON b.ID=a.post_id WHERE b.ID IS NULL" );
+				if ( ! $this->_delete_orphaned_post_meta() ) {
+					return false;
+				}
 				return __( 'Clean orphaned post meta successfully.', 'litespeed-cache' );
 
 			case 'auto_draft':
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-			$wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_status = 'auto-draft'" );
+				if ( ! $this->_delete_posts( "WHERE post_status = 'auto-draft' AND post_date < DATE_SUB( NOW(), INTERVAL 7 DAY )" ) ) {
+					return false;
+				}
 				return __( 'Clean auto drafts successfully.', 'litespeed-cache' );
 
 			case 'trash_post':
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-            $wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_status = 'trash'" );
+				if ( ! $this->_delete_posts( "WHERE post_status = 'trash'" ) ) {
+					return false;
+				}
 				return __( 'Clean trashed posts and pages successfully.', 'litespeed-cache' );
 
 			case 'spam_comment':
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-			$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'spam'" );
+				if ( ! $this->_delete_comments( "comment_approved = 'spam'" ) ) {
+					return false;
+				}
 				return __( 'Clean spam comments successfully.', 'litespeed-cache' );
 
 			case 'trash_comment':
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-			$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'trash'" );
+				if ( ! $this->_delete_comments( "comment_approved = 'trash'" ) ) {
+					return false;
+				}
 				return __( 'Clean trashed comments successfully.', 'litespeed-cache' );
 
 			case 'trackback-pingback':
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-			$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_type = 'trackback' OR comment_type = 'pingback'" );
+				if ( ! $this->_delete_comments( "comment_type = 'trackback' OR comment_type = 'pingback'" ) ) {
+					return false;
+				}
 				return __( 'Clean trackbacks and pingbacks successfully.', 'litespeed-cache' );
 
 			case 'expired_transient':
@@ -291,54 +290,86 @@ class DB_Optm extends Root {
 					"SELECT option_name FROM `$wpdb->options` WHERE option_name LIKE %s AND option_value < %d",
 					$wpdb->esc_like( '_transient_timeout_' ) . '%',
 					time()
-				)
-			);
-			foreach ( $transients as $transient ) {
-				$keys_to_delete[] = $transient->option_name;
-				$keys_to_delete[] = str_replace( '_transient_timeout_', '_transient_', $transient->option_name );
-			}
-
-			if ( ! empty( $keys_to_delete ) ) {
-				$placeholders = implode( ',', array_fill( 0, count( $keys_to_delete ), '%s' )  );
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-				$wpdb->query(
-					$wpdb->prepare(
-						// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-						"DELETE FROM `$wpdb->options` WHERE option_name IN ( $placeholders )",
-						$keys_to_delete
 					)
 				);
-			}
+			foreach ( $transients as $transient ) {
+					$keys_to_delete[] = $transient->option_name;
+					$keys_to_delete[] = str_replace( '_transient_timeout_', '_transient_', $transient->option_name );
+				}
+				if ( ! empty( $wpdb->last_error ) ) {
+					return false;
+				}
+
+				if ( ! empty( $keys_to_delete ) ) {
+					$placeholders = implode( ',', array_fill( 0, count( $keys_to_delete ), '%s' )  );
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+					$deleted = $wpdb->query(
+						$wpdb->prepare(
+							// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+							"DELETE FROM `$wpdb->options` WHERE option_name IN ( $placeholders )",
+							$keys_to_delete
+						)
+					);
+					if ( false === $deleted ) {
+						return false;
+					}
+				}
 				return __( 'Clean expired transients successfully.', 'litespeed-cache' );
 
 			case 'all_transients':
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-			$wpdb->query(
-				$wpdb->prepare(
-					"DELETE FROM `$wpdb->options` WHERE option_name LIKE %s",
-					$wpdb->esc_like( '_transient_' ) . '%'
-				)
-			);
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$deleted = $wpdb->query(
+					$wpdb->prepare(
+						"DELETE FROM `$wpdb->options` WHERE option_name LIKE %s",
+						$wpdb->esc_like( '_transient_' ) . '%'
+					)
+				);
+				if ( false === $deleted ) {
+					return false;
+				}
 				return __( 'Clean all transients successfully.', 'litespeed-cache' );
 
 			case 'optimize_tables':
-			$like = $wpdb->esc_like( $wpdb->prefix ) . '%';
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-			$result = (array) $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT table_name, DATA_FREE FROM information_schema.tables WHERE TABLE_SCHEMA = %s AND TABLE_NAME LIKE %s AND ENGINE <> 'InnoDB' AND DATA_FREE > 0",
-					DB_NAME,
-					$like
-				)
-			);
-			if ( $result ) {
-				foreach ( $result as $row ) {
-					$table = str_replace( '`', '``', $row->table_name );
-					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					$wpdb->query( "OPTIMIZE TABLE `$table`" );
+				$scope   = $this->_table_scope();
+				$skipped = false;
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$result = (array) $wpdb->get_results(
+					$wpdb->prepare(
+						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- The scope is prepared in _table_scope().
+						"SELECT table_name, DATA_FREE FROM information_schema.tables WHERE TABLE_SCHEMA = %s AND $scope AND ENGINE <> 'InnoDB' AND DATA_FREE > 0",
+						DB_NAME
+					)
+				);
+				if ( ! empty( $wpdb->last_error ) ) {
+					return false;
 				}
-			}
-				return __( 'Optimized all tables.', 'litespeed-cache' );
+				if ( $result ) {
+					foreach ( $result as $row ) {
+						$table = str_replace( '`', '``', $row->table_name );
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						$statuses = $wpdb->get_results( "OPTIMIZE TABLE `$table`" );
+						if ( ! empty( $wpdb->last_error ) || ! $statuses ) {
+							return false;
+						}
+						$completed = false;
+						$has_note  = false;
+						foreach ( $statuses as $status ) {
+							$status = (array) $status;
+							if ( isset( $status['Msg_type'] ) && 'error' === $status['Msg_type'] ) {
+								return false;
+							}
+							$completed = $completed || ( isset( $status['Msg_type'] ) && 'status' === $status['Msg_type'] );
+							$has_note  = $has_note || ( isset( $status['Msg_type'] ) && 'note' === $status['Msg_type'] );
+						}
+						if ( ! $completed ) {
+							if ( ! $has_note ) {
+								return false;
+							}
+							$skipped = true;
+						}
+					}
+				}
+				return $skipped ? __( 'Optimized supported tables. Unsupported tables were skipped.', 'litespeed-cache' ) : __( 'Optimized all tables.', 'litespeed-cache' );
 		}
 	}
 
@@ -352,18 +383,157 @@ class DB_Optm extends Root {
 	public function list_myisam() {
 		global $wpdb;
 
-		$like = $wpdb->esc_like( $wpdb->prefix ) . '%';
+		$scope = $this->_table_scope();
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		return (array) $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT TABLE_NAME as table_name, ENGINE as engine
 				 FROM information_schema.tables
-				 WHERE TABLE_SCHEMA = %s AND ENGINE = 'myisam' AND TABLE_NAME LIKE %s",
-				DB_NAME,
-				$like
+				 WHERE TABLE_SCHEMA = %s AND ENGINE = 'myisam' AND $scope", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Prepared scope.
+				DB_NAME
 			)
 		);
+	}
+
+	/**
+	 * Select this site's tables without treating numeric subsite prefixes as main-site tables.
+	 *
+	 * @return string Prepared SQL condition.
+	 */
+	private function _table_scope() {
+		global $wpdb;
+		$scope = $wpdb->prepare( 'TABLE_NAME LIKE %s', $wpdb->esc_like( $wpdb->prefix ) . '%' );
+		if ( is_multisite() && $wpdb->prefix === $wpdb->base_prefix ) {
+			$subsites = [];
+			foreach ( get_sites( [ 'fields' => 'ids', 'number' => 0 ] ) as $blog_id ) {
+				if ( $wpdb->get_blog_prefix( $blog_id ) !== $wpdb->prefix ) {
+					$subsites[] = (int) $blog_id;
+				}
+			}
+			if ( $subsites ) {
+				$scope .= $wpdb->prepare( ' AND TABLE_NAME NOT REGEXP %s', '^' . $wpdb->base_prefix . '(' . implode( '|', $subsites ) . ')_' );
+			}
+		}
+		return $scope;
+	}
+
+	/**
+	 * Delete orphaned metadata and invalidate its cache in bounded batches.
+	 *
+	 * @return bool Whether all deletions succeeded.
+	 */
+	private function _delete_orphaned_post_meta() {
+		global $wpdb;
+		// Include zero-parent metadata, which is also orphaned in WordPress's unsigned post ID column.
+		$last_id = -1;
+		do {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT a.post_id FROM `$wpdb->postmeta` a LEFT JOIN `$wpdb->posts` b ON b.ID=a.post_id WHERE b.ID IS NULL AND a.post_id > %d ORDER BY a.post_id LIMIT %d", $last_id, self::DELETE_BATCH_SIZE ) );
+			if ( $wpdb->last_error ) {
+				return false;
+			}
+			if ( ! $ids ) {
+				return true;
+			}
+			$next_id = (int) end( $ids );
+			if ( $next_id <= $last_id ) {
+				return false;
+			}
+			$list = implode( ',', array_map( 'intval', $ids ) );
+			// Recheck that the post is still absent, before deleting this batch's metadata.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$deleted = $wpdb->query( "DELETE a FROM `$wpdb->postmeta` a LEFT JOIN `$wpdb->posts` b ON b.ID=a.post_id WHERE b.ID IS NULL AND a.post_id IN ($list)" );
+			foreach ( $ids as $id ) {
+				wp_cache_delete( (int) $id, 'post_meta' );
+			}
+			if ( false === $deleted ) {
+				return false;
+			}
+			$last_id = $next_id;
+			$count   = count( $ids );
+		} while ( self::DELETE_BATCH_SIZE === $count );
+		return true;
+	}
+
+	/**
+	 * Delete posts in bounded batches and invalidate their original snapshots.
+	 *
+	 * @param string $where Internal SQL predicate.
+	 * @param int    $max_rows Maximum rows, or zero for all matches.
+	 * @return bool
+	 */
+	private function _delete_posts( $where, $max_rows = 0 ) {
+		global $wpdb;
+		$last_id = 0;
+		$count   = 0;
+		while ( ! $max_rows || $count < $max_rows ) {
+			$limit = $max_rows ? min( self::DELETE_BATCH_SIZE, $max_rows - $count ) : self::DELETE_BATCH_SIZE;
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Internal prepared conditions.
+			$posts = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_type FROM `$wpdb->posts` $where AND ID > %d ORDER BY ID LIMIT %d", $last_id, $limit ) );
+			if ( ! empty( $wpdb->last_error ) ) {
+				return false;
+			}
+			if ( ! $posts ) {
+				return true;
+			}
+			$next_id = (int) end( $posts )->ID;
+			if ( $next_id <= $last_id ) {
+				return false;
+			}
+			$ids = implode( ',', array_map( 'intval', wp_list_pluck( $posts, 'ID' ) ) );
+			// Recheck the original condition while deleting both tables, so an edited draft cannot lose metadata.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Integer IDs and internal conditions.
+			$deleted = $wpdb->query( "DELETE `$wpdb->posts`, `$wpdb->postmeta` FROM `$wpdb->posts` LEFT JOIN `$wpdb->postmeta` ON `$wpdb->postmeta`.post_id = `$wpdb->posts`.ID $where AND `$wpdb->posts`.ID IN ($ids)" );
+			foreach ( $posts as $post ) {
+				clean_post_cache( $post );
+			}
+			if ( false === $deleted ) {
+				return false;
+			}
+			$last_id = $next_id;
+			$count  += count( $posts );
+			if ( count( $posts ) < $limit ) {
+				return true;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Delete comments in bounded pages and invalidate persistent comment/query caches.
+	 *
+	 * @param string $condition Internal SQL predicate.
+	 * @return bool Whether all selected deletes succeeded.
+	 */
+	private function _delete_comments( $condition ) {
+		global $wpdb;
+		$last_id = 0;
+		do {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Internal predicate and bounded cursor.
+			$ids = $wpdb->get_col( $wpdb->prepare( "SELECT comment_ID FROM `$wpdb->comments` WHERE ($condition) AND comment_ID > %d ORDER BY comment_ID LIMIT %d", $last_id, self::DELETE_BATCH_SIZE ) );
+			if ( ! empty( $wpdb->last_error ) ) {
+				return false;
+			}
+			if ( ! $ids ) {
+				return true;
+			}
+			$next_id = (int) end( $ids );
+			if ( $next_id <= $last_id ) {
+				return false;
+			}
+			$id_list = implode( ',', array_map( 'intval', $ids ) );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Recheck the internal predicate for selected integer IDs.
+			$deleted = $wpdb->query( "DELETE FROM `$wpdb->comments` WHERE ($condition) AND comment_ID IN ($id_list)" );
+			// clean_comment_cache() also advances WordPress's comments last_changed value.
+			clean_comment_cache( $ids );
+			if ( false === $deleted ) {
+				return false;
+			}
+			$last_id = $next_id;
+			$count   = count( $ids );
+		} while ( self::DELETE_BATCH_SIZE === $count );
+		return true;
 	}
 
 	/**
@@ -400,7 +570,10 @@ class DB_Optm extends Root {
 		$tb = str_replace( '`', '``', $tb );
 		// Identifiers cannot use placeholders on the supported WordPress 6.0 minimum, so escape backticks before quoting them.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.SchemaChange
-		$wpdb->query( 'ALTER TABLE `' . $db . '`.`' . $tb . '` ENGINE = InnoDB' );
+		if ( false === $wpdb->query( 'ALTER TABLE `' . $db . '`.`' . $tb . '` ENGINE = InnoDB' ) ) {
+			Admin_Display::error( __( 'Could not convert the table to InnoDB.', 'litespeed-cache' ) );
+			return;
+		}
 
 		Debug2::debug( "[DB] Converted $tb to InnoDB" );
 
@@ -430,6 +603,10 @@ class DB_Optm extends Root {
 				$autoload_values
 			)
 		);
+		if ( ! is_object( $summary ) ) {
+			Admin_Display::error( __( 'Could not read the autoload summary.', 'litespeed-cache' ) );
+			return (object) [ 'autoload_size' => 0, 'autload_entries' => 0, 'autoload_toplist' => [] ];
+		}
 
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$summary->autoload_toplist = $wpdb->get_results(
@@ -469,11 +646,18 @@ class DB_Optm extends Root {
 							switch_to_blog( $blog_id );
 							$msg = $this->_db_clean( $type );
 							restore_current_blog();
+							if ( false === $msg ) {
+								break;
+							}
 						}
 					} else {
 						$msg = $this->_db_clean( $type );
 					}
-					Admin_Display::success( $msg );
+					if ( false === $msg ) {
+						Admin_Display::error( __( 'Database cleanup failed.', 'litespeed-cache' ) );
+					} else {
+						Admin_Display::success( $msg );
+					}
 				}
 				break;
 		}
