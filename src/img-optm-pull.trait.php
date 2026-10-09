@@ -87,6 +87,11 @@ trait Img_Optm_Pull {
 		}
 
 		$src = ltrim( wp_normalize_path( $row->src ), '/' );
+
+		while ( 0 === strpos( $src, './' ) ) {
+			$src = substr( $src, 2 );
+		}
+		
 		if ( '' === $src || preg_match( '#(^|/)\.{1,2}(/|$)#', $src ) ) {
 			return false;
 		}
