@@ -192,19 +192,16 @@ class Task extends Root {
 	 * @return void
 	 */
 	public static function async_litespeed_handler() {
-		$type = Router::verify_type();
-		if ( ! in_array( $type, [ 'crawler', 'crawler_force', 'imgoptm', 'imgoptm_force' ], true ) ) {
-			return;
-		}
+		$type      = Router::verify_type();
 		$key       = 'async_call-hash.' . $type;
 		$hash_data = self::get_option( $key, [] );
 		if ( ! $hash_data || ! is_array( $hash_data ) || empty( $hash_data['hash'] ) || empty( $hash_data['ts'] ) ) {
-			self::debug( 'async_litespeed_handler no hash data' );
+			self::debug( 'async_litespeed_handler no hash data', $hash_data );
 			return;
 		}
 
 		$nonce = isset( $_GET['nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['nonce'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( 120 < time() - (int) $hash_data['ts'] || '' === $nonce || ! is_string( $hash_data['hash'] ) || ! hash_equals( $hash_data['hash'], $nonce ) ) {
+		if ( 120 < time() - (int) $hash_data['ts'] || '' === $nonce || ! hash_equals( $hash_data['hash'], $nonce ) ) {
 			self::debug( 'async_litespeed_handler nonce mismatch' );
 			return;
 		}
@@ -242,9 +239,6 @@ class Task extends Root {
 	 * @return void
 	 */
 	public static function async_call( $type ) {
-		if ( ! in_array( $type, [ 'crawler', 'crawler_force', 'imgoptm', 'imgoptm_force' ], true ) ) {
-			return;
-		}
 		$hash = Str::rrand( 32 );
 		self::update_option(
 			'async_call-hash.' . $type,

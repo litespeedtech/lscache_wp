@@ -157,7 +157,7 @@ class WP_Object_Cache {
 		 */
 		if ( ! defined( 'LSOC_PREFIX' ) ) {
 			global $table_prefix;
-			$identity = ( defined( 'WP_CACHE_KEY_SALT' ) ? WP_CACHE_KEY_SALT : '' ) . "\0" . ( defined( 'DB_NAME' ) ? DB_NAME : '' ) . "\0" . (string) $table_prefix;
+			$identity = ( defined( 'WP_CACHE_KEY_SALT' ) ? WP_CACHE_KEY_SALT : '' ) . "\0" . DB_NAME . "\0" . (string) $table_prefix;
 			define( 'LSOC_PREFIX', hash( 'sha256', $identity ) );
 		}
 	}
@@ -411,30 +411,21 @@ class WP_Object_Cache {
 			$group = 'default';
 		}
 
-		$id             = $this->_key( $key, $group );
-		$persistent     = ! $this->_object_cache->is_non_persistent( $group );
-		$backend_usable = $persistent && ( 'set' === $method || $this->_object_cache->usable() );
-		if ( ! $backend_usable && ( ( 'add' === $method && array_key_exists( $id, $this->_cache ) ) || ( 'replace' === $method && ! array_key_exists( $id, $this->_cache ) ) ) ) {
+		$id         = $this->_key( $key, $group );
+		$persistent = ! $this->_object_cache->is_non_persistent( $group );
+		// Conditional writes are atomic on a connected backend; otherwise they test the request cache.
+		$backend = $persistent && 'set' !== $method && $this->_object_cache->usable();
+		if ( ! $backend && ( ( 'add' === $method && array_key_exists( $id, $this->_cache ) ) || ( 'replace' === $method && ! array_key_exists( $id, $this->_cache ) ) ) ) {
 			return false;
 		}
 
 		if ( is_object( $data ) ) {
 			$data = clone $data;
 		}
-		if ( $backend_usable && 'set' !== $method ) {
-			// Serialize the same snapshot as set(), so custom clone hooks cannot diverge the two caches.
-			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- Preserve the existing drop-in payload format.
-			if ( ! $this->_object_cache->$method( $id, serialize( [ 'data' => $data ] ), $expire ) ) {
-				// A connection can fail after the usability check; only a genuine backend outage permits local fallback.
-				if ( $this->_object_cache->usable() ) {
-					unset( $this->_cache_404[ $id ] );
-					return false;
-				}
-				$backend_usable = false;
-				if ( ( 'add' === $method && array_key_exists( $id, $this->_cache ) ) || ( 'replace' === $method && ! array_key_exists( $id, $this->_cache ) ) ) {
-					return false;
-				}
-			}
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- Preserve the existing drop-in payload format.
+		if ( $backend && ! $this->_object_cache->$method( $id, serialize( [ 'data' => $data ] ), $expire ) ) {
+			unset( $this->_cache_404[ $id ] );
+			return false;
 		}
 
 		$this->_cache[ $id ] = $data;
@@ -444,8 +435,7 @@ class WP_Object_Cache {
 		}
 
 		if ( $persistent ) {
-			if ( 'set' === $method || ! $backend_usable ) {
-				// Ordinary sets write through; an unavailable backend keeps the runtime conditional fallback.
+			if ( ! $backend ) {
 				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
 				$this->_object_cache->set( $id, serialize( [ 'data' => $data ] ), $expire );
 			}

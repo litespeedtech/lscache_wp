@@ -78,7 +78,7 @@ class Optimizer extends Root {
 	 * @since  1.9
 	 * @access public
 	 */
-	public function serve( $request_url, $file_type, $minify, $src_list ) {
+	public function serve( $request_url, $file_type, $minify, $src_list, $is_delayed = false ) {
 		// Try Unique CSS
 		if ($file_type == 'css') {
 			$content = false;
@@ -143,17 +143,17 @@ class Optimizer extends Root {
 				// Load file
 				$content = $this->load_file($src_info['src'], $file_type);
 
-				if (!$content) {
+				if ( false === $content ) {
+					wp_delete_file( $tmp_static_file );
+					return false;
+				}
+				if ( '' === $content ) {
 					continue;
 				}
 
 				$is_min = $this->is_min($src_info['src']);
 			}
-			$content = $this->optm_snippet($content, $file_type, $minify && !$is_min, $src_info['src'], !empty($src_info['media']) ? $src_info['media'] : false);
-			if (false === $content) {
-				wp_delete_file($tmp_static_file);
-				return false;
-			}
+			$content = $this->optm_snippet($content, $file_type, $minify && !$is_min, $src_info['src'], !empty($src_info['media']) ? $src_info['media'] : false, $is_delayed);
 			// Write to file. Bail out on write failure (disk full / permission / etc.) so a partial tmp does not get hashed and persisted.
 			if (File::save($tmp_static_file, $content, true, true) === false) {
 				Debug2::debug('[Optmer] File::save append failed, aborting: ' . $tmp_static_file);
@@ -240,26 +240,13 @@ class Optimizer extends Root {
 	}
 
 	/**
-	 * Whether an HTML media attribute can be embedded in a generated CSS rule.
-	 *
-	 * @param string $media Media query.
-	 * @return bool
-	 */
-	public static function is_media_safe( $media ) {
-		return is_string($media) && !preg_match('#[{};]|/\*|\*/#', $media);
-	}
-
-	/**
 	 * Load a single file
 	 *
 	 * @since  4.0
 	 */
-	public function optm_snippet( $content, $file_type, $minify, $src, $media = false ) {
+	public function optm_snippet( $content, $file_type, $minify, $src, $media = false, $is_delayed = false ) {
 		// CSS related features
 		if ($file_type == 'css') {
-			if ($media && !self::is_media_safe($media)) {
-				return false;
-			}
 			// Font optimize
 			$content = $this->optm_font_face( $content );
 
@@ -286,6 +273,9 @@ class Optimizer extends Root {
 			}
 
 			$content .= "\n;";
+			if ( $is_delayed ) {
+				$content = str_replace( 'DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $content );
+			}
 		}
 
 		// Add filter
@@ -343,7 +333,7 @@ class Optimizer extends Root {
 			$this_url = substr($src, 0, 2) == '//' ? set_url_scheme($src) : $src;
 			$con      = $this->load_cached_file($this_url, $file_type);
 
-			if ($file_type == 'css') {
+			if ( false !== $con && $file_type == 'css' ) {
 				$dirname = dirname($this_url) . '/';
 
 				$con = Lib\UriRewriter::prepend($con, $dirname);
@@ -352,7 +342,7 @@ class Optimizer extends Root {
 			Debug2::debug2('[CSS] Load local [' . $file_type . '] ' . $real_file[0]);
 			$con = File::read($real_file[0]);
 
-			if ($file_type == 'css') {
+			if ( false !== $con && $file_type == 'css' ) {
 				$dirname = dirname($real_file[0]);
 
 				$con = Lib\UriRewriter::rewrite($con, $dirname);
@@ -370,7 +360,12 @@ class Optimizer extends Root {
 	 */
 	public static function minify_css( $data ) {
 		try {
-			$obj = new Lib\CSS_JS_MIN\Minify\CSS();
+			// The caller supplies content, never a path for the minifier to open.
+			$obj = new class() extends Lib\CSS_JS_MIN\Minify\CSS {
+				protected function canImportFile( $path ) {
+					return false;
+				}
+			};
 			$obj->add($data);
 
 			return $obj->minify();
@@ -400,7 +395,12 @@ class Optimizer extends Root {
 		}
 
 		try {
-			$obj = new Lib\CSS_JS_MIN\Minify\JS();
+			// The caller supplies content, never a path for the minifier to open.
+			$obj = new class() extends Lib\CSS_JS_MIN\Minify\JS {
+				protected function canImportFile( $path ) {
+					return false;
+				}
+			};
 			$obj->add($data);
 
 			return $obj->minify();

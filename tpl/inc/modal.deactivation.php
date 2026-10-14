@@ -53,10 +53,10 @@ $reasons = [
                 <p><?php esc_attr_e('Why are you deactivating the plugin?', 'litespeed-cache'); ?></p>
                 <div class="deactivate-reason-wrapper">
                     <?php foreach ($reasons as $reason) : ?>
-                    <label for="litespeed-deactivate-reason-<?php esc_attr_e( $reason['id'] ); ?>">
-                        <input type="radio" id="litespeed-deactivate-reason-<?php esc_attr_e( $reason['id'] ); ?>" value="<?php esc_attr_e( $reason['value'] ); ?>"
+                    <label for="litespeed-deactivate-reason-<?php echo esc_attr( $reason['id'] ); ?>">
+                        <input type="radio" id="litespeed-deactivate-reason-<?php echo esc_attr( $reason['id'] ); ?>" value="<?php echo esc_attr( $reason['value'] ); ?>"
                             <?php echo ! empty( $reason['selected'] ) ? ' checked="checked"' : ''; ?> name="litespeed-reason" />
-                        <?php esc_html_e( $reason['text'] ); ?>
+                        <?php echo esc_html( $reason['text'] ); ?>
                     </label>
                     <?php endforeach; ?>
                 </div>
@@ -90,7 +90,7 @@ $reasons = [
     (function ($) {
     'use strict';
         jQuery(document).ready(function () {
-            var lscId = '<?php echo home_url(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>';
+            var lscId = <?php echo wp_json_encode( home_url(), Str::JSON_HTML_FLAGS ); ?>;
             var modalesc_attr_element = $('#litespeed-deactivation');
             var deactivateesc_attr_element = $('#deactivate-litespeed-cache');
 

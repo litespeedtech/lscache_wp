@@ -110,32 +110,36 @@ class Guest {
 		header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
 		header( 'Pragma: no-cache' );
 
+		// This endpoint does not bootstrap WordPress; a login-cookie hint must never receive anonymous vary.
+		foreach ( array_keys( $_COOKIE ) as $cookie_name ) {
+			if ( 0 === strpos( $cookie_name, 'wordpress_logged_in_' ) || ( ! empty( $this->_conf['logged_in_cookie'] ) && $cookie_name === $this->_conf['logged_in_cookie'] ) ) {
+				echo '[]';
+				exit;
+			}
+		}
+
 		if ( $this->always_guest() ) {
-			header( 'X-LiteSpeed-Guest: always-guest' );
 			echo '[]';
 			exit;
 		}
 
 		// If contains vary already, don't reload to avoid infinite loop when parent page having browser cache
 		if ( $this->_conf && self::has_vary() ) {
-			header( 'X-LiteSpeed-Guest: already-varied' );
 			echo '[]';
 			exit;
 		}
 
 		// Send vary cookie, always hashed; without a site hash no cookie can be issued.
 		if ( ! is_array( $this->_conf ) || empty( $this->_conf[ self::HASH ] ) ) {
-			header( 'X-LiteSpeed-Guest: missing-configuration' );
 			echo '[]';
 			exit;
 		}
-		$plain = 'guest_mode:1';
-		$key   = hash_hmac( 'sha256', 'lscwp:vary:v1', (string) $this->_conf[ self::HASH ], true );
-		$vary  = hash_hmac( 'sha256', strlen( $plain ) . ':' . $plain, $key );
+		$vary = md5( $this->_conf[ self::HASH ] . 'guest_mode:1' );
 
 		$expire = time() + 2 * 86400;
 		$is_ssl = ! empty( $this->_conf[ self::O_UTIL_NO_HTTPS_VARY ] ) ? false : $this->is_ssl();
-		setcookie( self::$_vary_name, $vary, $expire, '/', false, $is_ssl, true );
+		$scope  = isset( $this->_conf['guest_cookie'] ) ? $this->_conf['guest_cookie'] : [ 'path' => '/', 'domain' => '' ];
+		setcookie( self::$_vary_name, $vary, $expire, $scope['path'], $scope['domain'], $is_ssl, true );
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode -- No WP available
 		echo json_encode( [ 'reload' => 'yes' ] );

@@ -69,6 +69,7 @@ trait Img_Optm_Manage {
 	 *
 	 * @since 2.1.2
 	 * @access public
+	 * @return bool Whether the unfinished rows were deleted.
 	 */
 	public function clean() {
 		global $wpdb;
@@ -79,19 +80,23 @@ trait Img_Optm_Manage {
 			$q = "SELECT MIN(post_id) FROM `$this->_table_img_optming`";
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 			$min_pid = $wpdb->get_var( $q );
-			if ( null !== $min_pid && false !== $min_pid && is_numeric( $min_pid ) && $this->_summary['next_post_id'] > (int) $min_pid - 1 ) {
-				$min_pid                        = (int) $min_pid - 1;
-				$this->_summary['next_post_id'] = $min_pid;
+			// An empty table returns NULL, which must not rewind the cursor.
+			if ( null !== $min_pid && $this->_summary['next_post_id'] > $min_pid - 1 ) {
+				$this->_summary['next_post_id'] = $min_pid - 1;
 				self::save_summary();
 			}
 
 			$q = "DELETE FROM `$this->_table_img_optming`";
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-			$wpdb->query( $q );
+			if ( false === $wpdb->query( $q ) ) {
+				Admin_Display::error( __( 'Could not delete unfinished image data.', 'litespeed-cache' ) );
+				return false;
+			}
 		}
 
 		$msg = __( 'Cleaned up unfinished data successfully.', 'litespeed-cache' );
 		Admin_Display::success( $msg );
+		return true;
 	}
 
 	/**
@@ -105,7 +110,9 @@ trait Img_Optm_Manage {
 		$this->_summary['next_post_id'] = 0;
 		self::save_summary();
 
-		$this->clean();
+		if ( ! $this->clean() ) {
+			return;
+		}
 
 		$msg = __( 'Reset image optimization counter successfully.', 'litespeed-cache' );
 		Admin_Display::success( $msg );
@@ -161,9 +168,8 @@ trait Img_Optm_Manage {
 
 			$this->tmp_pid  = $v->post_id;
 			$this->tmp_path = pathinfo( $meta_value['file'], PATHINFO_DIRNAME ) . '/';
-			$this->_destroy_optm_file( $meta_value, true );
-			if ( ! empty( $meta_value['sizes'] ) ) {
-				array_map( [ $this, '_destroy_optm_file' ], $meta_value['sizes'] );
+			if ( ! $this->_apply_image_files( $meta_value, '_destroy_optm_file' ) ) {
+				return;
 			}
 		}
 
@@ -231,10 +237,12 @@ trait Img_Optm_Manage {
 		// del optimized ori
 		if ( $this->__media->info( $bk_file, $this->tmp_pid ) ) {
 			self::debug( 'deleting optim ori' );
-			$this->__media->del( $short_file_path, $this->tmp_pid );
-			$this->__media->rename( $bk_file, $short_file_path, $this->tmp_pid );
+			if ( ! $this->__media->rename( $bk_file, $short_file_path, $this->tmp_pid ) ) {
+				return false;
+			}
 		}
 		$this->__media->info( $bk_optm_file, $this->tmp_pid ) && $this->__media->del( $bk_optm_file, $this->tmp_pid );
+		return true;
 	}
 
 	/**
@@ -648,12 +656,18 @@ trait Img_Optm_Manage {
 			while ( 'done' !== $offset ) {
 				Admin_Display::info( "Starting switch to $type [offset] $offset" );
 				$offset = $this->_batch_switch( $type, $offset );
+				if ( false === $offset ) {
+					return;
+				}
 			}
 		} else {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$offset = ! empty( $_GET['litespeed_i'] ) ? absint( wp_unslash( $_GET['litespeed_i'] ) ) : 0;
 
 			$new_offset = $this->_batch_switch( $type, $offset );
+			if ( false === $new_offset ) {
+				return;
+			}
 			if ( 'done' !== $new_offset ) {
 				return Router::self_redirect( Router::ACTION_IMG_OPTM, $type );
 			}
@@ -706,9 +720,8 @@ trait Img_Optm_Manage {
 
 			$this->tmp_pid  = $v->post_id;
 			$this->tmp_path = pathinfo( $meta_value['file'], PATHINFO_DIRNAME ) . '/';
-			$this->_switch_bk_file( $meta_value, true );
-			if ( ! empty( $meta_value['sizes'] ) ) {
-				array_map( [ $this, '_switch_bk_file' ], $meta_value['sizes'] );
+			if ( ! $this->_apply_image_files( $meta_value, '_switch_bk_file' ) ) {
+				return false;
 			}
 		}
 
@@ -742,24 +755,41 @@ trait Img_Optm_Manage {
 		$bk_file        = $local_filename . '.bk.' . $extension;
 		$bk_optm_file   = $local_filename . '.bk.optm.' . $extension;
 
-		// self::debug('_switch_bk_file ' . $bk_file . ' [type] ' . $this->tmp_type);
-		// switch to ori
 		if ( self::TYPE_BATCH_SWITCH_ORI === $this->tmp_type || 'orig' === $this->tmp_type ) {
-			// self::debug('switch to orig ' . $bk_file);
-			if ( ! $this->__media->info( $bk_file, $this->tmp_pid ) ) {
-				return;
-			}
-			$this->__media->rename( $local_filename . '.' . $extension, $bk_optm_file, $this->tmp_pid );
-			$this->__media->rename( $bk_file, $local_filename . '.' . $extension, $this->tmp_pid );
+			$source = $bk_file;
+			$backup = $bk_optm_file;
 		} elseif ( self::TYPE_BATCH_SWITCH_OPTM === $this->tmp_type || 'optm' === $this->tmp_type ) {
-			// switch to optm
-			// self::debug('switch to optm ' . $bk_file);
-			if ( ! $this->__media->info( $bk_optm_file, $this->tmp_pid ) ) {
-				return;
-			}
-			$this->__media->rename( $local_filename . '.' . $extension, $bk_file, $this->tmp_pid );
-			$this->__media->rename( $bk_optm_file, $local_filename . '.' . $extension, $this->tmp_pid );
+			$source = $bk_optm_file;
+			$backup = $bk_file;
+		} else {
+			return;
 		}
+		if ( ! $this->__media->info( $source, $this->tmp_pid ) ) {
+			return;
+		}
+		if ( ! $this->__media->rename( $short_file_path, $backup, $this->tmp_pid ) ) {
+			return false;
+		}
+		if ( ! $this->__media->rename( $source, $short_file_path, $this->tmp_pid ) ) {
+			// Restore the served file if publishing its replacement fails.
+			$this->__media->rename( $backup, $short_file_path, $this->tmp_pid );
+			return false;
+		}
+	}
+
+	/**
+	 * Apply an internal file operation to the main image, then all thumbnails.
+	 *
+	 * @param array  $meta_value Attachment metadata.
+	 * @param string $method     Internal operation name.
+	 * @return bool False on any failure; a failed main image skips the thumbnails.
+	 */
+	private function _apply_image_files( $meta_value, $method ) {
+		if ( false === $this->$method( $meta_value, true ) ) {
+			return false;
+		}
+		// Attempt every thumbnail even if an earlier thumbnail failed.
+		return empty( $meta_value['sizes'] ) || ! in_array( false, array_map( [ $this, $method ], $meta_value['sizes'] ), true );
 	}
 
 	/**
@@ -809,9 +839,8 @@ trait Img_Optm_Manage {
 				return;
 			}
 
-			$this->_switch_bk_file( $meta_value, true );
-			if ( ! empty( $meta_value['sizes'] ) ) {
-				array_map( [ $this, '_switch_bk_file' ], $meta_value['sizes'] );
+			if ( ! $this->_apply_image_files( $meta_value, '_switch_bk_file' ) ) {
+				return;
 			}
 		} else {
 			// webp/avif: detect direction from the main file's sidecar. Served = <file>.<fmt>, parked/disabled = <file>.optm.<fmt>
@@ -828,9 +857,8 @@ trait Img_Optm_Manage {
 				return;
 			}
 
-			$this->_switch_format_file( $meta_value, true );
-			if ( ! empty( $meta_value['sizes'] ) ) {
-				array_map( [ $this, '_switch_format_file' ], $meta_value['sizes'] );
+			if ( ! $this->_apply_image_files( $meta_value, '_switch_format_file' ) ) {
+				return;
 			}
 		}
 
@@ -857,11 +885,11 @@ trait Img_Optm_Manage {
 		if ( 'optm' === $this->tmp_type ) {
 			// enable: parked -> served
 			if ( $this->__media->info( $parked_file, $this->tmp_pid ) ) {
-				$this->__media->rename( $parked_file, $served_file, $this->tmp_pid );
+				return $this->__media->rename( $parked_file, $served_file, $this->tmp_pid );
 			}
 		} elseif ( $this->__media->info( $served_file, $this->tmp_pid ) ) {
 			// disable: served -> parked
-			$this->__media->rename( $served_file, $parked_file, $this->tmp_pid );
+			return $this->__media->rename( $served_file, $parked_file, $this->tmp_pid );
 		}
 	}
 
@@ -895,9 +923,8 @@ trait Img_Optm_Manage {
 		if ( $meta_value ) {
 			$this->tmp_pid  = $v->post_id;
 			$this->tmp_path = pathinfo( $meta_value['file'], PATHINFO_DIRNAME ) . '/';
-			$this->_destroy_optm_file( $meta_value, true );
-			if ( ! empty( $meta_value['sizes'] ) ) {
-				array_map( [ $this, '_destroy_optm_file' ], $meta_value['sizes'] );
+			if ( ! $this->_apply_image_files( $meta_value, '_destroy_optm_file' ) ) {
+				return;
 			}
 		}
 

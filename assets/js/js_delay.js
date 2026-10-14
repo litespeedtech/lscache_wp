@@ -1,16 +1,16 @@
-window.litespeed_ui_events = window.litespeed_ui_events || ['mouseover', 'click', 'keydown', 'wheel', 'touchmove', 'touchstart', 'pointerup', 'pointerdown'];
+window.litespeed_ui_events = Array.isArray(window.litespeed_ui_events) ? window.litespeed_ui_events : ['mouseover', 'click', 'keydown', 'wheel', 'touchmove', 'touchstart', 'pointerup', 'pointerdown'];
 var urlCreator = window.URL || window.webkitURL;
 
 // const litespeed_js_delay_timer = setTimeout( litespeed_load_delayed_js, 70 );
 
-litespeed_ui_events.forEach(e => {
+window.litespeed_ui_events.forEach(e => {
 	window.addEventListener(e, litespeed_load_delayed_js_force, { passive: true }); // Use passive to save GPU in interaction
 });
 
 function litespeed_load_delayed_js_force() {
 	console.log('[LiteSpeed] Start Load JS Delayed');
 	// clearTimeout( litespeed_js_delay_timer );
-	litespeed_ui_events.forEach(e => {
+	window.litespeed_ui_events.forEach(e => {
 		window.removeEventListener(e, litespeed_load_delayed_js_force, { passive: true });
 	});
 

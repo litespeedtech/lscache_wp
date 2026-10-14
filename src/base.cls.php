@@ -330,6 +330,8 @@ class Base extends Root {
 	 */
 	protected static $single_site_options = [
 		self::HASH,
+		self::O_CACHE_EXC_CAT,
+		self::O_CACHE_EXC_TAG,
 		self::O_CRAWLER,
 		self::O_CRAWLER_SITEMAP,
 		self::O_CDN,
@@ -731,6 +733,19 @@ class Base extends Root {
 			if ( ! is_array( $val ) ) {
 				$val = Utility::sanitize_lines( $val, $this->_conf_filter( $id ) );
 			}
+			if ( self::O_CDN_MAPPING === $id ) {
+				foreach ( $val as &$row ) {
+					if ( ! is_array( $row ) ) {
+						continue;
+					}
+					foreach ( [ self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS ] as $toggle ) {
+						if ( array_key_exists( $toggle, $row ) ) {
+							$row[ $toggle ] = 'false' === $row[ $toggle ] ? false : (bool) $row[ $toggle ];
+						}
+					}
+				}
+				unset( $row );
+			}
 		} elseif ( ! is_string( $default_v ) ) {
 			$val = (int) $val;
 		} else {
@@ -947,8 +962,9 @@ class Base extends Root {
 			self::O_OPTM_CCSS_SEP_URI => 'uri',
 			// self::O_OPTM_JS_DEFER_EXC    => 'uri',
 			self::O_OPTM_DNS_PREFETCH => 'domain',
+			self::O_OPTM_DNS_PRECONNECT => 'domain',
 			self::O_CDN_ORI => 'noprotocol,trailingslash', // `Original URLs`
-			// self::O_OPTM_LOCALIZE_DOMAINS    => 'noprotocol', // `Localize Resources`
+			self::O_OPTM_LOCALIZE_DOMAINS => 'urlchars',
 			// self::   => '',
 			// self::   => '',
 		];
@@ -1107,8 +1123,8 @@ class Base extends Root {
 		$css = apply_filters( 'litespeed_' . $type, $css, $queue_k );
 		// Font optimize
 		$css = $this->cls('Optimizer')->optm_font_face( $css );
-		// Sanitize: CSS must not contain HTML tags
-		$css = File::remove_zero_space( wp_strip_all_tags( $css ) );
+		// Preserve CSS syntax; style-element terminators are escaped at inline sinks.
+		$css = File::remove_zero_space( $css );
 		self::debug2( 'con: ', $css );
 
 		if ( '/*' === substr( $css, 0, 2 ) && '*/' === substr( $css, -2 ) ) {

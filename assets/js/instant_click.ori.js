@@ -1,5 +1,8 @@
 /*! instant.page v5.2.0 - (C) 2019-2024 Alexandre Dieulot - https://instant.page/license */
 
+;(function () {
+'use strict'
+
 let _chromiumMajorVersionInUserAgent = null
   , _speculationRulesType
   , _allowQueryString
@@ -444,3 +447,4 @@ function preloadUsingLinkElement(url, fetchPriority = 'auto') {
 
   document.head.appendChild(linkElement)
 }
+})()

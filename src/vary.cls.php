@@ -79,7 +79,7 @@ class Vary extends Root {
 					if ( is_multisite() ? is_network_admin() : is_admin() ) {
 						Admin_Display::show_error_cookie();
 					}
-					Control::set_nocache( '❌❌ vary cookie setting error' );
+					Control::set_nocache_hard( 'vary cookie setting error' );
 				}
 			}
 			return;
@@ -102,7 +102,7 @@ class Vary extends Root {
 		if ( is_multisite() ? is_network_admin() : is_admin() ) {
 			Admin_Display::show_error_cookie();
 		}
-		Control::set_nocache( 'vary cookie setting lost error' );
+		Control::set_nocache_hard( 'vary cookie setting lost error' );
 	}
 
 	/**
@@ -116,10 +116,6 @@ class Vary extends Root {
 
 		// Logged-in user.
 		if ( Router::is_logged_in() ) {
-			// Cookie-authenticated REST responses can contain user-specific data in any namespace.
-			if ( $this->cls( 'REST' )->is_rest() ) {
-				Control::set_nocache_hard( 'logged-in REST request' );
-			}
 			// If not ESI, check cache logged-in user setting.
 			if ( ! $this->cls( 'Router' )->esi_enabled() ) {
 				// Cache logged-in => private cache.
@@ -130,7 +126,7 @@ class Vary extends Root {
 					Control::set_private( 'logged in user' );
 				} else {
 					// No cache for logged-in user.
-					Control::set_nocache( 'logged in user' );
+					Control::set_nocache_hard( 'logged in user' );
 				}
 			} elseif ( ! is_admin() ) {
 				// ESI is on; can be public cache, but ensure cacheable is initialized.
@@ -299,7 +295,7 @@ class Vary extends Root {
 		if ( $this->conf( Base::O_CACHE_COMMENTER ) ) {
 			Control::set_private( 'existing commenter' );
 		} else {
-			Control::set_nocache( 'existing commenter' );
+			Control::set_nocache_hard( 'existing commenter' );
 		}
 
 		return $comments;
@@ -396,9 +392,12 @@ class Vary extends Root {
 			return false;
 		}
 
-		// Disable when the crawler is making the request. The User-Agent string is public and forgeable; only a role simulation that passed the hash + server IP check counts.
-		if ( Router::is_role_simulated() ) {
-			self::debug( 'can_change_vary bypassed due to validated role simulation' );
+		// Disable when crawler is making the request.
+		if (
+			! empty( $_SERVER['HTTP_USER_AGENT'] )
+			&& 0 === strpos( wp_unslash( (string) $_SERVER['HTTP_USER_AGENT'] ), Crawler::FAST_USER_AGENT ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		) {
+			self::debug( 'can_change_vary bypassed due to crawler' );
 			return false;
 		}
 
@@ -417,7 +416,7 @@ class Vary extends Root {
 	 * @since 1.6.6.1 Guard to ensure single run.
 	 *
 	 * @param int|false $uid    User ID or false.
-	 * @param int|false $expire Expiration timestamp (default: +2 days).
+	 * @param int|false $expire Timestamp, zero for a session cookie, or false for auth expiry / anonymous +2 days.
 	 * @return void
 	 */
 	private function _update_default_vary( $uid = false, $expire = false ) {
@@ -434,11 +433,12 @@ class Vary extends Root {
 
 		$vary         = $this->finalize_default_vary( $uid );
 		$current_vary = self::has_vary();
-		if ( ! $expire ) {
-			$expire = time() + 2 * DAY_IN_SECONDS;
-		}
 		// A uid handed in by the login hook is authenticated even though Router still caches the pre-login state.
 		$authenticated = $uid > 0 || Router::is_logged_in();
+		if ( false === $expire ) {
+			$auth_cookie = $authenticated ? wp_parse_auth_cookie( '', 'logged_in' ) : false;
+			$expire      = ! empty( $auth_cookie['expiration'] ) ? (int) $auth_cookie['expiration'] : time() + 2 * DAY_IN_SECONDS;
+		}
 
 		if ( 'commenter' === $current_vary ) {
 			if ( ! $authenticated ) {
@@ -453,9 +453,9 @@ class Vary extends Root {
 			return;
 		}
 
-		if ( $current_vary !== $vary ) {
+		if ( $current_vary !== $vary || $uid > 0 ) {
 			// The response cookie cannot change the cache key of the current request.
-			if ( $authenticated || $current_vary ) {
+			if ( $current_vary !== $vary && ( $authenticated || $current_vary || $vary !== $this->guest_vary() ) ) {
 				Control::set_nocache_hard( 'vary mismatch with an existing identity' );
 			}
 			if ( $is_esi ) {
@@ -523,7 +523,7 @@ class Vary extends Root {
 	 */
 	public function finalize_default_vary( $uid = false ) {
 		// Bypass vary for guests where applicable (avoid non-guest filenames for assets).
-		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && ! ( $uid > 0 || Router::is_logged_in() ) ) {
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && ! ( $uid > 0 ) ) {
 			return false;
 		}
 
@@ -541,11 +541,6 @@ class Vary extends Root {
 
 		// Get user role/group.
 		$role = Router::get_role( $uid );
-		if ( $role ) {
-			$roles = array_filter( array_map( 'trim', explode( ',', $role ) ) );
-			sort( $roles, SORT_STRING );
-			$role = implode( ',', array_unique( $roles ) );
-		}
 
 		if ( $uid > 0 ) {
 			$vary['logged-in'] = 1;
@@ -594,9 +589,12 @@ class Vary extends Root {
 
 		$res = implode( ';', $list );
 		self::debug2( 'default vary plain: ' . $res );
-		// Domain-separated HMAC prevents boundary ambiguity and keeps the role bucket unforgeable.
-		$key = hash_hmac( 'sha256', 'lscwp:vary:v1', (string) $this->conf( Base::HASH ), true );
-		return hash_hmac( 'sha256', strlen( $res ) . ':' . $res, $key );
+		// Always hashed: a plain debug value would let anyone forge another role's bucket.
+		$hash = $this->vary_hash();
+		if ( '' === $hash ) {
+			return false;
+		}
+		return md5( $hash . $res );
 	}
 
 	/**
@@ -697,7 +695,7 @@ class Vary extends Root {
 	 */
 	public function finalize() {
 		// Finalize default vary for non-guest.
-		if ( ! defined( 'LITESPEED_GUEST' ) || ! LITESPEED_GUEST || Router::is_logged_in() ) {
+		if ( ! defined( 'LITESPEED_GUEST' ) || ! LITESPEED_GUEST ) {
 			$this->_update_default_vary();
 		}
 
@@ -725,15 +723,13 @@ class Vary extends Root {
 		global $post;
 
 		$cookies = []; // No need to append default vary cookie name.
+		if ( ! empty( $_COOKIE[ 'wp-postpass_' . COOKIEHASH ] ) ) {
+			Control::set_nocache_hard( 'password-protected visitor' );
+			return false;
+		}
 
 		if ( ! empty( $post->post_password ) ) {
 			$postpass_key = 'wp-postpass_' . COOKIEHASH;
-			if ( $this->_get_cookie_val( $postpass_key ) ) {
-				self::debug( 'finalize bypassed due to password protected vary ' );
-				// If user has password cookie, do not cache & ignore existing vary cookies.
-				Control::set_nocache( 'password protected vary' );
-				return false;
-			}
 
 			$cookies[] = $values_json ? $this->_get_cookie_val( $postpass_key ) : $postpass_key;
 		}
@@ -793,7 +789,50 @@ class Vary extends Root {
 		// HTTPS bypass toggle for clients using both HTTP/HTTPS.
 		$is_ssl = $this->conf( Base::O_UTIL_NO_HTTPS_VARY ) ? false : is_ssl();
 
-		setcookie( self::$_vary_name, $val, (int) $expire, $path ? $path : COOKIEPATH, COOKIE_DOMAIN, $is_ssl, true );
+		$scope       = self::cookie_scope();
+		$cookie_path = $path ? $path : $scope['path'];
+		$legacy_path = $path ? $path : COOKIEPATH;
+		if ( is_multisite() && ( $legacy_path !== $cookie_path || (string) COOKIE_DOMAIN !== $scope['domain'] ) ) {
+			// Remove the former scope before publishing the shared cookie, so duplicate names cannot mask it.
+			setcookie( self::$_vary_name, false, 1, $legacy_path, COOKIE_DOMAIN, $is_ssl, true );
+		}
+		setcookie( self::$_vary_name, $val, (int) $expire, $cookie_path, $scope['domain'], $is_ssl, true );
 		self::debug( 'set_cookie ---> [k] ' . self::$_vary_name . ' [v] ' . ( false === $val ? 'false' : $val ) . ' [ttl] ' . ( (int) $expire - time() ) );
+	}
+
+	/**
+	 * Reuse the installation's primary hash for shared vary cookies; other features keep their site hash.
+	 *
+	 * @return string
+	 */
+	public function vary_hash() {
+		$hash = is_multisite() ? Conf::ensure_blog_hash( get_main_site_id( get_main_network_id() ) ) : (string) $this->conf( Base::HASH );
+		if ( '' === $hash ) {
+			Control::set_nocache_hard( 'missing shared vary hash' );
+			return '';
+		}
+		return $hash;
+	}
+
+	/**
+	 * Shared multisite cookies use a host-only root scope, including mapped domains.
+	 *
+	 * @return array
+	 */
+	public static function cookie_scope() {
+		return is_multisite() ? [ 'path' => '/', 'domain' => '' ] : [ 'path' => COOKIEPATH, 'domain' => (string) COOKIE_DOMAIN ];
+	}
+
+	/**
+	 * Anonymous baseline without third-party currency or identity components.
+	 *
+	 * @return string|false
+	 */
+	public function guest_vary() {
+		if ( ! $this->conf( Base::O_GUEST ) ) {
+			return false;
+		}
+		$hash = $this->vary_hash();
+		return '' === $hash ? false : md5( $hash . 'guest_mode:1' );
 	}
 }

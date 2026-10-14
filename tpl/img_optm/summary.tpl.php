@@ -26,7 +26,7 @@ $optm_summary = Img_Optm::get_summary();
 list($last_run, $is_running) = $img_optm->cron_running( false );
 $finished_percentage         = 0;
 if ( $img_count['groups_all'] ) {
-	$finished_percentage = 100 - floor( $img_count['groups_new'] * 100 / $img_count['groups_all'] );
+	$finished_percentage = 100 - (int) floor( $img_count['groups_new'] * 100 / $img_count['groups_all'] );
 }
 if ( 100 === $finished_percentage && $img_count['groups_new'] ) {
 	$finished_percentage = 99;

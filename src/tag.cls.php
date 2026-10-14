@@ -191,7 +191,7 @@ class Tag extends Root {
 	 * @return bool|string False on input error, hash otherwise.
 	 */
 	public static function get_uri_tag( $uri, $ori = false ) {
-		$no_qs = strtok($uri, '?');
+		$no_qs = rawurldecode( (string) strtok( $uri, '?' ) );
 		if (empty($no_qs)) {
 			return false;
 		}
@@ -202,8 +202,9 @@ class Tag extends Root {
 			return $slashed;
 		}
 
-		self::debug2('URI tag plain: ' . $slashed);
-		// Always hashed, so debug mode never exposes the tag namespace.
+		if (defined('LSCWP_LOG')) {
+			return self::TYPE_URL . $slashed;
+		}
 		return self::TYPE_URL . md5($slashed);
 	}
 
@@ -215,7 +216,7 @@ class Tag extends Root {
 	 * @param boolean $ori Return the original url or not
 	 */
 	public static function build_uri_tag( $ori = false ) {
-		return self::get_uri_tag(urldecode($_SERVER['REQUEST_URI']), $ori);
+		return self::get_uri_tag(wp_unslash($_SERVER['REQUEST_URI']), $ori); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- The URI is hashed, not rendered.
 	}
 
 	/**
@@ -248,22 +249,29 @@ class Tag extends Root {
 				// An Archive is a Category, Tag, Author, Date, Custom Post Type or Custom Taxonomy based pages.
 				if (is_category() || is_tag() || is_tax()) {
 					$tags[] = self::TYPE_ARCHIVE_TERM . $queried_obj_id;
-				} elseif (is_post_type_archive() && ($post_type = get_post_type())) {
-					$tags[] = self::TYPE_ARCHIVE_POSTTYPE . $post_type;
+				} elseif (is_post_type_archive()) {
+					foreach ( (array) get_query_var( 'post_type' ) as $post_type ) {
+						if ( is_string( $post_type ) && '' !== $post_type ) {
+							$tags[] = self::TYPE_ARCHIVE_POSTTYPE . $post_type;
+						}
+					}
 				} elseif (is_author()) {
 					$tags[] = self::TYPE_AUTHOR . $queried_obj_id;
 				} elseif (is_date()) {
-					global $post;
-
-					if ($post && isset($post->post_date)) {
-						$date = $post->post_date;
-						$date = strtotime($date);
-						if (is_day()) {
-							$tags[] = self::TYPE_ARCHIVE_DATE . date('Ymd', $date);
-						} elseif (is_month()) {
-							$tags[] = self::TYPE_ARCHIVE_DATE . date('Ym', $date);
-						} elseif (is_year()) {
-							$tags[] = self::TYPE_ARCHIVE_DATE . date('Y', $date);
+					$compact = (string) get_query_var( 'm' );
+					if ( $compact ) {
+						$length = is_day() ? 8 : ( is_month() ? 6 : 4 );
+						$tags[] = self::TYPE_ARCHIVE_DATE . substr( $compact, 0, $length );
+					} else {
+						$year = (int) get_query_var( 'year' );
+						if ( $year ) {
+							if (is_day()) {
+								$tags[] = self::TYPE_ARCHIVE_DATE . sprintf( '%04d%02d%02d', $year, get_query_var( 'monthnum' ), get_query_var( 'day' ) );
+							} elseif (is_month()) {
+								$tags[] = self::TYPE_ARCHIVE_DATE . sprintf( '%04d%02d', $year, get_query_var( 'monthnum' ) );
+							} elseif (is_year()) {
+								$tags[] = self::TYPE_ARCHIVE_DATE . sprintf( '%04d', $year );
+							}
 						}
 					}
 				}
@@ -326,7 +334,7 @@ class Tag extends Root {
 			self::$_tags = array_merge(self::$_tags, $type_tags);
 		}
 
-		if (defined('LITESPEED_GUEST') && LITESPEED_GUEST && !Router::is_logged_in()) {
+		if (defined('LITESPEED_GUEST') && LITESPEED_GUEST) {
 			self::$_tags[] = 'guest';
 		}
 

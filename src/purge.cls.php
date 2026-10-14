@@ -132,7 +132,7 @@ class Purge extends Base {
 			return;
 		}
 
-		$this->purge_post( $post->ID );
+		$this->_purge_post( (int) $post->ID );
 	}
 
 	/**
@@ -243,8 +243,12 @@ class Purge extends Base {
 		$this->_purge_all_lscache( true );
 		$this->_purge_all_cssjs( true );
 		$this->_purge_all_localres( true );
-		$this->_purge_all_object( true );
-		$this->purge_all_opcache( true );
+		// Shared backend flushes require explicit network authority, including during site cron.
+		$shared = ! is_multisite() || defined( 'LITESPEED_CLI' ) || ( defined( 'LSWCP_EMPTYCACHE' ) && LSWCP_EMPTYCACHE ) || ( did_action( 'plugins_loaded' ) && current_user_can( 'manage_network_options' ) );
+		if ( $shared ) {
+			$this->_purge_all_object( true );
+			$this->purge_all_opcache( true );
+		}
 
 		if ( $this->conf( self::O_CDN_CLOUDFLARE ) && $this->conf( self::O_CDN_CLOUDFLARE_CLEAR ) ) {
 			CDN\Cloudflare::purge_all( 'Purge All' );
@@ -256,8 +260,8 @@ class Purge extends Base {
 
 		if ( ! defined( 'LITESPEED_PURGE_SILENT' ) ) {
 			// Defer to `after_setup_theme` when the purge runs earlier (e.g. conf upgrade at include time), else the `__()` fires the WP 6.7+ `_load_textdomain_just_in_time` notice.
-			$notify = function () {
-				Admin_Display::success( __( 'Purged all caches successfully.', 'litespeed-cache' ) );
+			$notify = function () use ( $shared ) {
+				Admin_Display::success( $shared ? __( 'Purged all caches successfully.', 'litespeed-cache' ) : __( 'Purged site caches successfully. Shared object cache and OPcache were not purged.', 'litespeed-cache' ) );
 			};
 			if ( did_action( 'after_setup_theme' ) ) {
 				$notify();
@@ -621,7 +625,12 @@ class Purge extends Base {
 
 		do_action( 'litespeed_purged_all_object' );
 
-		$this->cls( 'Object_Cache' )->flush();
+		if ( ! $this->cls( 'Object_Cache' )->flush() ) {
+			if ( ! $silence ) {
+				Admin_Display::error( __( 'Could not purge the object cache.', 'litespeed-cache' ) );
+			}
+			return false;
+		}
 		self::debug( 'Flushed object cache' );
 
 		if ( ! $silence ) {
@@ -899,7 +908,7 @@ class Purge extends Base {
 		if ( '' === $val ) {
 			return;
 		}
-		if ( 0 === preg_match( '/^[a-zA-Z0-9-]+$/', $val ) ) {
+		if ( 0 === preg_match( '/\A(?:[a-zA-Z0-9_-]|%[a-fA-F0-9]{2})+\z/', $val ) ) {
 			self::debug( "$val cat invalid" );
 			return;
 		}
@@ -930,7 +939,7 @@ class Purge extends Base {
 		if ( '' === $val ) {
 			return;
 		}
-		if ( 0 === preg_match( '/^[a-zA-Z0-9-]+$/', $val ) ) {
+		if ( 0 === preg_match( '/\A(?:[a-zA-Z0-9_-]|%[a-fA-F0-9]{2})+\z/', $val ) ) {
 			self::debug( "$val tag invalid" );
 			return;
 		}
@@ -956,25 +965,30 @@ class Purge extends Base {
 	 * @param string $url    URL.
 	 * @param bool   $purge2 Use Purge2 header.
 	 * @param bool   $quite  If true, do not show admin notice.
-	 * @return void
+	 * @return bool Whether a valid URL tag was queued.
 	 */
 	public function purge_url( $url, $purge2 = false, $quite = false ) {
 		$val = trim( (string) $url );
 		if ( '' === $val ) {
-			return;
+			return false;
 		}
 
 		if ( false !== strpos( $val, '<' ) ) {
 			self::debug( "$val url contains <" );
-			return;
+			return false;
 		}
 
-		$val  = Utility::make_relative( $val );
+		$parts = wp_parse_url( $val );
+		if ( false === $parts ) {
+			return false;
+		}
+		// Cache URI tags contain the request path, never an origin or fragment from the caller's URL.
+		$val  = isset( $parts['path'] ) ? $parts['path'] : '/';
 		$hash = Tag::get_uri_tag( $val );
 
 		if ( false === $hash ) {
 			self::debug( "$val url invalid" );
-			return;
+			return false;
 		}
 
 		self::add( $hash, $purge2 );
@@ -984,6 +998,7 @@ class Purge extends Base {
 		}
 
 		do_action( 'litespeed_purged_link', $url );
+		return true;
 	}
 
 	/**
@@ -998,7 +1013,11 @@ class Purge extends Base {
 		}
 
 		$sel      = sanitize_text_field( wp_unslash( $_REQUEST[ Admin_Display::PURGEBYOPT_SELECT ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$list_buf = sanitize_textarea_field( wp_unslash( $_REQUEST[ Admin_Display::PURGEBYOPT_LIST ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$list_raw = $_REQUEST[ Admin_Display::PURGEBYOPT_LIST ]; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput -- Keep encoded paths intact; typed handlers validate them before use.
+		if ( ! is_string( $list_raw ) ) {
+			return;
+		}
+		$list_buf = wp_unslash( $list_raw );
 
 		if ( '' === $list_buf ) {
 			return;
@@ -1071,7 +1090,16 @@ class Purge extends Base {
 		if ( ! $pid || ! in_array( $status, [ 'publish', 'trash', 'private', 'draft' ], true ) ) {
 			return;
 		}
+		$this->_purge_post( $pid );
+	}
 
+	/**
+	 * Purge a known affected post, including a transition away from publish.
+	 *
+	 * @param int $pid Post ID.
+	 * @return void
+	 */
+	private function _purge_post( $pid ) {
 		$purge_tags = $this->_get_purge_tags_by_post( $pid );
 		if ( ! $purge_tags ) {
 			return;
@@ -1312,7 +1340,7 @@ class Purge extends Base {
 			return false;
 		}
 
-		if ( is_network_admin() ) {
+		if ( is_network_admin() && current_user_can( 'manage_network_options' ) ) {
 			return false;
 		}
 
@@ -1321,7 +1349,7 @@ class Purge extends Base {
 		}
 
 		// Ajax network contexts.
-		if ( Router::is_ajax() && ( check_ajax_referer( 'updates', false, false ) || check_ajax_referer( 'litespeed-purgeall-network', false, false ) ) ) {
+		if ( Router::is_ajax() && current_user_can( 'manage_network_options' ) && ( check_ajax_referer( 'updates', false, false ) || check_ajax_referer( 'litespeed-purgeall-network', false, false ) ) ) {
 			return false;
 		}
 
@@ -1365,8 +1393,14 @@ class Purge extends Base {
 
 		// get adjacent posts id as related post tag
 		if ( 'post' === $post_type ) {
+			global $post;
+			$previous_global_post = $post;
+			// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Core's adjacent-post API reads only the global; restore it right after.
+			$post      = $the_post;
 			$prev_post = get_previous_post();
 			$next_post = get_next_post();
+			// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Restore the caller's query context.
+			$post = $previous_global_post;
 			if ( ! empty( $prev_post->ID ) ) {
 				$purge_tags[] = Tag::TYPE_POST . $prev_post->ID;
 				self::debug( '--------purge_tags prev is: ' . $prev_post->ID );
@@ -1421,17 +1455,17 @@ class Purge extends Base {
 			$purge_tags[] = Tag::TYPE_PAGES_WITH_RECENT_POSTS;
 		}
 
-		// Date archives (use gmdate as per WPCS).
-		$date_gmt = $the_post ? strtotime( $the_post->post_date_gmt ) : false;
-		if ( $date_gmt ) {
+		// Archive queries use the stored local post date, not its UTC counterpart.
+		$date = $the_post ? str_replace( '-', '', substr( $the_post->post_date, 0, 10 ) ) : '';
+		if ( preg_match( '/\A[0-9]{8}\z/', $date ) ) {
 			if ( $this->conf( self::O_PURGE_POST_DATE ) ) {
-				$purge_tags[] = Tag::TYPE_ARCHIVE_DATE . gmdate( 'Ymd', $date_gmt );
+				$purge_tags[] = Tag::TYPE_ARCHIVE_DATE . $date;
 			}
 			if ( $this->conf( self::O_PURGE_POST_MONTH ) ) {
-				$purge_tags[] = Tag::TYPE_ARCHIVE_DATE . gmdate( 'Ym', $date_gmt );
+				$purge_tags[] = Tag::TYPE_ARCHIVE_DATE . substr( $date, 0, 6 );
 			}
 			if ( $this->conf( self::O_PURGE_POST_YEAR ) ) {
-				$purge_tags[] = Tag::TYPE_ARCHIVE_DATE . gmdate( 'Y', $date_gmt );
+				$purge_tags[] = Tag::TYPE_ARCHIVE_DATE . substr( $date, 0, 4 );
 			}
 		}
 

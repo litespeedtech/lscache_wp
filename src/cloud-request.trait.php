@@ -221,10 +221,6 @@ trait Cloud_Request {
 			wp_delete_file( $legacy_file );
 		}
 		$service_tag = preg_replace( '/[^a-zA-Z0-9]/', '', $service_tag );
-		$legacy_file = LITESPEED_STATIC_DIR . '/qc.' . $type . '.' . $service_tag;
-		if ( file_exists( $legacy_file ) ) {
-			wp_delete_file( $legacy_file );
-		}
 		return LITESPEED_STATIC_DIR . '/qc.' . $type . '.' . get_current_blog_id() . '.' . $service_tag;
 	}
 
@@ -435,7 +431,7 @@ trait Cloud_Request {
 				'We are working hard to improve your online service experience. The service will be unavailable while we work. We apologize for any inconvenience.',
 				'litespeed-cache'
 			);
-			$msg .= ' ' . $json['_503'] . ' [server] ' . esc_html( $server ) . ' [service] ' . esc_html( $service );
+			$msg .= ' ' . esc_html( $json['_503'] ) . ' [server] ' . esc_html( $server ) . ' [service] ' . esc_html( $service );
 			Admin_Display::error( $msg );
 
 			// Force redetect node
@@ -478,7 +474,7 @@ trait Cloud_Request {
 	public function extract_msg( $json, $service, $server = false, $is_callback = false ) {
 		if ( ! empty( $json['_info'] ) ) {
 			self::debug( '_info: ' . $json['_info'] );
-			$msg  = __( 'Message from QUIC.cloud server', 'litespeed-cache' ) . ': ' . $json['_info'];
+			$msg  = __( 'Message from QUIC.cloud server', 'litespeed-cache' ) . ': ' . esc_html( $json['_info'] );
 			$msg .= $this->_parse_link( $json );
 			Admin_Display::info( $msg );
 			unset( $json['_info'] );
@@ -486,7 +482,7 @@ trait Cloud_Request {
 
 		if ( ! empty( $json['_note'] ) ) {
 			self::debug( '_note: ' . $json['_note'] );
-			$msg  = __( 'Message from QUIC.cloud server', 'litespeed-cache' ) . ': ' . $json['_note'];
+			$msg  = __( 'Message from QUIC.cloud server', 'litespeed-cache' ) . ': ' . esc_html( $json['_note'] );
 			$msg .= $this->_parse_link( $json );
 			Admin_Display::note( $msg );
 			unset( $json['_note'] );
@@ -494,7 +490,7 @@ trait Cloud_Request {
 
 		if ( ! empty( $json['_success'] ) ) {
 			self::debug( '_success: ' . $json['_success'] );
-			$msg  = __( 'Good news from QUIC.cloud server', 'litespeed-cache' ) . ': ' . $json['_success'];
+			$msg  = __( 'Good news from QUIC.cloud server', 'litespeed-cache' ) . ': ' . esc_html( $json['_success'] );
 			$msg .= $this->_parse_link( $json );
 			Admin_Display::success( $msg );
 			unset( $json['_success'] );
@@ -503,7 +499,7 @@ trait Cloud_Request {
 		// Upgrade is required
 		if ( ! empty( $json['_err_req_v'] ) ) {
 			self::debug( '_err_req_v: ' . $json['_err_req_v'] );
-			$msg = sprintf( __( '%1$s plugin version %2$s required for this action.', 'litespeed-cache' ), Core::NAME, 'v' . $json['_err_req_v'] . '+' ) .
+			$msg = sprintf( __( '%1$s plugin version %2$s required for this action.', 'litespeed-cache' ), Core::NAME, 'v' . esc_html( $json['_err_req_v'] ) . '+' ) .
 				' [server] ' . esc_html( $server ) . ' [service] ' . esc_html( $service );
 
 			// Append upgrade link
@@ -552,6 +548,7 @@ trait Cloud_Request {
 						case '_success':
 							$color_mode = substr( $v, 1 );
 							$msgs       = $json['_carry_on'][ $v ];
+							$msgs       = is_array( $msgs ) ? array_map( 'esc_html', $msgs ) : esc_html( $msgs );
 							Admin_Display::add_unique_notice( $color_mode, $msgs, true );
 							break;
 

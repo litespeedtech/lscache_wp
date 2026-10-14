@@ -101,6 +101,7 @@ class Htaccess extends Root {
 	const MARKER_LOGIN_COOKIE        = '### marker LOGIN COOKIE';
 	const MARKER_ASYNC               = '### marker ASYNC';
 	const MARKER_REST_AUTH           = '### marker REST AUTH';
+	const MARKER_POSTPASS            = '### marker POSTPASS';
 	const MARKER_CRAWLER             = '### marker CRAWLER';
 	const MARKER_MOBILE              = '### marker MOBILE';
 	const MARKER_NOCACHE_COOKIES     = '### marker NOCACHE COOKIES';
@@ -264,7 +265,14 @@ class Htaccess extends Root {
 	 * @return string|false The directory containing .htaccess, or false if not found.
 	 */
 	private function _htaccess_search( $start_path ) {
-		while ( ! file_exists( $start_path . '/.htaccess' ) ) {
+		$frontend = Router::frontend_path();
+		while ( true ) {
+			if ( ! File::within( $start_path, ABSPATH ) && ! File::within( $start_path, $frontend ) ) {
+				return false;
+			}
+			if ( file_exists( $start_path . '/.htaccess' ) ) {
+				return $start_path;
+			}
 			if ( '/' === $start_path || ! $start_path ) {
 				return false;
 			}
@@ -280,8 +288,6 @@ class Htaccess extends Root {
 
 			$start_path = dirname( $start_path );
 		}
-
-		return $start_path;
 	}
 
 	/**
@@ -436,9 +442,6 @@ class Htaccess extends Root {
 		$match = substr( $rule, strlen( 'RewriteCond %{HTTP_USER_AGENT} ' ), -strlen( ' [NC]' ) );
 
 		if ( ! $match ) {
-			if ( $allow_empty ) {
-				return '';
-			}
 			Error::t( 'HTA_DNF', __( 'Mobile Agent Rules', 'litespeed-cache' ) );
 		}
 
@@ -536,7 +539,7 @@ class Htaccess extends Root {
 		 * @since 1.6.3
 		 */
 		$id    = Base::O_CACHE_TTL_BROWSER;
-		$ttl   = (int) $cfg[ $id ];
+		$ttl   = $cfg[ $id ];
 		$rules = array(
 			self::EXPIRES_MODULE_START,
 			'ExpiresActive on',
@@ -605,7 +608,7 @@ class Htaccess extends Root {
 	 * @param bool   $notify Whether to add an admin notice for rejected entries.
 	 * @return array
 	 */
-	public function filter_list( $values, $pattern, $id, $notify = true ) {
+	public static function filter_list( $values, $pattern, $id, $notify = true ) {
 		$clean   = [];
 		$dropped = false;
 		foreach ( (array) $values as $v ) {
@@ -617,11 +620,10 @@ class Htaccess extends Root {
 			}
 		}
 		if ( $dropped && $notify ) {
-			$title = 'litespeed_vary_cookies' === $id ? 'litespeed_vary_cookies filter' : Lang::title( $id );
 			Admin_Display::error( sprintf(
 				/* translators: %s: Setting title. */
 				__( 'Some entries in %s cannot be written to .htaccess and were omitted. Review this setting; omitted exclusions do not prevent caching.', 'litespeed-cache' ),
-				esc_html( $title )
+				esc_html( Lang::title( $id ) )
 			) );
 		}
 		return array_values( array_unique( $clean ) );
@@ -654,8 +656,8 @@ class Htaccess extends Root {
 		$new_rules[] = '';
 
 		// Prevent an authenticated REST request from reading an anonymous cache entry before WordPress runs.
-		$rest_prefix = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : 'wp-json';
-		$rest_prefix = is_string( $rest_prefix ) && preg_match( '/^[A-Za-z0-9._~-]+(?:\/[A-Za-z0-9._~-]+)*$/', $rest_prefix ) && ! preg_match( '/(?:^|\/)\.{1,2}(?:\/|$)/', $rest_prefix ) ? $rest_prefix : 'wp-json';
+		$rest_prefix = rest_get_url_prefix();
+		$rest_prefix = is_string( $rest_prefix ) && preg_match( '/^[A-Za-z0-9._~-]+(?:\/[A-Za-z0-9._~-]+)*\z/', $rest_prefix ) && ! preg_match( '/(?:^|\/)\.{1,2}(?:\/|$)/', $rest_prefix ) ? $rest_prefix : 'wp-json';
 		$rest_prefix = preg_quote( $rest_prefix, '/' );
 		$new_rules[] = self::MARKER_REST_AUTH . self::MARKER_START;
 		$new_rules[] = 'RewriteCond %{HTTP:Authorization} !^$';
@@ -663,6 +665,11 @@ class Htaccess extends Root {
 		$new_rules[] = 'RewriteCond %{QUERY_STRING} (^|&)rest_route=';
 		$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]';
 		$new_rules[] = self::MARKER_REST_AUTH . self::MARKER_END;
+		$new_rules[] = '';
+		$new_rules[] = self::MARKER_POSTPASS . self::MARKER_START;
+		$new_rules[] = 'RewriteCond %{HTTP_COOKIE} (^|;\\s*)wp-postpass_' . preg_quote( COOKIEHASH, '/' ) . '=';
+		$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]';
+		$new_rules[] = self::MARKER_POSTPASS . self::MARKER_END;
 		$new_rules[] = '';
 
 		// mobile agents.
@@ -696,10 +703,10 @@ class Htaccess extends Root {
 		}
 
 		// check login cookie.
-		$vary_cookies = $this->filter_list( $cfg[ Base::O_CACHE_VARY_COOKIES ], self::PATTERN_COOKIE_NAME, Base::O_CACHE_VARY_COOKIES );
+		$vary_cookies = $cfg[ Base::O_CACHE_VARY_COOKIES ];
 		$id           = Base::O_CACHE_LOGIN_COOKIE;
 		if ( ! empty( $cfg[ $id ] ) ) {
-			$vary_cookies = array_merge( $vary_cookies, $this->filter_list( [ $cfg[ $id ] ], self::PATTERN_COOKIE_NAME, $id ) );
+			$vary_cookies[] = $cfg[ $id ];
 		}
 		if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
 			// Need to keep this due to different behavior of OLS when handling response vary header @Sep/22/2018.
@@ -708,7 +715,7 @@ class Htaccess extends Root {
 			}
 		}
 		$vary_cookies = apply_filters( 'litespeed_vary_cookies', $vary_cookies ); // todo: test if response vary header can work in latest OLS, drop the above two lines.
-		$vary_cookies = $this->filter_list( $vary_cookies, self::PATTERN_COOKIE_NAME, 'litespeed_vary_cookies' );
+		$vary_cookies = $this->filter_list( $vary_cookies, self::PATTERN_COOKIE_NAME, Base::O_CACHE_VARY_COOKIES );
 		// frontend and backend.
 		if ( $vary_cookies ) {
 			$env                 = 'Cache-Vary:' . implode( ',', $vary_cookies );
@@ -725,10 +732,11 @@ class Htaccess extends Root {
 		}
 
 		// CORS font rules.
-		$id = Base::O_CDN;
-		if ( ! empty( $cfg[ $id ] ) ) {
+		$id          = Base::O_CDN;
+		$cdn_enabled = is_multisite() ? \get_blog_option( get_main_site_id( get_main_network_id() ), Conf::name( $id ), false ) : ! empty( $cfg[ $id ] );
+		if ( $cdn_enabled ) {
 			$new_rules[] = self::MARKER_CORS . self::MARKER_START;
-			$new_rules   = array_merge( $new_rules, $this->_cors_rules() ); // todo: network.
+			$new_rules   = array_merge( $new_rules, $this->_cors_rules() );
 			$new_rules[] = self::MARKER_CORS . self::MARKER_END;
 			$new_rules[] = '';
 		}
@@ -747,14 +755,17 @@ class Htaccess extends Root {
 			// Match Media's crawler support when page requests omit explicit image types in Accept.
 			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} (chrome-lighthouse|googlebot|page\ speed) [NC,OR]';
 
-			// Check for iPhone browsers (version > 13).
-			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} iPhone\ OS\ (1[4-9]|[2-9][0-9]) [OR]';
+			// Format-specific browser thresholds must match Media's page-render decision.
+			$iphone_versions = 'avif' === $next_gen_format ? '1[6-9]|[2-9][0-9]|[1-9][0-9]{2,}' : '1[4-9]|[2-9][0-9]|[1-9][0-9]{2,}';
+			$new_rules[]     = 'RewriteCond %{HTTP_USER_AGENT} iPhone\ OS\ (' . $iphone_versions . ')_ [NC,OR]';
 			
-			// Check for macOS Safari (version >= 16.4).
-			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} Macintosh.*Version/((1[7-9]|[2-9][0-9])|16\.([4-9]|[1-9][0-9])) [OR]';
+			// AVIF on macOS depends on the OS; require explicit Accept instead of a Safari-only threshold.
+			if ( 'webp' === $next_gen_format ) {
+				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} Macintosh.*Version/((1[7-9]|[2-9][0-9]|[1-9][0-9]{2,})|16\.([4-9]|[1-9][0-9])) [NC,OR]';
+			}
 			
-			// Check for Firefox (version >= 65).
-			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} Firefox/([6-9][0-9]|[1-9][0-9]{2,})';
+			$firefox_versions = 'avif' === $next_gen_format ? '9[3-9]|[1-9][0-9]{2,}' : '6[5-9]|[7-9][0-9]|[1-9][0-9]{2,}';
+			$new_rules[]      = 'RewriteCond %{HTTP_USER_AGENT} Firefox/(' . $firefox_versions . ') [NC]';
 
 			// Add vary.
 			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+webp]';
@@ -870,7 +881,9 @@ class Htaccess extends Root {
 
 		$this->_htaccess_backup( $kind );
 
-		File::insert_with_markers( $this->htaccess_path( $kind ), $this->_wrap_do_no_edit( $rules ), $marker, true );
+		if ( ! File::insert_with_markers( $this->htaccess_path( $kind ), $this->_wrap_do_no_edit( $rules ), $marker, true ) ) {
+			throw new \Exception( 'Could not update the rewrite rules.' );
+		}
 	}
 
 	/**
@@ -1023,15 +1036,23 @@ class Htaccess extends Root {
 	 * @access public
 	 *
 	 * @return void
+	 * @throws \Exception After attempting every marker, if any write failed.
 	 */
 	public function clear_rules() {
-		$this->_insert_wrapper( false ); // Use false to avoid do-not-edit msg.
-		// Clear non ls rules.
-		$this->_insert_wrapper( false, false, self::MARKER_NONLS );
-
-		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
-			$this->_insert_wrapper( false, 'backend' );
-			$this->_insert_wrapper( false, 'backend', self::MARKER_NONLS );
+		$failed = [];
+		$kinds  = $this->frontend_htaccess !== $this->backend_htaccess ? [ 'frontend', 'backend' ] : [ 'frontend' ];
+		foreach ( $kinds as $kind ) {
+			foreach ( [ self::MARKER, self::MARKER_NONLS ] as $marker ) {
+				try {
+					$this->_insert_wrapper( false, $kind, $marker );
+				} catch ( \Exception $error ) {
+					$failed[] = $error->getMessage();
+				}
+			}
+		}
+		if ( $failed ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Callers escape the aggregate diagnostic at rendering.
+			throw new \Exception( implode( ' ', array_unique( $failed ) ) );
 		}
 	}
 }

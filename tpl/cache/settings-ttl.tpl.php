@@ -72,7 +72,7 @@ defined( 'WPINC' ) || exit;
 			<?php $this->build_input( $option_id ); ?> <?php $this->readable_seconds(); ?>
 			<div class="litespeed-desc">
 				<?php echo esc_html__( 'Specify how long, in seconds, feeds are cached.', 'litespeed-cache' ); ?>
-				<?php echo esc_html__( 'If this is set to a number less than 30, feeds will not be cached.', 'litespeed-cache' ); ?>
+				<?php echo esc_html__( 'Set to 0 to disable feed caching.', 'litespeed-cache' ); ?>
 				<?php $this->recommended( $option_id ); ?>
 			</div>
 		</td>
@@ -87,7 +87,7 @@ defined( 'WPINC' ) || exit;
 			<?php $this->build_input( $option_id ); ?> <?php $this->readable_seconds(); ?>
 			<div class="litespeed-desc">
 				<?php echo esc_html__( 'Specify how long, in seconds, REST calls are cached.', 'litespeed-cache' ); ?>
-				<?php echo esc_html__( 'If this is set to a number less than 30, feeds will not be cached.', 'litespeed-cache' ); ?>
+				<?php echo esc_html__( 'Set to 0 to disable REST caching.', 'litespeed-cache' ); ?>
 				<?php $this->recommended( $option_id ); ?>
 			</div>
 		</td>

@@ -26,7 +26,7 @@ class File {
 	 *
 	 * @since 7.9
 	 */
-	const STATIC_DIR_HTACCESS_MARKER = 'LSCACHE_STATIC_PROTECT_V2';
+	const STATIC_DIR_HTACCESS_MARKER = 'LSCACHE_STATIC_PROTECT_V3';
 
 	/**
 	 * Build the whitelist .htaccess content for LITESPEED_STATIC_DIR
@@ -52,10 +52,14 @@ class File {
 
 Options -Indexes
 
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Block dotfiles (runtime configuration, queues, .htaccess) anywhere in the tree
+    # Block dotfiles (.litespeed_conf.dat, .htaccess, etc.) anywhere in the tree
     RewriteRule (^|/)\.[^/]+$ - [F,L]
 
     # Whitelisted root-level public files
@@ -189,7 +193,7 @@ HTACCESS;
 	 * @since  3.3
 	 */
 	public static function is_404( $url ) {
-		$response = wp_safe_remote_get($url);
+		$response = wp_safe_remote_head( $url );
 		$code     = wp_remote_retrieve_response_code($response);
 		if ($code == 404) {
 			return true;
@@ -204,10 +208,13 @@ HTACCESS;
 	 * @since 2.1
 	 */
 	public static function rrmdir( $dir ) {
+		if ( ! is_dir( $dir ) || is_link( $dir ) ) {
+			return false;
+		}
 		$files = array_diff(scandir($dir), array( '.', '..' ));
 
 		foreach ($files as $file) {
-			is_dir("$dir/$file") ? self::rrmdir("$dir/$file") : unlink("$dir/$file");
+			is_dir("$dir/$file") && ! is_link("$dir/$file") ? self::rrmdir("$dir/$file") : unlink("$dir/$file");
 		}
 
 		return rmdir($dir);
@@ -277,7 +284,7 @@ HTACCESS;
 	 * @since 1.1.5
 	 * @access public
 	 * @param string  $filename
-	 * @param string|array $data
+	 * @param string  $data
 	 * @param boolean $mkdir
 	 * @param boolean $silence Used to avoid WP's functions are used
 	 */
@@ -290,13 +297,13 @@ HTACCESS;
 	 *
 	 * @since 1.1.0
 	 * @param string  $filename
-	 * @param string  $data
+	 * @param string|array $data
 	 * @param boolean $mkdir
 	 * @param boolean $append If the content needs to be appended
 	 * @param boolean $silence Used to avoid WP's functions are used
 	 */
 	public static function save( $filename, $data, $mkdir = false, $append = false, $silence = true ) {
-		if (!is_string($filename) || '' === $filename) {
+		if ( ! is_string( $filename ) || '' === $filename ) {
 			return $silence ? false : __('Filename is empty!', 'litespeed-cache');
 		}
 
@@ -346,7 +353,7 @@ HTACCESS;
 		}
 
 		$ret = file_put_contents($filename, $data, $append ? FILE_APPEND : LOCK_EX);
-		if ($ret === false || $ret !== strlen($data)) {
+		if ($ret !== strlen($data)) {
 			return $silence ? false : sprintf(__('Failed to write to %s.', 'litespeed-cache'), $filename);
 		}
 
@@ -491,7 +498,7 @@ HTACCESS;
 	}
 
 	/**
-	 * Publish a same-directory temporary file with WordPress's file mode.
+	 * Publish a same-directory temporary file, preserving existing target permissions.
 	 *
 	 * @since 7.9.1
 	 *
@@ -502,6 +509,12 @@ HTACCESS;
 	 */
 	public static function publish_temp_file( $temp, $target, $root = '' ) {
 		$mode       = defined('FS_CHMOD_FILE') ? FS_CHMOD_FILE : 0644;
+		if ( is_file( $target ) ) {
+			$permissions = fileperms( $target );
+			if ( false !== $permissions ) {
+				$mode = $permissions & 0777;
+			}
+		}
 		$temp_dir   = realpath(dirname($temp));
 		$target_dir = realpath(dirname($target));
 		// Same-directory is not in-scope: both sides move together when their shared parent is swapped.
@@ -520,7 +533,7 @@ HTACCESS;
 	}
 
 	/**
-	 * Remove Unicode zero-width space <200b><200c>
+	 * Remove a leading UTF-8 BOM while preserving content characters.
 	 *
 	 * @since 2.1.2
 	 * @since 2.9 changed to public
@@ -535,10 +548,6 @@ HTACCESS;
 		if (substr($content, 0, 3) === "\xEF\xBB\xBF") {
 			$content = substr($content, 3);
 		}
-
-		$content = str_replace("\xe2\x80\x8b", '', $content);
-		$content = str_replace("\xe2\x80\x8c", '', $content);
-		$content = str_replace("\xe2\x80\x8d", '', $content);
 
 		return $content;
 	}
@@ -698,6 +707,8 @@ HTACCESS;
 
 		// Attempt to get a lock. If the filesystem supports locking, this will block until the lock is acquired.
 		flock($fp, LOCK_EX);
+		$original = stream_get_contents( $fp );
+		rewind( $fp );
 
 		$lines = array();
 		while (!feof($fp)) {
@@ -724,6 +735,11 @@ HTACCESS;
 				$existing_lines[] = $line;
 			}
 		}
+		if ( $found_marker && ! $found_end_marker ) {
+			flock( $fp, LOCK_UN );
+			fclose( $fp );
+			return false;
+		}
 
 		// Check to see if there was a change
 		if ($existing_lines === $insertion) {
@@ -745,13 +761,19 @@ HTACCESS;
 		// Write to the start of the file, and truncate it to that length
 		fseek($fp, 0);
 		$bytes = fwrite($fp, $new_file_data);
-		if ($bytes) {
-			ftruncate($fp, ftell($fp));
+		$complete = strlen( $new_file_data ) === $bytes && ftruncate( $fp, strlen( $new_file_data ) );
+		if ( ! $complete ) {
+			rewind( $fp );
+			if ( strlen( $original ) === fwrite( $fp, $original ) ) {
+				ftruncate( $fp, strlen( $original ) );
+			} else {
+				Root::debugErr( 'Failed to restore the original marker file: ' . $filename );
+			}
 		}
 		fflush($fp);
 		flock($fp, LOCK_UN);
 		fclose($fp);
 
-		return (bool) $bytes;
+		return $complete;
 	}
 }

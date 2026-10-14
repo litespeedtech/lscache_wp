@@ -95,6 +95,21 @@ class CDN extends Root {
 	}
 
 	/**
+	 * Validate a CDN URL prefix without a DNS lookup or an outbound request.
+	 *
+	 * @since 7.9.2
+	 * @param mixed $url URL prefix.
+	 * @return bool
+	 */
+	public static function valid_mapping_url( $url ) {
+		if ( ! is_string( $url ) || preg_match( '/[\s\x00-\x1f\x7f\'"<>\\\\]/', $url ) ) {
+			return false;
+		}
+		$parts = wp_parse_url( $url );
+		return is_array( $parts ) && isset( $parts['scheme'] ) && 'https' === strtolower( $parts['scheme'] ) && ! empty( $parts['host'] ) && ! isset( $parts['user'] ) && ! isset( $parts['pass'] );
+	}
+
+	/**
 	 * Initialize CDN integration and register filters if enabled.
 	 *
 	 * @since 1.2.3
@@ -132,7 +147,7 @@ class CDN extends Root {
 				continue;
 			}
 			$this_url = $v[ Base::CDN_MAPPING_URL ];
-			if ( ! is_string( $this_url ) || ! wp_http_validate_url( $this_url ) || 0 !== strpos( $this_url, 'https://' ) || preg_match( '/[\s\x00-\x1f\x7f\'"<>]/', $this_url ) ) {
+			if ( ! self::valid_mapping_url( $this_url ) ) {
 				self::debug( 'Bypassed an invalid CDN mapping URL' );
 				continue;
 			}
@@ -352,7 +367,7 @@ class CDN extends Root {
 					continue;
 				}
 
-				$attr_str      = str_replace( $url, esc_url( $url2 ), $matches[0][ $k2 ] );
+				$attr_str      = str_replace( $url, $url2, $matches[0][ $k2 ] );
 				$this->content = str_replace( $matches[0][ $k2 ], $attr_str, $this->content );
 			}
 		}
@@ -366,7 +381,12 @@ class CDN extends Root {
 	 * @return void
 	 */
 	private function _replace_img() {
-		preg_match_all( '#<img([^>]+?)src=([\'"\\\]*)([^\'"\s\\\>]+)([\'"\\\]*)([^>]*)>#i', $this->content, $matches );
+		$content = Utility::html_mask( $this->content, [ 'img' ] );
+		if ( null === $content ) {
+			return;
+		}
+		preg_match_all( '#<img([^>]+?)src=([\'"\\\]*)([^\'"\s\\\>]+)([\'"\\\]*)([^>]*)>#i', $content, $matches );
+		$replacements = [];
 		foreach ( $matches[3] as $k => $url ) {
 			// Backslash by the quote = escaped JSON/JS context; rewriting would corrupt the escaping.
 			if ( false !== strpos( $matches[2][ $k ], '\\' ) || false !== strpos( $matches[4][ $k ], '\\' ) ) {
@@ -383,8 +403,10 @@ class CDN extends Root {
 				continue;
 			}
 
-			$html_snippet  = sprintf( '<img %1$s src=%2$s %3$s>', $matches[1][ $k ], $matches[2][ $k ] . esc_url( $url2 ) . $matches[4][ $k ], $matches[5][ $k ] );
-			$this->content = str_replace( $matches[0][ $k ], $html_snippet, $this->content );
+			$replacements[ $matches[0][ $k ] ] = sprintf( '<img %1$s src=%2$s %3$s>', $matches[1][ $k ], $matches[2][ $k ] . $url2 . $matches[4][ $k ], $matches[5][ $k ] );
+		}
+		if ( $replacements ) {
+			$this->content = Utility::html_replace( array_keys( $replacements ), array_values( $replacements ), $this->content );
 		}
 	}
 
@@ -396,51 +418,64 @@ class CDN extends Root {
 	 * @return void
 	 */
 	private function _replace_inline_css() {
-		self::debug2( '_replace_inline_css', $this->_cfg_cdn_mapping );
-
-		/**
-		 * Excludes `\` from URL matching
-		 *
-		 * @see  #959152 - WordPress LSCache CDN Mapping causing malformed URLS
-		 * @see  #685485
-		 * @since 3.0
-		 */
-		preg_match_all( '/url\((?![\'"]?data)[\'"]?(.+?)[\'"]?\)/i', $this->content, $matches );
-		foreach ( $matches[1] as $k => $url ) {
-			$url = str_replace( [ ' ', '\t', '\n', '\r', '\0', '\x0B', '"', "'", '&quot;', '&#039;' ], '', $url );
-
-			// Skip escaped JSON/JS contexts — same family as #959152.
-			if ( false !== strpos( $url, '\\' ) ) {
-				continue;
+		$content = Utility::html_tokens( $this->content, function ( $token ) {
+			if ( ! empty( $token['raw'] ) ) {
+				if ( 'style' !== strtolower( $token['raw'] ) ) {
+					return $token[0];
+				}
+				return '<' . $token['raw'] . $token['raw_attrs'] . '>' . $this->_rewrite_css_urls( $token['body'] ) . $token['close'];
 			}
+			if ( empty( $token['tag'] ) || empty( $token['end'] ) ) {
+				return $token[0];
+			}
+			// Consume every attribute, including non-style quoted values, before advancing.
+			$attrs = preg_replace_callback( '~\G(\s+)([^\s=/>]+)(\s*=\s*)("[^"]*"|\'[^\']*\'|[^\s>]+)|\G\s+[^\s=/>]+(?!\s*=)~', function ( $attr ) {
+				if ( empty( $attr[2] ) || 'style' !== strtolower( $attr[2] ) ) {
+					return $attr[0];
+				}
+				$value = $attr[4];
+				$quote = '"' === $value[0] || "'" === $value[0] ? $value[0] : '';
+				$css   = $quote ? substr( $value, 1, -1 ) : $value;
+				return $attr[1] . $attr[2] . $attr[3] . $quote . $this->_rewrite_css_urls( $css ) . $quote;
+			}, $token['attrs'] );
+			return null === $attrs ? $token[0] : '<' . $token['tag'] . $attrs . '>';
+		} );
+		if ( null !== $content ) {
+			$this->content = $content;
+		} else {
+			self::debug( 'CDN CSS parsing skipped: ambiguous HTML or PCRE error ' . preg_last_error() );
+		}
+	}
 
-			// Parse file postfix
+	/**
+	 * Rewrite a CSS URL without deleting syntax from untrusted content.
+	 *
+	 * @param string $css Style element text or a style attribute value.
+	 * @return string CSS with only safe URL spans replaced.
+	 */
+	private function _rewrite_css_urls( $css ) {
+		$result = preg_replace_callback( '~(\burl\(\s*([\'"]|&quot;|&apos;|&#0*34;|&#0*39;|&#x0*22;|&#x0*27;|))(.*?)(\2\s*\))~is', function ( $matches ) {
+			$url = $matches[3];
+			// Reject ambiguous URLs rather than stripping quotes, entities, or real whitespace.
+			if ( '' === $url || preg_match( '/[\s\x00-\x1f\x7f<>\'"\\\\`]/', html_entity_decode( $url, ENT_QUOTES | ENT_HTML5, 'UTF-8' ) ) || 0 === stripos( $url, 'data:' ) ) {
+				return $matches[0];
+			}
 			$parsed_url = wp_parse_url( $url, PHP_URL_PATH );
 			if ( ! $parsed_url ) {
-				continue;
+				return $matches[0];
 			}
 
 			$postfix = '.' . pathinfo( $parsed_url, PATHINFO_EXTENSION );
 			if ( array_key_exists( $postfix, $this->_cfg_cdn_mapping ) ) {
-				self::debug2( 'matched file_type ' . $postfix . ' : ' . $url );
 				$url2 = $this->rewrite( $url, Base::CDN_MAPPING_FILETYPE, $postfix );
-				if ( ! $url2 ) {
-					continue;
-				}
-			} elseif ( in_array( $postfix, [ 'jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'avif' ], true ) ) {
+			} elseif ( in_array( substr( $postfix, 1 ), [ 'jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'avif' ], true ) ) {
 				$url2 = $this->rewrite( $url, Base::CDN_MAPPING_INC_IMG );
-				if ( ! $url2 ) {
-					continue;
-				}
 			} else {
-				continue;
+				return $matches[0];
 			}
-
-			$attr          = str_replace( $matches[1][ $k ], esc_url( $url2 ), $matches[0][ $k ] );
-			$this->content = str_replace( $matches[0][ $k ], $attr, $this->content );
-		}
-
-		self::debug2( '_replace_inline_css done' );
+			return $url2 ? $matches[1] . $url2 . $matches[4] : $matches[0];
+		}, $css );
+		return null === $result ? $css : $result;
 	}
 
 	/**
@@ -616,7 +651,9 @@ class CDN extends Root {
 		// Now lets replace CDN url
 		foreach ( $this->_cfg_url_ori as $v ) {
 			if ( false !== strpos( $v, '*' ) ) {
-				$url = preg_replace( '#' . $scheme . $v . '#iU', $final_url, $url );
+				$url = preg_replace_callback( '#' . $scheme . $v . '#iU', static function () use ( $final_url ) {
+					return $final_url;
+				}, $url );
 			} else {
 				$url = str_replace( $scheme . $v, $final_url, $url );
 			}

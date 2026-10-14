@@ -118,7 +118,7 @@ class Debug2 extends Root {
 			return true;
 		}
 
-		Conf::cls()->update_confs( [ Base::DEBUG_TMP_DISABLE => 0 ] );
+		Conf::cls()->update( Base::DEBUG_TMP_DISABLE, 0 );
 		return false;
 	}
 
@@ -141,6 +141,10 @@ class Debug2 extends Root {
 
 		$logs = [ 'debug', 'debug.purge', 'crawler' ];
 		foreach ( $logs as $log ) {
+			// Core owns its active debug log; only migrate files whose ownership is unambiguous.
+			if ( 'debug' === $log && defined( 'WP_DEBUG_LOG' ) && WP_DEBUG_LOG ) {
+				continue;
+			}
 			$old_path = LSCWP_CONTENT_DIR . '/' . $log . '.log';
 			$new_path = $this->path( $log );
 			if ( file_exists( $old_path ) && ! file_exists( $new_path ) ) {
@@ -247,11 +251,6 @@ class Debug2 extends Root {
 	 * @return void
 	 */
 	public function beta_test( $zip = false ) {
-		if ( ! current_user_can( 'update_plugins' ) ) {
-			Admin_Display::error( __( 'Sorry, you are not allowed to update plugins for this site.', 'litespeed-cache' ) );
-			return;
-		}
-
 		if ( ! $zip ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( empty( $_REQUEST[ self::BETA_TEST_URL ] ) ) {
@@ -291,26 +290,15 @@ class Debug2 extends Root {
 		$plugin_info->url         = 'https://wordpress.org/plugins/litespeed-cache/';
 
 		// Offered to the upgrader's single read only; never stored in the shared transient.
-		$inject_short_circuit = null;
-		$inject               = function ( $value ) use ( &$inject, &$inject_short_circuit, $plugin_info ) {
+		$inject = function ( $value ) use ( &$inject, $plugin_info ) {
 			remove_filter( 'site_transient_update_plugins', $inject );
-			remove_filter( 'pre_site_transient_update_plugins', $inject_short_circuit, PHP_INT_MAX );
 			$value                                = is_object( $value ) ? clone $value : new \stdClass();
 			$value->response[ Core::PLUGIN_FILE ] = $plugin_info;
 			return $value;
 		};
-		// Hosts may bypass the ordinary transient filter; scope that path to the same single read.
-		$inject_short_circuit = function ( $value ) use ( $inject ) {
-			return false === $value ? $value : $inject( $value );
-		};
 		add_filter( 'site_transient_update_plugins', $inject );
-		add_filter( 'pre_site_transient_update_plugins', $inject_short_circuit, PHP_INT_MAX );
-		try {
-			Activation::cls()->upgrade();
-		} finally {
-			remove_filter( 'site_transient_update_plugins', $inject );
-			remove_filter( 'pre_site_transient_update_plugins', $inject_short_circuit, PHP_INT_MAX );
-		}
+		Activation::cls()->upgrade();
+		remove_filter( 'site_transient_update_plugins', $inject );
 	}
 
 	/**
@@ -386,7 +374,7 @@ class Debug2 extends Root {
 		 */
 		$list = $this->conf( Base::O_DEBUG_INC );
 		if ( $list ) {
-			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Matching must preserve encoded path characters.
 			$result      = REST::str_hit_uri( $request_uri, $list );
 			if ( ! $result ) {
 				return;
@@ -395,7 +383,7 @@ class Debug2 extends Root {
 
 		$list = $this->conf( Base::O_DEBUG_EXC );
 		if ( $list ) {
-			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Matching must preserve encoded path characters.
 			$result      = REST::str_hit_uri( $request_uri, $list );
 			if ( $result ) {
 				return;
@@ -406,6 +394,19 @@ class Debug2 extends Root {
 			$this->_init_request();
 			define( 'LSCWP_LOG', true );
 		}
+	}
+
+	/**
+	 * Redact credential query values in both the request and referrer.
+	 *
+	 * @param string $value Query string or URL.
+	 * @return string
+	 */
+	private function _redact_query( $value ) {
+		return preg_replace_callback( '/(^|[?&])([^=?&#]+)=[^&#]*/', static function ( $matches ) {
+			$key = rawurldecode( $matches[2] );
+			return preg_match( '/nonce|password|passwd|pwd|token|key|secret|_hash|code|auth|sig/i', $key ) ? $matches[1] . $matches[2] . '=[redacted]' : $matches[0];
+		}, $value );
 	}
 
 	/**
@@ -460,7 +461,7 @@ class Debug2 extends Root {
 		$param = sprintf('💓 ------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok($server['REQUEST_URI'], '?'));
 
 		$qs = !empty($server['QUERY_STRING']) ? $server['QUERY_STRING'] : '';
-		$qs = preg_replace( '/(^|&)([^=&]*(?:nonce|password|passwd|token|api[_-]?key|secret|_hash)[^=&]*)=[^&]*/i', '$1$2=[redacted]', $qs );
+		$qs = $this->_redact_query( $qs );
 		if ( $this->conf( Base::O_DEBUG_COLLAPSE_QS ) ) {
 			$qs = $this->_omit_long_message( $qs );
 			if ( $qs ) {
@@ -473,7 +474,7 @@ class Debug2 extends Root {
 		}
 
 		if ( ! empty( $server['HTTP_REFERER'] ) ) {
-			$params[] = 'HTTP_REFERER: ' . $this->_omit_long_message( $server['HTTP_REFERER'] );
+			$params[] = 'HTTP_REFERER: ' . $this->_omit_long_message( $this->_redact_query( $server['HTTP_REFERER'] ) );
 		}
 
 		if ( defined( 'LSCWP_LOG_MORE' ) ) {
@@ -742,7 +743,6 @@ class Debug2 extends Root {
 
 		header( 'Content-Type: text/plain; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-		header( 'Content-Length: ' . filesize( $file ) );
 		header( 'Cache-Control: no-cache, no-store, must-revalidate' );
 		header( 'Pragma: no-cache' );
 		header( 'Expires: 0' );

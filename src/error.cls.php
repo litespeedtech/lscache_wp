@@ -126,7 +126,7 @@ class Error {
 			case 0 === strpos( $code, 'unfinished_queue ' ):
 				$msg = sprintf(
 					__( 'There is proceeding queue not pulled yet. Queue info: %s.', 'litespeed-cache' ),
-					'<code>' . substr( $code, strlen( 'unfinished_queue ' ) ) . '</code>'
+					'<code>' . esc_html( substr( $code, strlen( 'unfinished_queue ' ) ) ) . '</code>'
 				);
 				break;
 
@@ -220,7 +220,7 @@ class Error {
 			case substr( $code, 0, 14 ) === 'callback_fail ':
 				$msg =
 					__( 'The callback validation to your domain failed. Please make sure there is no firewall blocking our servers. Response code: ', 'litespeed-cache' ) .
-					substr( $code, 14 );
+					esc_html( substr( $code, 14 ) );
 				break;
 
 			case 'forbidden':
@@ -235,7 +235,7 @@ class Error {
 				break;
 
 			default:
-				$msg = __( 'Unknown error', 'litespeed-cache' ) . ': ' . $code;
+				$msg = __( 'Unknown error', 'litespeed-cache' ) . ': ' . esc_html( $code );
 				break;
 		}
 

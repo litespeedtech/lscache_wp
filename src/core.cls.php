@@ -56,6 +56,13 @@ class Core extends Root {
 	private $footer_comment = '';
 
 	/**
+	 * Whether the registry has been loaded and its integrations detected in this request.
+	 *
+	 * @var bool
+	 */
+	private static $_thirdparty_loaded = false;
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -66,10 +73,6 @@ class Core extends Root {
 	 */
 	public function __construct() {
 		! defined( 'LSCWP_TS_0' ) && define( 'LSCWP_TS_0', microtime( true ) );
-		// Purge before configuration or cloud summaries can be loaded from the previous environment's OC.
-		if ( defined( 'LSCWP_OBJECT_CACHE' ) && LSCWP_OBJECT_CACHE ) {
-			$this->cls( 'Object_Cache' )->purge_on_environment_change();
-		}
 		$this->cls( 'Conf' )->init();
 
 		/**
@@ -242,7 +245,9 @@ class Core extends Root {
 		add_action( 'init', [ $this, 'after_user_init' ], 5 );
 
 		// Load 3rd party hooks
-		add_action( 'wp_loaded', [ $this, 'load_thirdparty' ], 2 );
+		if ( defined( 'LITESPEED_ON' ) ) {
+			add_action( 'wp_loaded', [ $this, 'load_thirdparty' ], 2 );
+		}
 	}
 
 	/**
@@ -252,6 +257,8 @@ class Core extends Root {
 	 */
 	public function after_user_init() {
 		$this->cls( 'Router' )->is_role_simulation();
+		// Excluded roles bypass Optimize::init(), but still need a separate page-cache identity.
+		add_filter( 'litespeed_vary', [ $this, 'vary_add_role_exclude' ] );
 
 		// Detect if is Guest mode or not
 		$this->cls( 'Vary' )->after_user_init();
@@ -307,6 +314,19 @@ class Core extends Root {
 		if ( ! is_admin() ) {
 			$this->cls( 'GUI' )->init();
 		}
+	}
+
+	/**
+	 * Partition optimized and role-excluded page responses even when optimization is bypassed.
+	 *
+	 * @param array $vary Current vary components.
+	 * @return array
+	 */
+	public function vary_add_role_exclude( $vary ) {
+		if ( $this->cls( 'Conf' )->in_optm_exc_roles() ) {
+			$vary['role_exclude_optm'] = 1;
+		}
+		return $vary;
 	}
 
 	/**
@@ -370,8 +390,14 @@ class Core extends Root {
 	 *
 	 * @since 1.0.5
 	 */
-	public function load_thirdparty() {
+	public static function load_thirdparty() {
+		if ( self::$_thirdparty_loaded ) {
+			return;
+		}
+		// Activation or OFF-to-ON saves can run after wp_loaded without the normal cache-enabled bootstrap.
+		include_once LSCWP_DIR . 'thirdparty/entry.inc.php';
 		do_action( 'litespeed_load_thirdparty' );
+		self::$_thirdparty_loaded = true;
 	}
 
 	/**
@@ -429,6 +455,8 @@ class Core extends Root {
 		$buffer = trim( $buffer );
 
 		$buffer = File::remove_zero_space( $buffer );
+		// Ignore only document-leading format characters; preserve them in CSS, JS and body content.
+		$buffer = preg_replace( '/\A(?:\s|\xE2\x80[\x8B-\x8D])+/', '', $buffer );
 
 		$is_html = 0 === stripos( $buffer, '<html' ) || 0 === stripos( $buffer, '<!DOCTYPE' );
 
@@ -585,7 +613,7 @@ class Core extends Root {
 			}
 			// CacheKeyModify uses case-sensitive names and a trailing '*' prefix.
 			$prefix     = '*' === substr( $rule, -1 );
-			$patterns[] = preg_quote( $prefix ? substr( $rule, 0, -1 ) : $rule, '/' ) . ( $prefix ? '' : '(?:=|\z)' );
+			$patterns[] = preg_quote( $prefix ? substr( $rule, 0, -1 ) : $rule, '/' ) . ( $prefix ? '' : '(?:=|&|\z)' );
 		}
 		if ( ! $patterns ) {
 			return $buffer;
@@ -710,7 +738,7 @@ class Core extends Root {
 		if ( defined( 'LITESPEED_ON' ) && defined( 'LSCWP_LOG' ) ) {
 			$vary = $this->cls( 'Vary' )->finalize_full_varies();
 			if ( $vary ) {
-				self::debug( 'Full varies digest: ' . md5( $vary ) );
+				$this->comment( 'Full varies: ' . $vary );
 			}
 		}
 
@@ -756,24 +784,30 @@ class Core extends Root {
 
 		// If CLI and contains Purge Header, issue an HTTP request to Purge
 		if ( defined( 'LITESPEED_CLI' ) ) {
-			$purge_queue = Purge::get_option( Purge::DB_QUEUE );
-			if ( ! $purge_queue || '-1' === $purge_queue ) {
-				$purge_queue = Purge::get_option( Purge::DB_QUEUE2 );
-			}
-			if ( $purge_queue && '-1' !== $purge_queue ) {
-				self::debug( '[Core] Purge Queue found, issue an HTTP request to purge: ' . $purge_queue );
-				// Kick off HTTP request
-				$url  = admin_url( 'admin-ajax.php' );
-				$resp = wp_safe_remote_get( $url );
-				if ( is_wp_error( $resp ) ) {
-					$error_message = $resp->get_error_message();
-					self::debug( '[URL]' . $url );
-					self::debug( 'failed to request: ' . $error_message );
-				} else {
-					self::debug( 'HTTP request response: ' . $resp['body'] );
-				}
-			}
+			self::kick_purge_queue();
 		}
+	}
+
+	/**
+	 * Trigger the current blog's stored purge headers before a CLI caller leaves that blog.
+	 *
+	 * @return bool Whether the HTTP kick succeeded or there was no pending queue.
+	 */
+	public static function kick_purge_queue() {
+		$purge_queue = Purge::get_option( Purge::DB_QUEUE );
+		if ( ! $purge_queue || '-1' === $purge_queue ) {
+			$purge_queue = Purge::get_option( Purge::DB_QUEUE2 );
+		}
+		if ( ! $purge_queue || '-1' === $purge_queue ) {
+			return true;
+		}
+		// A WP_Error yields code 0.
+		$code = (int) wp_remote_retrieve_response_code( wp_safe_remote_get( admin_url( 'admin-ajax.php' ) ) );
+		if ( ! $code || $code >= 500 ) {
+			self::debug( 'Failed to kick the current blog purge queue.' );
+			return false;
+		}
+		return true;
 	}
 
 	/**

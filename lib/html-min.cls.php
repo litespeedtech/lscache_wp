@@ -100,43 +100,41 @@ class HTML_MIN {
 			$this->_isXhtml = ( false !== strpos( $this->_html, '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML' ) );
 		}
 
-		$this->_replacementHash = 'MINIFYHTML' . md5( $_SERVER['REQUEST_TIME'] );
+		$this->_replacementHash = $this->_generate_hash();
 		$this->_placeholders    = array();
 
-		// replace SCRIPTs (and minify) with placeholders
-		$this->_html = preg_replace_callback(
-			'/(\\s*)<script(\\b[^>]*?>)([\\s\\S]*?)<\\/script>(\\s*)/i',
-			array( $this, '_removeScriptCB' ),
-			$this->_html
-		);
-
-		// replace STYLEs (and minify) with placeholders
-		$this->_html = preg_replace_callback(
-			'/\\s*<style(\\b[^>]*>)([\\s\\S]*?)<\\/style>\\s*/i',
-			array( $this, '_removeStyleCB' ),
-			$this->_html
-		);
-
-		// remove HTML comments (not containing IE conditional comments).
-		$this->_html = preg_replace_callback(
-			'/<!--([\\s\\S]*?)-->/',
-			array( $this, '_commentCB' ),
-			$this->_html
-		);
-
-		// replace PREs with placeholders
-		$this->_html = preg_replace_callback(
-			'/\\s*<pre(\\b[^>]*?>[\\s\\S]*?<\\/pre>)\\s*/i',
-			array( $this, '_removePreCB' ),
-			$this->_html
-		);
-
-		// replace TEXTAREAs with placeholders
-		$this->_html = preg_replace_callback(
-			'/\\s*<textarea(\\b[^>]*?>[\\s\\S]*?<\\/textarea>)\\s*/i',
-			array( $this, '_removeTextareaCB' ),
-			$this->_html
-		);
+		// Determine context before removing comments or invoking a script/style minifier.
+		$html = \LiteSpeed\Utility::html_tokens( $this->_html, function ( $token ) {
+			if ( ! empty( $token['opaque'] ) ) {
+				return $this->_reservePlace( $token[0] );
+			}
+			if ( ! empty( $token['raw'] ) ) {
+				$name = strtolower( $token['raw'] );
+				// Unclosed blocks remain intact; adding a terminator would change the document.
+				if ( ! empty( $token['close'] ) && 'script' === $name ) {
+					return $this->_removeScriptCB( [ $token[0], '', $token['raw_attrs'] . '>', $token['body'], '' ] );
+				}
+				if ( ! empty( $token['close'] ) && 'style' === $name ) {
+					return $this->_removeStyleCB( [ $token[0], $token['raw_attrs'] . '>', $token['body'] ] );
+				}
+				return $this->_reservePlace( $token[0] );
+			}
+			if ( ! empty( $token['tag'] ) && ! empty( $token['end'] ) ) {
+				// Keep the tag visible to whitespace rules while protecting all attribute bytes.
+				return '<' . $token['tag'] . $this->_reservePlace( $token['attrs'] ) . '>';
+			}
+			if ( '<!--' === substr( $token[0], 0, 4 ) && '-->' === substr( $token[0], -3 ) ) {
+				return $this->_commentCB( [ $token[0], substr( $token[0], 4, -3 ) ] );
+			}
+			if ( preg_match( '#\A</[a-z][^\s/>]*\s*>\z#i', $token[0] ) ) {
+				return $token[0];
+			}
+			return $this->_reservePlace( $token[0] );
+		}, true );
+		if ( null === $html ) {
+			return $this->_html;
+		}
+		$this->_html = $html;
 
 		// trim each line.
 		// @todo take into account attribute values that span multiple lines.
@@ -164,17 +162,8 @@ class HTML_MIN {
 		// $this->_html = preg_replace('/(<[a-z\\-]+)\\s+([^>]+>)/i', "$1\n$2", $this->_html);
 
 		// fill placeholders
-		$this->_html = str_replace(
-			array_keys( $this->_placeholders ),
-			array_values( $this->_placeholders ),
-			$this->_html
-		);
-		// issue 229: multi-pass to catch scripts that didn't get replaced in textareas
-		$this->_html = str_replace(
-			array_keys( $this->_placeholders ),
-			array_values( $this->_placeholders ),
-			$this->_html
-		);
+		// Restore once: inserted script/style content must not expand another token.
+		$this->_html = strtr( $this->_html, $this->_placeholders );
 
 		return $this->_html;
 	}
@@ -197,8 +186,8 @@ class HTML_MIN {
 			}
 		}
 
-		// Comment can be removed.
-		return '';
+		// A separator prevents removal from assembling a new tag across this boundary.
+		return ' ';
 	}
 
 	protected function _reservePlace( $content ) {
@@ -208,19 +197,16 @@ class HTML_MIN {
 		return $placeholder;
 	}
 
+	/** Generate a request-private token that content cannot predict. */
+	protected function _generate_hash() {
+		return 'MINIFYHTML' . bin2hex( random_bytes( 16 ) );
+	}
+
 	protected $_isXhtml         = null;
 	protected $_replacementHash = null;
 	protected $_placeholders    = array();
 	protected $_cssMinifier     = null;
 	protected $_jsMinifier      = null;
-
-	protected function _removePreCB( $m ) {
-		return $this->_reservePlace( "<pre{$m[1]}" );
-	}
-
-	protected function _removeTextareaCB( $m ) {
-		return $this->_reservePlace( "<textarea{$m[1]}" );
-	}
 
 	protected function _removeStyleCB( $m ) {
 		$openStyle = "<style{$m[1]}";
@@ -229,13 +215,18 @@ class HTML_MIN {
 		$css = preg_replace( '/(?:^\\s*<!--|-->\\s*$)/', '', $css );
 
 		// remove CDATA section markers
-		$css = $this->_removeCdata( $css );
+		if ( $this->_isXhtml ) {
+			$css = $this->_removeCdata( $css );
+		}
 
 		// minify
 		$minifier = $this->_cssMinifier
 			? $this->_cssMinifier
 			: 'trim';
 		$css      = call_user_func( $minifier, $css );
+		if ( false !== stripos( $css, '</style' ) ) {
+			return $this->_reservePlace( $m[0] );
+		}
 
 		return $this->_reservePlace(
 			$this->_needsCdata( $css )
@@ -258,7 +249,9 @@ class HTML_MIN {
 		}
 
 		// remove CDATA section markers
-		$js = $this->_removeCdata( $js );
+		if ( $this->_isXhtml ) {
+			$js = $this->_removeCdata( $js );
+		}
 
 		// minify
 		/**
@@ -270,6 +263,9 @@ class HTML_MIN {
 			$js = call_user_func( $this->_jsMinifier, $js, trim( $m[2] ) );
 		} else {
 			$js = trim( $js );
+		}
+		if ( false !== stripos( $js, '</script' ) ) {
+			return $this->_reservePlace( $m[0] );
 		}
 
 		return $this->_reservePlace(

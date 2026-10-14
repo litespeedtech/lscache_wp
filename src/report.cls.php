@@ -100,18 +100,22 @@ class Report extends Base {
 	 * @return string
 	 */
 	public function generate_php_report( $flags = INFO_GENERAL | INFO_CONFIGURATION ) {
-		// INFO_ENVIRONMENT
-		$flags &= ~INFO_MODULES;
-		$report = '';
-
 		ob_start();
 		phpinfo($flags); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_phpinfo
-		$report = ob_get_contents();
-		ob_end_clean();
+		$report = ob_get_clean();
 
 		preg_match('%<style type="text/css">(.*?)</style>.*?<body>(.*?)</body>%s', $report, $report);
 
-		return $report[2];
+		if ( ! isset( $report[2] ) ) {
+			return '';
+		}
+		return preg_replace_callback( '/(<tr\b[^>]*>\s*<td\b[^>]*>)(.*?)(<\/td>)(.*?)(<\/tr>)/is', static function ( $row ) {
+			$directive = html_entity_decode( wp_strip_all_tags( $row[2] ), ENT_QUOTES );
+			if ( preg_match( '/password|secret|token|auth|credential|private|key|session\.save_path|sendmail_path/i', $directive ) ) {
+				$row[4] = preg_replace( '/(<td\b[^>]*>).*?(<\/td>)/is', '$1[redacted]$2', $row[4] );
+			}
+			return $row[1] . $row[2] . $row[3] . $row[4] . $row[5];
+		}, $report[2] );
 	}
 
 	/**
@@ -250,7 +254,22 @@ class Report extends Base {
 				$buf .= $path . " returned false for file_get_contents.\n";
 				continue;
 			}
-			$content = preg_replace( '/^(\s*(?:SetEnv|SetEnvIf|SetEnvIfNoCase)\s+\S+)(?:\s+.*)?$/mi', '$1 [redacted]', $content );
+			$content = preg_replace( '/\\\\\r?\n[ \t]*/', ' ', $content );
+			// Response Header values are public; request-side and server-side values may carry credentials.
+			$content = preg_replace( '/^(\s*(?:SetEnv|SetEnvIf|SetEnvIfNoCase|SetEnvIfExpr|RequestHeader|php_value|php_flag|php_admin_value|php_admin_flag))\b[^\r\n]*$/mi', '$1 [redacted]', $content );
+			$content = preg_replace_callback( '/(\[|,)((?:E|env)=)("[^"]*"|[^,\]\r\n]*)/i', static function ( $matches ) {
+				$entry = trim( $matches[3], '"' );
+				$parts = explode( ':', $entry, 2 );
+				if ( 'noabort:1' === strtolower( $entry ) ) {
+					return $matches[0];
+				}
+				if ( count( $parts ) < 2 || in_array( strtolower( $parts[0] ), [ 'cache-control', 'cache-vary', 'lscache_vary_value', 'lscache_vary_cookie' ], true ) ) {
+					return $matches[0];
+				}
+				$quote = '"' === substr( $matches[3], 0, 1 ) ? '"' : '';
+				return $matches[1] . $matches[2] . $quote . $parts[0] . ':[redacted]' . $quote;
+			}, $content );
+			$content = preg_replace( '/^(\s*RewriteCond\s+%\{HTTP:(?:Authorization|Cookie|[^}]*(?:secret|token|key|auth|sig)[^}]*)\}\s+)[^\r\n]*$/mi', '$1[redacted]', $content );
 			$buf    .= $path . " contents:\n" . $content . "\n\n";
 		}
 		return $buf;

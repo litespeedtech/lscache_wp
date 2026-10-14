@@ -51,7 +51,7 @@ trait Cloud_Misc {
 
 		// Try to update dash content
 		$data = self::post( self::SVC_D_DASH, [ 'action2' => ( 'cdn_dash_mini' === $type ? 'cdn_dash' : $type ) ] );
-		if ( isset( $data['qc_activated'] ) && is_string( $data['qc_activated'] ) && in_array( $data['qc_activated'], [ 'anonymous', 'linked', 'cdn', 'deleted' ], true ) ) {
+		if ( ! empty( $data['qc_activated'] ) && in_array( $data['qc_activated'], [ 'anonymous', 'linked', 'cdn', 'deleted' ], true ) ) {
 			// Sync conf as changed
 			if ( 'cdn' === $data['qc_activated'] && ( empty( $this->_summary['qc_activated'] ) || $this->_summary['qc_activated'] !== $data['qc_activated'] ) ) {
 				$msg = sprintf( __( 'Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache' ), 'QUIC.cloud' );

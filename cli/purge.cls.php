@@ -10,7 +10,6 @@ namespace LiteSpeed\CLI;
 defined( 'WPINC' ) || exit();
 
 use LiteSpeed\Core;
-use LiteSpeed\Router;
 use LiteSpeed\Admin_Display;
 use WP_CLI;
 
@@ -56,14 +55,8 @@ class Purge {
 	private function dispatch( $action, $extra = [] ) {
 		// WP-CLI invokes this method directly; no browser request or nonce is involved.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$previous_request = $_REQUEST;
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$_REQUEST = array_merge( $_REQUEST, $extra );
-		try {
-			Core::cls()->proceed_action( $action );
-		} finally {
-			$_REQUEST = $previous_request;
-		}
+		Core::cls()->proceed_action( $action );
 	}
 
 	/**
@@ -140,20 +133,23 @@ class Purge {
 	 * @param array $args Positional arguments (URL).
 	 */
 	public function url( $args ) {
-		$data          = array(
-			Router::ACTION => Core::ACTION_QS_PURGE,
-		);
 		$url           = $args[0];
 		$deconstructed = wp_parse_url( $url );
-		if ( empty( $deconstructed ) ) {
+		if ( empty( $deconstructed['host'] ) ) {
 			WP_CLI::error( 'URL passed in is invalid.' );
 			return;
 		}
 
+		$switched = false;
 		if ( is_multisite() ) {
-			if ( 0 === get_blog_id_from_url( $deconstructed['host'], '/' ) ) {
+			$site = get_site_by_path( $deconstructed['host'], isset( $deconstructed['path'] ) ? $deconstructed['path'] : '/' );
+			if ( ! $site ) {
 				WP_CLI::error( 'Multisite URL passed in is invalid.' );
 				return;
+			}
+			if ( get_current_blog_id() !== (int) $site->blog_id ) {
+				switch_to_blog( $site->blog_id );
+				$switched = true;
 			}
 		} else {
 			$deconstructed_site = wp_parse_url( get_home_url() );
@@ -165,12 +161,17 @@ class Purge {
 
 		WP_CLI::debug( 'URL is ' . $url );
 
-		$purge_ret = WP_CLI\Utils\http_request( 'GET', $url, $data );
-		if ( $purge_ret->success ) {
-			WP_CLI::success( __( 'Purged the URL!', 'litespeed-cache' ) );
-		} else {
-			WP_CLI::error( 'Something went wrong! Got ' . $purge_ret->status_code );
+		try {
+			if ( ! \LiteSpeed\Purge::cls()->purge_url( $url ) || ! Core::kick_purge_queue() ) {
+				WP_CLI::error( 'Could not purge the URL.' );
+				return;
+			}
+		} finally {
+			if ( $switched ) {
+				restore_current_blog();
+			}
 		}
+		WP_CLI::success( __( 'Purged the URL!', 'litespeed-cache' ) );
 	}
 
 	/**
@@ -190,7 +191,7 @@ class Purge {
 			$term = $callback( $val );
 			if ( ! empty( $term ) ) {
 				WP_CLI::line( $term->name );
-				$filtered[] = in_array( $callback, array( 'get_tag', 'get_category' ), true ) ? $term->name : $val;
+				$filtered[] = in_array( $callback, [ 'get_tag', 'get_category' ], true ) ? $term->slug : $val;
 			} else {
 				WP_CLI::debug( '[LSCACHE] Skip val, not a valid term. ' . $val );
 			}

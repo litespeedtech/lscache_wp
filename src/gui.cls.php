@@ -725,7 +725,7 @@ class GUI extends Base {
 			);
 		}
 
-		if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
+		if ( defined( 'LSCWP_OBJECT_CACHE' ) && ( ! is_multisite() || current_user_can( 'manage_network_options' ) ) ) {
 			$wp_admin_bar->add_menu(
 				[
 					'parent' => 'litespeed-menu',
@@ -737,7 +737,7 @@ class GUI extends Base {
 			);
 		}
 
-		if ( Router::opcache_enabled() ) {
+		if ( Router::opcache_enabled() && ( ! is_multisite() || current_user_can( 'manage_network_options' ) ) ) {
 			$wp_admin_bar->add_menu(
 				[
 					'parent' => 'litespeed-menu',
@@ -944,7 +944,7 @@ class GUI extends Base {
 			);
 		}
 
-		if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
+		if ( defined( 'LSCWP_OBJECT_CACHE' ) && ( ! is_multisite() || current_user_can( 'manage_network_options' ) ) ) {
 			$wp_admin_bar->add_menu(
 				[
 					'parent' => 'litespeed-menu',
@@ -956,7 +956,7 @@ class GUI extends Base {
 			);
 		}
 
-		if ( Router::opcache_enabled() ) {
+		if ( Router::opcache_enabled() && ( ! is_multisite() || current_user_can( 'manage_network_options' ) ) ) {
 			$wp_admin_bar->add_menu(
 				[
 					'parent' => 'litespeed-menu',
@@ -1165,7 +1165,7 @@ class GUI extends Base {
 	 */
 	private function _enqueue_guest_docref_js( $buffer ) {
 		$js_con = File::read( LSCWP_DIR . self::LIB_GUEST_DOCREF_JS );
-		$buffer = preg_replace( '/<head>/', '<head><script data-no-optimize="1">' . $js_con . '</script>', $buffer, 1 );
+		$buffer = Utility::html_replace( '<head>', '<head><script data-no-optimize="1">' . $js_con . '</script>', $buffer, 1 );
 		return $buffer;
 	}
 
@@ -1182,7 +1182,7 @@ class GUI extends Base {
 		// Build path for guest endpoint using wp_parse_url for compatibility.
 		$guest_update_path = wp_parse_url( LSWCP_PLUGIN_URL . self::PHP_GUEST, PHP_URL_PATH );
 		$js_con            = str_replace( 'litespeed_url', esc_url( $guest_update_path ), $js_con );
-		$buffer            = preg_replace( '/<\/body>/', '<script data-no-optimize="1">' . $js_con . '</script></body>', $buffer, 1 );
+		$buffer            = Utility::insert_before_last_tag( $buffer, '</body>', '<script data-no-optimize="1">' . $js_con . '</script>' );
 		return $buffer;
 	}
 }

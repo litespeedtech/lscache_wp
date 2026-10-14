@@ -315,6 +315,11 @@ class Object_Cache extends Root {
 			return;
 		}
 
+		// Without a real AUTH_KEY the log name falls back to the options API, which re-enters this drop-in before the connection exists.
+		if ( ! defined( 'AUTH_KEY' ) || false !== strpos( AUTH_KEY, 'put your unique phrase here' ) ) {
+			return;
+		}
+
 		$litespeed_data_folder = defined( 'LITESPEED_DATA_FOLDER' ) ? LITESPEED_DATA_FOLDER : 'litespeed';
 		$lscwp_content_dir     = defined( 'LSCWP_CONTENT_DIR' ) ? LSCWP_CONTENT_DIR : WP_CONTENT_DIR;
 		$litespeed_static_dir  = $lscwp_content_dir . '/' . $litespeed_data_folder;
@@ -347,7 +352,7 @@ class Object_Cache extends Root {
 	 * @access public
 	 *
 	 * @param array $options Options to apply after update.
-	 * @return bool Whether the drop-in was installed.
+	 * @return void
 	 */
 	public function update_file( $options ) {
 		$changed = false;
@@ -361,7 +366,7 @@ class Object_Cache extends Root {
 			$this->debug_oc( 'copying object-cache.php file to ' . $_oc_wp_file );
 			if ( ! copy( $_oc_ori_file, $_oc_wp_file ) ) {
 				Admin_Display::error( __( 'Could not write the object cache drop-in.', 'litespeed-cache' ) );
-				return false;
+				return;
 			}
 			$changed = true;
 		}
@@ -372,7 +377,6 @@ class Object_Cache extends Root {
 		if ( $changed ) {
 			$this->_reconnect( $options );
 		}
-		return true;
 	}
 
 	/**
@@ -467,7 +471,6 @@ class Object_Cache extends Root {
 	 * @access private
 	 *
 	 * @return bool|null False on failure, true on success, null if driver missing.
-	 * @throws \RuntimeException Internally caught if connection or timeout setup fails.
 	 */
 	private function _connect() {
 		if ( isset( $this->_conn ) ) {
@@ -503,11 +506,11 @@ class Object_Cache extends Root {
 				// error_log( 'Object: _connect Redis' );
 
 				$method = $this->_cfg_persistent ? 'pconnect' : 'connect';
-				$port   = $this->_cfg_port ? (int) $this->_cfg_port : 6379;
-				// Bound both opening and reads, including reused persistent sockets, without a retry/backoff layer.
-				if ( ! $this->_conn->$method( $this->_cfg_host, $port, self::REDIS_TIMEOUT ) || ! $this->_conn->setOption( \Redis::OPT_READ_TIMEOUT, self::REDIS_TIMEOUT ) ) {
-					throw new \RuntimeException( 'Redis connection or read timeout setup failed.' );
-				}
+				// Port 0 means the driver default: -1 matches v7.9.1 omitting the argument, so a `/path.sock` host stays a UNIX socket.
+				$port = $this->_cfg_port ? (int) $this->_cfg_port : -1;
+				// Bound both opening and reads, including reused persistent sockets; a failed connect is caught by the PING check below.
+				$this->_conn->$method( $this->_cfg_host, $port, self::REDIS_TIMEOUT );
+				$this->_conn->setOption( \Redis::OPT_READ_TIMEOUT, self::REDIS_TIMEOUT );
 
 				if ( $this->_cfg_pswd ) {
 					if ( $this->_cfg_user ) {
@@ -788,10 +791,6 @@ class Object_Cache extends Root {
 		} else {
 			// Memcached treats expirations above 30 days as Unix timestamps.
 			$res = $this->_conn->$method( $key, $data, $ttl > 30 * DAY_IN_SECONDS ? time() + $ttl : $ttl );
-			// A rejected value must not disable later invalidations on a healthy connection.
-			if ( false === $res && in_array( $this->_conn->getResultCode(), [ \Memcached::RES_CONNECTION_FAILURE, \Memcached::RES_CONNECTION_BIND_FAILURE, \Memcached::RES_READ_FAILURE, \Memcached::RES_UNKNOWN_READ_FAILURE, \Memcached::RES_WRITE_FAILURE, \Memcached::RES_HOST_LOOKUP_FAILURE, \Memcached::RES_TIMEOUT, \Memcached::RES_ERRNO, \Memcached::RES_FAIL_UNIX_SOCKET, \Memcached::RES_SERVER_MARKED_DEAD, \Memcached::RES_SERVER_TEMPORARILY_DISABLED, \Memcached::RES_CONNECTION_SOCKET_CREATE_FAILURE, \Memcached::RES_NO_SERVERS ], true ) ) {
-				$this->_cfg_enabled = false;
-			}
 		}
 
 		return $res;
@@ -859,32 +858,6 @@ class Object_Cache extends Root {
 		}
 
 		return (bool) $res;
-	}
-
-	/**
-	 * Purge OC when this installation switches between the QUIC.cloud dev and live environments.
-	 *
-	 * Only dev leaves a marker in OC. Eviction or a manual purge makes dev purge again on the next request.
-	 *
-	 * @since 7.9.2
-	 */
-	public function purge_on_environment_change() {
-		if ( ! $this->_cfg_enabled || ! defined( 'LSOC_PREFIX' ) || ! isset( $GLOBALS['wp_object_cache'] ) || ! is_callable( [ $GLOBALS['wp_object_cache'], 'flush_runtime' ] ) ) {
-			return;
-		}
-
-		$is_dev = defined( 'LITESPEED_DEV' ) && LITESPEED_DEV;
-		$key    = LSOC_PREFIX . '.litespeed.dev';
-		// Use the always-persistent read path even when Cache WP-Admin is disabled.
-		$was_dev = 'dev' === $this->get( $key, 'site-transient' );
-		if ( $is_dev === $was_dev || ! $this->flush() ) {
-			return;
-		}
-
-		$GLOBALS['wp_object_cache']->flush_runtime();
-		if ( $is_dev ) {
-			$this->set( $key, 'dev', 0 );
-		}
 	}
 
 	/**

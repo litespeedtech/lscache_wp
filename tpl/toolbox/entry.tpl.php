@@ -26,7 +26,9 @@ if ( ! $this->_is_multisite || $this->_is_network_admin ) {
 
 if ( ! $this->_is_network_admin ) {
 	$menu_list['heartbeat'] = esc_html__( 'Heartbeat', 'litespeed-cache' );
-	$menu_list['report']    = esc_html__( 'Report', 'litespeed-cache' );
+	if ( ! is_multisite() || current_user_can( 'manage_network_options' ) ) {
+		$menu_list['report'] = esc_html__( 'Report', 'litespeed-cache' );
+	}
 }
 
 if ( ! $this->_is_multisite || $this->_is_network_admin ) {

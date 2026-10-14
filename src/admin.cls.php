@@ -156,7 +156,7 @@ class Admin extends Root {
 	}
 
 	/**
-	 * Clean up the input (array or scalar) of any extra slashes/spaces.
+	 * Trim already-unslashed input, including nested values.
 	 *
 	 * @since 1.0.4
 	 *
@@ -168,7 +168,7 @@ class Admin extends Root {
 			return array_map( __CLASS__ . '::cleanup_text', $input );
 		}
 
-		return stripslashes(trim($input));
+		return trim($input);
 	}
 
 	/**

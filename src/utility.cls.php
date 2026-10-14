@@ -14,6 +14,202 @@ defined( 'WPINC' ) || exit();
  * Miscellaneous utility methods used across the plugin.
  */
 class Utility extends Root {
+	/**
+	 * Consume complete HTML tokens before looking inside them. Raw-text bodies and
+	 * quoted attributes must never be rescanned as sibling tags. This is a lexical
+	 * boundary for rewrites, not a sanitizer or a replacement for KSES.
+	 */
+	const HTML_ATTR_PATTERN = '(?:[\x09\x0a\x0c\x0d /]+|[^\x09\x0a\x0c\x0d />=]+(?:[\x09\x0a\x0c\x0d ]*=[\x09\x0a\x0c\x0d ]*(?>"[^"]*(?:"|\z)|\'[^\']*(?:\'|\z)|[^\x09\x0a\x0c\x0d >]*))?|=)*+';
+
+	private const HTML_TOKEN_PREFIX = '~<!--(?:>|->|.*?(?:-->|--!>|\z))'
+		. '|<!\[CDATA\[.*?(?:\]\]>|\z)'
+		. '|<!DOCTYPE(?:[^\'">]|"[^"]*(?:"|\z)|\'[^\']*(?:\'|\z))*(?:>|\z)'
+		. '|<![^>]*(?:>|\z)|<\?[^>]*(?:>|\z)'
+		. '|<plaintext(?=[\x09\x0a\x0c\x0d />])[^>]*>.*\z'
+		. '|<(?P<raw>script|style|textarea|title|xmp|iframe|noembed|noframes|noscript)(?=[\x09\x0a\x0c\x0d />])'
+		. '(?P<raw_attrs>' . self::HTML_ATTR_PATTERN . ')>(?P<body>';
+
+	private const HTML_TOKEN_SUFFIX = ')(?P<close></(?P=raw)(?=[\x09\x0a\x0c\x0d />])' . self::HTML_ATTR_PATTERN . '>|\z)'
+		. '|<(?P<tag>[a-z][^\x09\x0a\x0c\x0d />]*)(?P<attrs>' . self::HTML_ATTR_PATTERN . ')(?P<end>>|\z)'
+		. '|</[a-z][^\x09\x0a\x0c\x0d />]*' . self::HTML_ATTR_PATTERN . '(?:>|\z)'
+		. '|</[^>]*(?:>|\z)~is';
+
+	const HTML_TOKEN_PATTERN = self::HTML_TOKEN_PREFIX . '.*?' . self::HTML_TOKEN_SUFFIX;
+	// CDATA can contain raw-element end tags inside an opaque foreign block.
+	private const HTML_OPAQUE_TOKEN_PATTERN = self::HTML_TOKEN_PREFIX . '(?:<!\[CDATA\[.*?(?:\]\]>|\z)|(?!<!\[CDATA\[).)*?' . self::HTML_TOKEN_SUFFIX;
+
+	/**
+	 * Walk HTML boundaries, retaining opaque blocks without stopping later rewrites.
+	 *
+	 * @param string   $html         Original HTML.
+	 * @param callable $callback     Token replacement; each token includes its original byte offset.
+	 * @param bool     $preserve_pre Preserve pre blocks only for whitespace minification.
+	 * @return string|null Null means callers must preserve their original input.
+	 */
+	public static function html_tokens( $html, $callback, $preserve_pre = false ) {
+		$result = '';
+		$offset = 0;
+		$cursor = 0;
+		$depth  = 0;
+		$block  = [];
+		while ( true ) {
+			$matched = preg_match( $depth ? self::HTML_OPAQUE_TOKEN_PATTERN : self::HTML_TOKEN_PATTERN, $html, $matches, PREG_OFFSET_CAPTURE, $offset );
+			if ( false === $matched ) {
+				return null;
+			}
+			if ( ! $matched ) {
+				break;
+			}
+			$token = [];
+			foreach ( $matches as $key => $value ) {
+				$token[ $key ] = $value[0];
+			}
+			$start  = $matches[0][1];
+			$offset = $start + strlen( $token[0] );
+			// A script end tag inside double-escaped data only returns to escaped data.
+			if ( ! empty( $token['raw'] ) && 'script' === strtolower( $token['raw'] ) && false !== strpos( $token['body'], '<!--' ) && false !== stripos( $token['body'], '<script' ) ) {
+				$body_start = $start + strlen( $token['raw_attrs'] ) + strlen( $token['raw'] ) + 2;
+				$ending     = self::_html_script_end( $html, $body_start, (bool) $depth );
+				if ( null === $ending ) {
+					return null;
+				}
+				list( $offset, $token['close'] ) = $ending;
+
+				$token['opaque'] = true;
+				$token[0]        = substr( $html, $start, $offset - $start );
+			}
+			$name = isset( $token['tag'] ) ? strtolower( $token['tag'] ) : '';
+			// A slash in an unquoted attribute value does not close a foreign element.
+			$self_closed = in_array( $name, [ 'svg', 'math' ], true ) && self::html_self_closing( $token['attrs'] );
+			if ( $depth ) {
+				if ( $name === $block['raw'] && ! $self_closed ) {
+					++$depth;
+				} elseif ( preg_match( '~\A</' . $block['raw'] . '(?=[\x09\x0a\x0c\x0d />])~i', $token[0] ) && '>' === substr( $token[0], -1 ) ) {
+					--$depth;
+				}
+				if ( $depth ) {
+					continue;
+				}
+				$block[0]       = substr( $html, $cursor, $offset - $cursor );
+				$block['close'] = $token[0];
+				$token          = $block;
+			} else {
+				$result .= substr( $html, $cursor, $start - $cursor );
+				$cursor  = $start;
+				if ( in_array( $name, [ 'template', 'svg', 'math' ], true ) || ( $preserve_pre && 'pre' === $name ) ) {
+					// Keep the whole block opaque while counting real same-name boundaries.
+					$block = [ 0 => $token[0], 'raw' => $name, 'close' => '' ];
+					if ( ! $self_closed ) {
+						$depth = 1;
+						continue;
+					}
+					$token = $block;
+				}
+			}
+			$token['offset'] = $cursor;
+			$result         .= $callback( $token );
+			$cursor          = $offset;
+		}
+		if ( $depth ) {
+			$block[0]        = substr( $html, $cursor );
+			$block['offset'] = $cursor;
+			return $result . $callback( $block );
+		}
+		return $result . substr( $html, $cursor );
+	}
+
+	/**
+	 * Find the real script end while honoring HTML's escaped-data transitions.
+	 *
+	 * @param string $html       Original HTML.
+	 * @param int    $offset     Start of the script body.
+	 * @param bool   $skip_cdata Whether the script is inside an opaque block.
+	 * @return array|null End offset and closing tag; null on a PCRE failure.
+	 */
+	private static function _html_script_end( $html, $offset, $skip_cdata ) {
+		$pattern = '~' . ( $skip_cdata ? '<!\[CDATA\[.*?(?:\]\]>|\z)|' : '' ) . '<!--|-->|</?script(?=[\x09\x0a\x0c\x0d />])~is';
+		$state   = 'data';
+		while ( true ) {
+			$found = preg_match( $pattern, $html, $matches, PREG_OFFSET_CAPTURE, $offset );
+			if ( false === $found ) {
+				return null;
+			}
+			if ( ! $found ) {
+				return [ strlen( $html ), '' ];
+			}
+			$marker = strtolower( $matches[0][0] );
+			$start  = $matches[0][1];
+			$offset = $start + strlen( $marker );
+			if ( '-->' === $marker ) {
+				$state = 'data';
+			} elseif ( '<!--' === $marker && 'data' === $state ) {
+				$state = 'escaped';
+			} elseif ( '<script' === $marker && 'escaped' === $state ) {
+				$state = 'double-escaped';
+			} elseif ( '</script' === $marker ) {
+				if ( 'double-escaped' === $state ) {
+					$state = 'escaped';
+					continue;
+				}
+				$found = preg_match( '~\G</script' . self::HTML_ATTR_PATTERN . '>~is', $html, $ending, 0, $start );
+				if ( false === $found ) {
+					return null;
+				}
+				return $found ? [ $start + strlen( $ending[0] ), $ending[0] ] : [ strlen( $html ), '' ];
+			}
+		}
+	}
+
+	/**
+	 * Distinguish a closing slash from a slash belonging to an unquoted value.
+	 *
+	 * @param string $attrs Raw attributes, excluding the final greater-than sign.
+	 * @return bool
+	 */
+	public static function html_self_closing( $attrs ) {
+		return 1 === preg_match( '~\A(?:[\x09\x0a\x0c\x0d /]+|[^\x09\x0a\x0c\x0d />=]+(?:[\x09\x0a\x0c\x0d ]*=[\x09\x0a\x0c\x0d ]*(?>"[^"]*"|\'[^\']*\'|(?!["\'])[^\x09\x0a\x0c\x0d >]*+))?+)*?/\z~', $attrs );
+	}
+
+	/**
+	 * Keep only the requested real elements for resource discovery.
+	 *
+	 * @param string $html Original HTML.
+	 * @param array  $tags Lowercase element names to retain.
+	 * @return string|null Masked HTML, or null on a PCRE failure.
+	 */
+	public static function html_mask( $html, $tags ) {
+		return self::html_tokens( $html, static function ( $token ) use ( $tags ) {
+			$name     = ! empty( $token['raw'] ) ? $token['raw'] : ( isset( $token['tag'] ) ? $token['tag'] : '' );
+			$complete = ! empty( $token['raw'] ) ? ! empty( $token['close'] ) : ! empty( $token['end'] );
+			return $complete && empty( $token['opaque'] ) && in_array( strtolower( $name ), $tags, true ) ? $token[0] : str_repeat( ' ', strlen( $token[0] ) );
+		} );
+	}
+
+	/**
+	 * Replace complete elements without touching identical text inside other tokens.
+	 *
+	 * @param string|array $search      Original elements, optionally followed by newlines.
+	 * @param string|array $replacement Replacements in matching order.
+	 * @param string       $html        Original HTML.
+	 * @param int          $limit       Maximum replacements, or -1 for all.
+	 * @return string
+	 */
+	public static function html_replace( $search, $replacement, $html, $limit = -1 ) {
+		$map = [];
+		foreach ( (array) $search as $key => $element ) {
+			$value = is_array( $replacement ) ? ( $replacement[ $key ] ?? '' ) : $replacement;
+			// Keep a separator so removing an element cannot assemble a new tag.
+			$map[ rtrim( $element, "\r\n" ) ] = '' === $value ? ' ' : $value;
+		}
+		$result = self::html_tokens( $html, static function ( $token ) use ( $map, &$limit ) {
+			if ( 0 === $limit || ! isset( $map[ $token[0] ] ) ) {
+				return $token[0];
+			}
+			--$limit;
+			return $map[ $token[0] ];
+		} );
+		return null === $result ? $html : $result;
+	}
 
 	/**
 	 * Cached list of extra internal domains.
@@ -21,6 +217,25 @@ class Utility extends Root {
 	 * @var array<int,string>|null
 	 */
 	private static $_internal_domains;
+
+	/**
+	 * Insert once before the last actual closing tag, skipping quoted and raw text.
+	 *
+	 * @param string $content Original markup.
+	 * @param string $tag     Closing tag to locate.
+	 * @param string $html    Markup to insert.
+	 * @return string
+	 */
+	public static function insert_before_last_tag( $content, $tag, $html ) {
+		$position = false;
+		$result   = self::html_tokens( $content, static function ( $token ) use ( $tag, &$position ) {
+			if ( 0 === strcasecmp( $token[0], $tag ) ) {
+				$position = $token['offset'];
+			}
+			return $token[0];
+		} );
+		return null === $result || false === $position ? $content : substr_replace( $content, $html, $position, 0 );
+	}
 
 	/**
 	 * Validate a list of regex rules by attempting to compile them.
@@ -287,6 +502,9 @@ class Utility extends Root {
 	 * @return array<string,string> Attributes.
 	 */
 	public static function parse_attr( $str ) {
+		if ( preg_match( '/\A\s*<\w+((?:"[^"]*"|\'[^\']*\'|[^\'">])*)>/s', $str, $opening ) ) {
+			$str = $opening[1];
+		}
 		$attrs  = [];
 		$parsed = wp_kses_hair( $str, self::_kses_protocols() );
 		foreach ( $parsed as $name => $data ) {
@@ -658,7 +876,7 @@ class Utility extends Root {
 	 * @since 1.3
 	 *
 	 * @param array|string $arr  Lines as array or newline-separated string.
-	 * @param string|null  $type Comma-separated transforms: uri,basename,drop_webp,relative,domain,noprotocol,trailingslash,string.
+	 * @param string|null  $type Comma-separated transforms: uri,basename,drop_webp,relative,domain,noprotocol,trailingslash,urlchars,string.
 	 * @return array|string Sanitized list or string.
 	 */
 	public static function sanitize_lines( $arr, $type = null ) {
@@ -675,7 +893,16 @@ class Utility extends Root {
 			$arr = explode( "\n", $arr );
 		}
 
-		$arr     = array_map( 'trim', $arr );
+		$arr = array_map( 'trim', $arr );
+		if ( in_array( 'urlchars', $types, true ) ) {
+			$arr = array_filter( $arr, static function ( $value ) {
+				// Comments are never localization needles; keep their author text.
+				if ( 0 === strpos( $value, '#' ) ) {
+					return ! preg_match( '/[\x00-\x1f\x7f]/', $value );
+				}
+				return ! preg_match( '/["\'<>\\\\`\x00-\x1f\x7f]|\s\S*\s/', $value );
+			} );
+		}
 		$changed = false;
 		if ( in_array( 'uri', $types, true ) ) {
 			$arr     = array_map( __CLASS__ . '::url2uri', $arr );
@@ -838,10 +1065,9 @@ class Utility extends Root {
 	 *
 	 * @param string       $url              URL.
 	 * @param string|false $addition_postfix Optional postfix to append to path before checking.
-	 * @param bool         $allow_missing    Whether a hook-provided local target may be absent.
 	 * @return array{0:string,1:int}|false [local path, size] or false.
 	 */
-	public static function is_internal_file( $url, $addition_postfix = false, $allow_missing = false ) {
+	public static function is_internal_file( $url, $addition_postfix = false ) {
 		if ( 'data:' === substr( $url, 0, 5 ) ) {
 			Debug2::debug2( '[Util] data: content not file' );
 			return false;
@@ -863,7 +1089,15 @@ class Utility extends Root {
 		if ( false !== strpos( $url_parsed['path'], "\0" ) ) {
 			return false;
 		}
-		$docroot = isset( $_SERVER['DOCUMENT_ROOT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) : '';
+		$docroot       = isset( $_SERVER['DOCUMENT_ROOT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) : '';
+		$from_frontend = '' === $docroot;
+		if ( $from_frontend ) {
+			$docroot  = Router::frontend_path();
+			$homepath = wp_parse_url( home_url(), PHP_URL_PATH );
+			if ( $homepath && '/' !== $homepath && 0 === strpos( $url_parsed['path'], rtrim( $homepath, '/' ) . '/' ) ) {
+				$url_parsed['path'] = substr( $url_parsed['path'], strlen( rtrim( $homepath, '/' ) ) );
+			}
+		}
 
 		// Replace child blog path for assets (multisite).
 		if ( is_multisite() && defined( 'PATH_CURRENT_SITE' ) ) {
@@ -874,7 +1108,7 @@ class Utility extends Root {
 
 		// Parse file path.
 		if ( '/' === substr( $url_parsed['path'], 0, 1 ) ) {
-			if ( defined( 'LITESPEED_WP_REALPATH' ) ) {
+			if ( ! $from_frontend && defined( 'LITESPEED_WP_REALPATH' ) ) {
 				$file_path_ori = $docroot . constant( 'LITESPEED_WP_REALPATH' ) . $url_parsed['path'];
 			} else {
 				$file_path_ori = $docroot . $url_parsed['path'];
@@ -897,22 +1131,26 @@ class Utility extends Root {
 		$file_path_ori = $mapped_path;
 
 		$file_path = realpath( $file_path_ori );
-		if ( ! $file_path && is_link( $file_path_ori ) ) {
-			return false;
-		}
-		// Missing sidecars may be created only inside an existing, contained parent directory.
-		if ( ! $is_mapped && ( '' === $docroot || ! File::within( $file_path ? $file_path : dirname( $file_path_ori ), $docroot ) ) ) {
-			return false;
-		}
-		if ( ! $file_path && $allow_missing ) {
-			$file_path = $file_path_ori;
-		}
-		if ( ( file_exists( $file_path ) || ! $allow_missing ) && ! is_file( $file_path ) ) {
+		if ( ! $file_path || ! is_file( $file_path ) ) {
 			Debug2::debug2( '[Util] file not exist: ' . $file_path_ori );
 			return false;
 		}
+		// Unmapped files must resolve inside a configured document, WordPress, content or upload root.
+		if ( ! $is_mapped ) {
+			$uploads = wp_get_upload_dir();
+			$inside  = false;
+			foreach ( [ $docroot, ABSPATH, WP_CONTENT_DIR, $uploads['basedir'] ] as $root ) {
+				if ( File::within( $file_path, $root ) ) {
+					$inside = true;
+					break;
+				}
+			}
+			if ( ! $inside ) {
+				return false;
+			}
+		}
 
-		return [ $file_path, is_file( $file_path ) ? (int) filesize( $file_path ) : 0 ];
+		return [ $file_path, (int) filesize( $file_path ) ];
 	}
 
 	/**

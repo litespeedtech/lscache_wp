@@ -1,175 +1,74 @@
-/**
- * CDN module
- * @author Hai Zheng
- */
-class CDNMapping extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			list: props.list,
-		};
+(function ($) {
+	'use strict';
 
-		this.onChange = this.onChange.bind(this);
-		this.delRow = this.delRow.bind(this);
-		this.addNew = this.addNew.bind(this);
-	}
-
-	onChange(e, index) {
-		const target = e.currentTarget;
-		const value = target.dataset.hasOwnProperty('value') ? Boolean(target.dataset.value * 1) : target.value;
-		const list = this.state.list;
-		list[index][target.dataset.type] = value;
-
-		this.setState({
-			list: list,
-		});
-	}
-
-	delRow(index) {
-		const data = this.state.list;
-		data.splice(index, 1);
-		this.setState({ list: data });
-	}
-
-	addNew() {
-		const list = this.state.list;
-		list.push({ url: '' });
-		this.setState({ list: list });
-	}
-
-	render() {
-		return (
-			<React.Fragment>
-				{this.state.list.map((item, i) => (
-					<CDNMappingBlock item={item} key={i} index={i} onChange={this.onChange} delRow={this.delRow} />
-				))}
-
-				<p>
-					<button type="button" className="button button-link litespeed-form-action litespeed-link-with-icon" onClick={this.addNew}>
-						<span className="dashicons dashicons-plus-alt"></span>
-						{litespeed_data['lang']['add_cdn_mapping_row']}
-					</button>
-				</p>
-			</React.Fragment>
+	window.litespeed_cdn_mapping = function (container, list) {
+		const lang = litespeed_data.lang;
+		const name = litespeed_data.ids.cdn_mapping;
+		const $container = $(container);
+		const $add = $('<p>').append(
+			$('<button>', { type: 'button', class: 'button button-link litespeed-form-action litespeed-link-with-icon' })
+				.append($('<span>', { class: 'dashicons dashicons-plus-alt' }), document.createTextNode(lang.add_cdn_mapping_row))
+				.on('click', function () { add_row({ url: '', filetype: '' }); })
 		);
-	}
-}
+		$container.empty().append($add);
 
-// { url: '', inc_img: true, inc_css: false, inc_js: false, filetype: [ '.aac', '.eot', ... ] }
-class CDNMappingBlock extends React.Component {
-	constructor(props) {
-		super(props);
+		function add_row(item) {
+			const filetype = Array.isArray(item.filetype) ? item.filetype.join('\n') : (item.filetype || '');
+			const $row = $('<div>', { class: 'litespeed-block' });
+			const $toggles = $('<div>', { class: 'litespeed-col-auto litespeed-cdn-mapping-col2' });
+			['inc_img', 'inc_css', 'inc_js'].forEach(function (key) {
+				const $input = $('<input>', { type: 'hidden', name: name + '[' + key + '][]' }).val(item[key] ? 1 : 0);
+				const $toggle = $('<div>', { role: 'switch', tabindex: 0, 'aria-label': lang['cdn_mapping_' + key] });
+				function update_toggle() {
+					const enabled = $input.val() === '1';
+					$toggle.attr({
+						class: 'litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-' + (enabled ? 'primary' : 'default litespeed-toggleoff'),
+						'aria-checked': enabled ? 'true' : 'false',
+					});
+				}
+				$toggle.append($input, $('<div>', { class: 'litespeed-toggle-group' }).append(
+					$('<label>', { class: 'litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on' }).text(lang.on),
+					$('<label>', { class: 'litespeed-toggle-btn litespeed-toggle-btn-default litespeed-toggle-active litespeed-toggle-off' }).text(lang.off),
+					$('<span>', { class: 'litespeed-toggle-handle litespeed-toggle-btn litespeed-toggle-btn-default' })
+				)).on('click', function () {
+					$input.val($input.val() === '1' ? 0 : 1);
+					update_toggle();
+				}).on('keydown', function (event) {
+					if (event.key === ' ' || event.key === 'Enter') {
+						event.preventDefault();
+						$toggle.trigger('click');
+					}
+				});
+				update_toggle();
+				$toggles.append($('<div>', { class: 'litespeed-row litespeed-toggle-wrapper' }).append(
+					$('<div>', { class: 'litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle' }).text(lang['cdn_mapping_' + key]), $toggle
+				));
+			});
 
-		this.onChange = this.onChange.bind(this);
-		this.delRow = this.delRow.bind(this);
-	}
+			// WordPress supplies this description with an escaped example URL.
+			$row.append(
+				$('<div>', { class: 'litespeed-cdn-mapping-col1' }).append(
+					$('<label>', { class: 'litespeed-form-label' }).text(lang.cdn_mapping_url),
+					$('<input>', { type: 'text', name: name + '[url][]', class: 'regular-text litespeed-input-long', 'aria-label': lang.cdn_mapping_url }).val(item.url || ''),
+					$('<div>', { class: 'litespeed-desc' }).append($('<span>').html(lang.cdn_mapping_url_desc))
+				),
+				$toggles,
+				$('<div>', { class: 'litespeed-col-auto' }).append(
+					$('<label>', { class: 'litespeed-form-label' }).text(lang.cdn_mapping_filetype),
+					$('<textarea>', { name: name + '[filetype][]', rows: filetype.split('\n').length + 2, cols: 18, 'aria-label': lang.cdn_mapping_filetype }).val(filetype)
+						.on('input', function () { $(this).attr('rows', this.value.split('\n').length + 2); }),
+					$('<div>', { class: 'litespeed-desc' }).append(
+						$('<a>', { href: lang.cdn_file_types_url, target: '_blank', rel: 'noopener noreferrer' }).text(lang.cdn_file_types_link_text)
+					)
+				),
+				$('<div>', { class: 'litespeed-col-auto' }).append(
+					$('<button>', { type: 'button', class: 'button button-link litespeed-collection-button litespeed-danger' })
+						.append($('<span>', { class: 'dashicons dashicons-dismiss' }), $('<span>', { class: 'screen-reader-text' }).text(lang.cdn_mapping_remove))
+						.on('click', function () { $row.remove(); })
+				)
+			).insertBefore($add);
+		}
 
-	onChange(e) {
-		this.props.onChange(e, this.props.index);
-	}
-
-	delRow() {
-		this.props.delRow(this.props.index);
-	}
-
-	render() {
-		const name_prefix = litespeed_data['ids']['cdn_mapping'];
-
-		const item = this.props.item;
-
-		const filetype = item.filetype ? (Array.isArray(item.filetype) ? item.filetype.join('\n') : item.filetype) : '';
-		return (
-			<div className="litespeed-block">
-				<div className="litespeed-cdn-mapping-col1">
-					<label className="litespeed-form-label">{litespeed_data['lang']['cdn_mapping_url']}</label>
-					<input
-						type="text"
-						name={name_prefix + '[url][]'}
-						className="regular-text litespeed-input-long"
-						value={item.url ? item.url : ''}
-						data-type="url"
-						onChange={this.onChange}
-					/>
-
-					<div className="litespeed-desc">
-						<span dangerouslySetInnerHTML={{ __html: litespeed_data['lang']['cdn_mapping_url_desc'] }} />
-					</div>
-				</div>
-
-				<div className="litespeed-col-auto litespeed-cdn-mapping-col2">
-					<div className="litespeed-row litespeed-toggle-wrapper">
-						<div className="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">{litespeed_data['lang']['cdn_mapping_inc_img']}</div>
-						<div
-							className={`litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-${item.inc_img ? 'primary' : 'default litespeed-toggleoff'}`}
-							data-type="inc_img"
-							data-value={item.inc_img ? 0 : 1}
-							onClick={this.onChange}
-						>
-							<input name={name_prefix + '[inc_img][]'} type="hidden" value={item.inc_img ? 1 : 0} />
-							<div className="litespeed-toggle-group">
-								<label className="litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on">{litespeed_data['lang']['on']}</label>
-								<label className="litespeed-toggle-btn litespeed-toggle-btn-default litespeed-toggle-active litespeed-toggle-off">
-									{litespeed_data['lang']['off']}
-								</label>
-								<span className="litespeed-toggle-handle litespeed-toggle-btn litespeed-toggle-btn-default"></span>
-							</div>
-						</div>
-					</div>
-					<div className="litespeed-row litespeed-toggle-wrapper">
-						<div className="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">{litespeed_data['lang']['cdn_mapping_inc_css']}</div>
-						<div
-							className={`litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-${item.inc_css ? 'primary' : 'default litespeed-toggleoff'}`}
-							data-type="inc_css"
-							data-value={item.inc_css ? 0 : 1}
-							onClick={this.onChange}
-						>
-							<input name={name_prefix + '[inc_css][]'} type="hidden" value={item.inc_css ? 1 : 0} />
-							<div className="litespeed-toggle-group">
-								<label className="litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on">{litespeed_data['lang']['on']}</label>
-								<label className="litespeed-toggle-btn litespeed-toggle-btn-default litespeed-toggle-active litespeed-toggle-off">
-									{litespeed_data['lang']['off']}
-								</label>
-								<span className="litespeed-toggle-handle litespeed-toggle-btn litespeed-toggle-btn-default"></span>
-							</div>
-						</div>
-					</div>
-					<div className="litespeed-row litespeed-toggle-wrapper">
-						<div className="litespeed-cdn-mapping-inc litespeed-form-label litespeed-form-label--toggle">{litespeed_data['lang']['cdn_mapping_inc_js']}</div>
-						<div
-							className={`litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-${item.inc_js ? 'primary' : 'default litespeed-toggleoff'}`}
-							data-type="inc_js"
-							data-value={item.inc_js ? 0 : 1}
-							onClick={this.onChange}
-						>
-							<input name={name_prefix + '[inc_js][]'} type="hidden" value={item.inc_js ? 1 : 0} />
-							<div className="litespeed-toggle-group">
-								<label className="litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on">{litespeed_data['lang']['on']}</label>
-								<label className="litespeed-toggle-btn litespeed-toggle-btn-default litespeed-toggle-active litespeed-toggle-off">
-									{litespeed_data['lang']['off']}
-								</label>
-								<span className="litespeed-toggle-handle litespeed-toggle-btn litespeed-toggle-btn-default"></span>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div className="litespeed-col-auto">
-					<label className="litespeed-form-label">{litespeed_data['lang']['cdn_mapping_filetype']}</label>
-					<textarea name={name_prefix + '[filetype][]'} rows={filetype.split('\n').length + 2} cols="18" value={filetype} data-type="filetype" onChange={this.onChange} />
-					<div className="litespeed-desc">
-						<a href={litespeed_data['lang']['cdn_file_types_url']} target="_blank" rel="noopener noreferrer">
-							{litespeed_data['lang']['cdn_file_types_link_text']}
-						</a>
-					</div>
-				</div>
-
-				<div className="litespeed-col-auto">
-					<button type="button" className="button button-link litespeed-collection-button litespeed-danger" onClick={this.delRow}>
-						<span className="dashicons dashicons-dismiss"></span>
-						<span className="screen-reader-text">{litespeed_data['lang']['cdn_mapping_remove']}</span>
-					</button>
-				</div>
-			</div>
-		);
-	}
-}
+		Object.values(list).forEach(add_row);
+	};
+})(jQuery);

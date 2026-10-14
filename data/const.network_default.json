@@ -26,7 +26,7 @@
 	"object-non_persistent_groups": "comment\ncounts\nplugins",
 	"debug-disable_all": false,
 	"debug": false,
-	"debug-ips": "127.0.0.1",
+	"debug-ips": "",
 	"debug-level": false,
 	"debug-filesize": 3,
 	"debug-collapse_qs": false,

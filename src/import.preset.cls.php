@@ -28,7 +28,7 @@ class Preset extends Import {
 	 * @since 7.9.2
 	 */
 	const PATTERN_NAME = '/^[A-Za-z0-9][A-Za-z0-9_-]*\z/';
-	const PATTERN_BACKUP_NAME = '/^backup-([0-9]+)(?:-[a-f0-9]{32})?-before-([A-Za-z0-9_-]+)\z/';
+	const PATTERN_BACKUP_NAME = '/^backup-([0-9]+)-before-([A-Za-z0-9_-]+)\z/';
 
 	/**
 	 * Validate a preset or backup name; false when it cannot be used as a file name.
@@ -56,12 +56,8 @@ class Preset extends Import {
 			if ('f' !== $file['type'] || self::BACKUP_EXTENSION !== substr($file['name'], -4)) {
 				continue;
 			}
-			$path = path_join( self::backup_dir(), $file['name'] );
-			if ( ! is_file( $path ) || is_link( $path ) || ! File::within( $path, self::backup_dir() ) || self::BACKUP_GUARD !== @file_get_contents( $path, false, null, 0, strlen( self::BACKUP_GUARD ) ) ) {
-				continue;
-			}
-			$name = self::sanitize_name(self::basename($file['name']));
-			if ( false !== $name && preg_match( self::PATTERN_BACKUP_NAME, $name ) ) {
+			$name = self::basename($file['name']);
+			if ( preg_match( self::PATTERN_BACKUP_NAME, $name ) ) {
 				$backups[] = $name;
 			}
 		}
@@ -178,26 +174,16 @@ class Preset extends Import {
 	}
 
 	/**
-	 * Restores settings from an exact backup name or legacy timestamp, then deletes the file.
+	 * Restores settings from the backup file with the given timestamp, then deletes the file
 	 *
 	 * @since  5.3.0
 	 * @access public
 	 */
 	public function restore( $timestamp ) {
-		$requested = self::sanitize_name( $timestamp );
-		$available = self::get_backups();
-		$backups   = array();
-		if ( $requested && preg_match( self::PATTERN_BACKUP_NAME, $requested ) ) {
-			if ( in_array( $requested, $available, true ) ) {
-				$backups[] = $requested;
-			}
-		} else {
-			$timestamp = (int) $timestamp;
-			foreach ( $available as $backup ) {
-				$parts = [];
-				if ( $timestamp > 0 && preg_match( self::PATTERN_BACKUP_NAME, $backup, $parts ) && (int) $parts[1] === $timestamp ) {
-					$backups[] = $backup;
-				}
+		$backups = [];
+		foreach (self::get_backups() as $backup) {
+			if (preg_match('/^backup-' . (int) $timestamp . '-/', $backup) === 1) {
+				$backups[] = $backup;
 			}
 		}
 
@@ -209,7 +195,7 @@ class Preset extends Import {
 		$backup = $backups[0];
 		$path   = self::get_backup($backup);
 
-		if (!$path || !$this->import_file($path)) {
+		if (!$this->import_file($path)) {
 			$this->log('error');
 			return;
 		}
@@ -231,18 +217,11 @@ class Preset extends Import {
 	 * @return bool Whether the backup was completely saved. Failure prevents applying the preset.
 	 */
 	public function make_backup( $preset ) {
-		try {
-			$backup = 'backup-' . time() . '-' . bin2hex( random_bytes( 16 ) ) . '-before-' . $preset;
-		} catch ( \Throwable $e ) {
-			Debug2::debug( '[Preset] Failed to create a private backup name' );
-			return false;
-		}
+		$backup = 'backup-' . time() . '-before-' . $preset;
 		$data   = $this->export(true, true);
 
 		$path = self::get_backup($backup);
-		$index = self::backup_dir() . '/index.php';
-		$index_ready = is_file( $index ) ? ! is_link( $index ) && File::read( $index ) === self::BACKUP_GUARD : File::save_atomic( $index, self::BACKUP_GUARD, true );
-		if ( ! $path || ! $index_ready || ! File::save_atomic( $path, self::BACKUP_GUARD . $data, true ) ) {
+		if ( ! $path || ! File::save_atomic( $path, self::BACKUP_GUARD . $data, true ) ) {
 			Debug2::debug('[Preset] Failed to save backup; settings were not changed');
 			return false;
 		}
@@ -266,10 +245,7 @@ class Preset extends Import {
 
 		$name     = self::basename($path);
 		$is_backup = self::BACKUP_EXTENSION === substr( $path, -4 );
-		if ( $is_backup && ( is_link( $path ) || ! File::within( $path, self::backup_dir() ) ) ) {
-			return $debug( false, $name );
-		}
-		$contents = file_get_contents($path);
+		$contents  = file_get_contents($path);
 
 		if (false === $contents) {
 			Debug2::debug('[Preset] ❌ Failed to get file contents');
@@ -282,44 +258,13 @@ class Preset extends Import {
 			$contents = substr( $contents, strlen( self::BACKUP_GUARD ) );
 		}
 
-		$parsed = array();
-		try {
-			// Check if the data is v4+
-			if (strpos($contents, '["_version",') === 0) {
-				$contents = explode("\n", $contents);
-				foreach ($contents as $line) {
-					$line = trim($line);
-					if (empty($line)) {
-						continue;
-					}
-					$item = \json_decode($line, true);
-					if ( ! is_array( $item ) || array_keys( $item ) !== [ 0, 1 ] || ! is_string( $item[0] ) ) {
-						return $debug( false, $name );
-					}
-					list($key, $value) = $item;
-					$parsed[$key]      = $value;
-				}
-			} else {
-				$decoded = base64_decode( $contents, true );
-				$parsed = false !== $decoded ? \json_decode( $decoded, true ) : false;
-			}
-		} catch (\Exception $ex) {
-			Debug2::debug('[Preset] ❌ Failed to parse serialized data');
-			return $debug(false, $name);
-		}
+		$parsed = Import::parse_settings( $contents );
 
 		if ( ! is_array( $parsed ) || empty($parsed) ) {
 			Debug2::debug('[Preset] ❌ Nothing to apply');
 			return $debug(false, $name);
 		}
 
-		if ( $is_backup ) {
-			foreach ( array_keys( $parsed ) as $id ) {
-				if ( $this->_conf_secret( $id ) ) {
-					unset( $parsed[ $id ] );
-				}
-			}
-		}
 		$this->cls('Conf')->update_confs($parsed);
 
 		return $debug(true, $name);
@@ -347,11 +292,11 @@ class Preset extends Import {
 
 		switch ($type) {
 			case self::TYPE_APPLY:
-            $this->apply(!empty($_GET['preset']) ? sanitize_text_field(wp_unslash($_GET['preset'])) : false);
+				$this->apply(!empty($_GET['preset']) ? sanitize_text_field(wp_unslash($_GET['preset'])) : false);
 				break;
 
 			case self::TYPE_RESTORE:
-            $this->restore( ! empty( $_GET['backup'] ) && is_string( $_GET['backup'] ) ? sanitize_text_field( wp_unslash( $_GET['backup'] ) ) : ( ! empty( $_GET['timestamp'] ) ? absint( $_GET['timestamp'] ) : 0 ) );
+				$this->restore(!empty($_GET['timestamp']) ? absint($_GET['timestamp']) : 0);
 				break;
 
 			default:

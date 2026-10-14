@@ -77,14 +77,6 @@ class Router extends Base {
 	const ITEM_HASH       = 'hash';
 
 	private static $_esi_enabled;
-
-	/**
-	 * Whether this request passed role simulation (crawler / UCSS) with a valid hash from the server IP.
-	 *
-	 * @since 7.9.2
-	 * @var bool
-	 */
-	private static $_role_simulated = false;
 	private static $_is_ajax;
 	private static $_is_logged_in;
 	private static $_ip;
@@ -107,13 +99,13 @@ class Router extends Base {
 		}
 
 		// Add i to avoid browser too many redirected warning
-		$i = !empty($_GET['litespeed_i']) ? $_GET['litespeed_i'] : 0;
+		$i = isset($_GET['litespeed_i']) && is_numeric($_GET['litespeed_i']) ? (int) $_GET['litespeed_i'] : 0;
 		++$i;
 
 		$link = Utility::build_url($action, $type, false, null, array( 'litespeed_i' => $i ));
 
 		$url = html_entity_decode($link);
-		exit("<meta http-equiv='refresh' content='0;url=$url'>");
+		exit( "<meta http-equiv='refresh' content='0;url=" . esc_attr( $url ) . "'>" );
 	}
 
 	/**
@@ -271,7 +263,7 @@ class Router extends Base {
 		$server_ip = $this->conf(self::O_SERVER_IP);
 		if (!$server_ip || self::get_ip() !== $server_ip) {
 			self::debug('❌❌ Role simulate uid denied! Not localhost visit!');
-			Control::set_nocache_hard('Role simulate uid denied');
+			Control::set_nocache('Role simulate uid denied');
 			return;
 		}
 
@@ -280,9 +272,8 @@ class Router extends Base {
 			$hash_data = self::get_option(self::ITEM_HASH, array());
 			if ($hash_data && is_array($hash_data) && !empty($hash_data['hash']) && !empty($hash_data['ts']) && !empty($hash_data['uid'])) {
 				$RUN_DURATION = $this->cls('Crawler')->get_crawler_duration();
-				if (time() - $hash_data['ts'] < $RUN_DURATION && is_string($_COOKIE['litespeed_hash']) && is_string($hash_data['hash']) && hash_equals($hash_data['hash'], $_COOKIE['litespeed_hash']) && !user_can($hash_data['uid'], 'edit_posts')) {
+				if (time() - $hash_data['ts'] < $RUN_DURATION && is_string($_COOKIE['litespeed_hash']) && is_string($hash_data['hash']) && hash_equals($hash_data['hash'], $_COOKIE['litespeed_hash'])) {
 					self::debug('🪪 Role simulator hash matched, escalating user to be uid=' . $hash_data['uid']);
-					self::$_role_simulated = true;
 					wp_set_current_user($hash_data['uid']);
 					return;
 				}
@@ -290,19 +281,6 @@ class Router extends Base {
 		}
 
 		self::debug('❌ WARNING: role simulator hash not match');
-		Control::set_nocache_hard('Role simulator hash not match');
-	}
-
-	/**
-	 * Whether the current request was authenticated as a role simulation (valid hash cookie from the server IP).
-	 *
-	 * This, not the crawler User-Agent string, is the only signal that may suppress vary-cookie updates.
-	 *
-	 * @since  7.9.2
-	 * @return bool
-	 */
-	public static function is_role_simulated() {
-		return self::$_role_simulated;
 	}
 
 	/**
@@ -381,15 +359,20 @@ class Router extends Base {
 	 * @return boolean
 	 */
 	public static function frontend_path() {
-		// todo: move to htaccess.cls ?
 		if (!isset(self::$_frontend_path)) {
-			$frontend = rtrim(ABSPATH, '/'); // /home/user/public_html/frontend
-			// get home path failed. Trac ticket #37668 (e.g. frontend:/blog backend:/wordpress)
-			if (!$frontend) {
-				Debug2::debug('[Router] No ABSPATH, generating from home option');
-				$frontend = parse_url(get_option('home'));
-				$frontend = !empty($frontend['path']) ? $frontend['path'] : '';
-				$frontend = $_SERVER['DOCUMENT_ROOT'] . $frontend;
+			$frontend = rtrim( wp_normalize_path( ABSPATH ), '/' );
+			$home     = wp_parse_url( get_option( 'home' ) );
+			$site     = wp_parse_url( get_option( 'siteurl' ) );
+			// Resolve own-directory installs without get_home_path()'s request-only SCRIPT_FILENAME assumption.
+			if ( is_array( $home ) && is_array( $site ) && ! empty( $home['host'] ) && ! empty( $site['host'] ) && 0 === strcasecmp( $home['host'], $site['host'] ) ) {
+				$home_path = isset( $home['path'] ) ? rtrim( rawurldecode( $home['path'] ), '/' ) : '';
+				$site_path = isset( $site['path'] ) ? rtrim( rawurldecode( $site['path'] ), '/' ) : '';
+				if ( $site_path !== $home_path && 0 === strpos( $site_path, $home_path . '/' ) ) {
+					$suffix = substr( $site_path, strlen( $home_path ) );
+					if ( ! preg_match( '#(^|/)\.{1,2}(/|$)#', $suffix ) && substr( $frontend, -strlen( $suffix ) ) === $suffix ) {
+						$frontend = substr( $frontend, 0, -strlen( $suffix ) );
+					}
+				}
 			}
 			$frontend = realpath($frontend);
 
@@ -503,7 +486,7 @@ class Router extends Base {
 	 * @access public
 	 */
 	public static function verify_type() {
-		if (empty($_REQUEST[self::TYPE])) {
+		if (empty($_REQUEST[self::TYPE]) || !is_string($_REQUEST[self::TYPE])) {
 			Debug2::debug('[Router] no type', 2);
 			return false;
 		}
@@ -520,7 +503,7 @@ class Router extends Base {
 	 * @access private
 	 */
 	private function verify_action() {
-		if (empty($_REQUEST[self::ACTION])) {
+		if (empty($_REQUEST[self::ACTION]) || !is_string($_REQUEST[self::ACTION])) {
 			Debug2::debug2('[Router] LSCWP_CTRL bypassed empty');
 			return;
 		}
@@ -571,7 +554,7 @@ class Router extends Base {
 		// OK, as we want to do something magic, lets check if its allowed
 		$_is_multisite       = is_multisite();
 		$_is_network_admin   = $_is_multisite && is_network_admin();
-		$_can_network_option = $_is_network_admin && current_user_can('manage_network_options');
+		$_can_network_option = $_is_multisite && current_user_can('manage_network_options');
 		$_can_option         = current_user_can('manage_options');
 
 		switch ($action) {
@@ -612,7 +595,8 @@ class Router extends Base {
 			case Core::ACTION_QS_SHOW_HEADERS:
 			case Core::ACTION_QS_PURGE_ALL:
 			case Core::ACTION_QS_PURGE_EMPTYCACHE:
-            if (defined('LITESPEED_ON') && ($_is_public_action || self::is_ajax())) {
+				$allowed = Core::ACTION_QS_PURGE_EMPTYCACHE === $action && $_is_multisite ? $_can_network_option : $_can_option;
+				if ( defined('LITESPEED_ON') && ( $_is_public_action || $allowed ) ) {
 					self::$_action = $action;
 				}
 				return;
@@ -628,7 +612,6 @@ class Router extends Base {
 			case self::ACTION_GUEST:
 			case self::ACTION_PRESET:
 			case self::ACTION_IMPORT:
-			case self::ACTION_REPORT:
 			case self::ACTION_CSS:
 			case self::ACTION_UCSS:
 			case self::ACTION_VPI:
@@ -643,7 +626,8 @@ class Router extends Base {
 				return;
 
 			case self::ACTION_DEBUG2:
-			if ( $_can_network_option || ( ! $_is_multisite && $_can_option ) ) {
+			case self::ACTION_REPORT:
+				if ( $_can_network_option || ( ! $_is_multisite && $_can_option ) ) {
 					self::$_action = $action;
 				}
 				return;

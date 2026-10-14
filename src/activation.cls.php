@@ -106,7 +106,7 @@ class Activation extends Base {
 			$current_blog = get_current_blog_id();
 
 			// get all sites
-			$sub_sites = get_sites();
+			$sub_sites = get_sites( [ 'number' => 0 ] );
 
 			// clear foreach site
 			foreach ( $sub_sites as $sub_site ) {
@@ -136,6 +136,15 @@ class Activation extends Base {
 
 		if ( file_exists( LITESPEED_STATIC_DIR ) ) {
 			File::rrmdir( LITESPEED_STATIC_DIR );
+		}
+		if ( is_dir( Preset::BACKUP_DIR ) ) {
+			File::rrmdir( Preset::BACKUP_DIR );
+		}
+		if ( is_multisite() ) {
+			global $wpdb;
+			// Network settings share sitemeta; uninstall removes the plugin from the installation.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->query( $wpdb->prepare( "DELETE FROM `$wpdb->sitemeta` WHERE meta_key LIKE %s", $wpdb->esc_like( 'litespeed.' ) . '%' ) );
 		}
 
 		self::del_conf_data_file();
@@ -167,6 +176,7 @@ class Activation extends Base {
 	 * @return array The array of blog ids.
 	 */
 	public static function get_network_ids( $args = [] ) {
+		$args          += [ 'number' => 0 ];
 		$args['fields'] = 'ids';
 		$blogs          = get_sites( $args );
 
@@ -325,6 +335,7 @@ class Activation extends Base {
 
 		// Update cache setting `_CACHE`
 		$this->cls( 'Conf' )->define_cache();
+		$this->cls( 'Conf' )->load_shared_options();
 
 		// Site options applied already
 		$options = $this->get_options();
@@ -351,6 +362,7 @@ class Activation extends Base {
 		/* 4) .htaccess; */
 
 		try {
+			Core::load_thirdparty();
 			$this->cls( 'Htaccess' )->update( $options );
 		} catch ( \Exception $ex ) {
 			Admin_Display::error( wp_kses_post( $ex->getMessage() ) );
@@ -360,35 +372,10 @@ class Activation extends Base {
 
 		if ( ( $options[ self::O_GUEST ] || $options[ self::O_OBJECT ] ) && ( ! $options[ self::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
 			$this->update_conf_data_file( $options );
-		} elseif ( ! is_multisite() ) {
-			self::del_conf_data_file();
 		} else {
-			$this->migrate_conf_data_file();
+			// Multisite Guest and object-cache values are installation-shared, so no other site still needs the file.
+			self::del_conf_data_file();
 		}
-	}
-
-	/**
-	 * Multisite: a site that needs no runtime configuration must not delete the shared file, but the plaintext copy still has to go.
-	 *
-	 * @since 7.9.2
-	 */
-	private function migrate_conf_data_file() {
-		$legacy = LSCWP_CONTENT_DIR . '/' . self::CONF_FILE_LEGACY;
-		if ( ! file_exists( $legacy ) ) {
-			return;
-		}
-		$data = self::parse_conf_file( File::read( $legacy ), true );
-		if ( false !== $data && false === self::parse_conf_file( File::read( self::$data_file ) ) ) {
-			$content = self::encode_conf_file( $data );
-			if ( false === $content ) {
-				Admin_Display::error( __( 'LiteSpeed Cache could not encode its runtime configuration. Please check the settings for invalid text.', 'litespeed-cache' ) );
-				return;
-			}
-			if ( ! self::_write_conf_file( $content ) ) {
-				return;
-			}
-		}
-		$this->_retire_legacy_conf_file();
 	}
 
 	/**
@@ -399,12 +386,7 @@ class Activation extends Base {
 	 * @return bool
 	 */
 	private static function _write_conf_file( $content ) {
-		try {
-			$temp = self::$data_file . '.' . bin2hex( random_bytes( 6 ) ) . '.php';
-		} catch ( \Exception $e ) {
-			Admin_Display::error( __( 'LiteSpeed Cache could not create a temporary runtime configuration file.', 'litespeed-cache' ) );
-			return false;
-		}
+		$temp     = self::$data_file . '.' . bin2hex( random_bytes( 6 ) ) . '.php';
 		$previous = file_exists( self::$data_file ) ? self::$data_file : LSCWP_CONTENT_DIR . '/' . self::CONF_FILE_LEGACY;
 		// Preserve a restricted mode when replacing either configuration format.
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fileperms
@@ -459,13 +441,6 @@ class Activation extends Base {
 				$wp_filesystem->delete( LSCWP_CONTENT_DIR . '/' . $name );
 			}
 		}
-		// Interrupted publications use this exact owned filename shape and must leave with the configuration.
-		$temporary_files = glob( LSCWP_CONTENT_DIR . '/' . self::CONF_FILE . '.*.php' );
-		foreach ( $temporary_files ? $temporary_files : [] as $temp ) {
-			if ( preg_match( '/\.[a-f0-9]{12}\.php$/D', $temp ) ) {
-				$wp_filesystem->delete( $temp );
-			}
-		}
 	}
 
 	/**
@@ -510,6 +485,11 @@ class Activation extends Base {
 		$data = [];
 		foreach ( $ids as $v ) {
 			$data[ $v ] = $options[ $v ];
+		}
+		if ( $options[ self::O_GUEST ] ) {
+			$data[ self::HASH ]       = Vary::cls()->vary_hash();
+			$data['guest_cookie']     = Vary::cookie_scope();
+			$data['logged_in_cookie'] = defined( 'LOGGED_IN_COOKIE' ) ? LOGGED_IN_COOKIE : '';
 		}
 		$content = self::encode_conf_file( $data );
 		if ( false === $content ) {
@@ -811,10 +791,6 @@ class Activation extends Base {
 				break;
 
 			case self::TYPE_INSTALL_ZIP:
-				if ( ! current_user_can( 'update_plugins' ) ) {
-					Admin_Display::error( __( 'Sorry, you are not allowed to update plugins for this site.', 'litespeed-cache' ) );
-					break;
-				}
 				Cloud::reload_summary();
 				$summary = Cloud::get_summary();
 				if ( ! empty( $summary['news.zip'] ) ) {

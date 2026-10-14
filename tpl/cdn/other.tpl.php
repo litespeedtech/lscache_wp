@@ -68,11 +68,14 @@ $this->form_action();
 
 				<div id="litespeed_cdn_mapping_div"></div>
 
-				<script type="text/babel">
-					ReactDOM.render(
-						<CDNMapping list={ <?php echo wp_json_encode( $cdn_mapping, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); ?> } />,
-						document.getElementById( 'litespeed_cdn_mapping_div' )
-					);
+				<script>
+					// Wait for localization printed in the footer.
+					jQuery( function () {
+						litespeed_cdn_mapping(
+							document.getElementById( 'litespeed_cdn_mapping_div' ),
+							<?php echo wp_json_encode( $cdn_mapping, Str::JSON_HTML_FLAGS ); ?>
+						);
+					} );
 				</script>
 
 				<div class="litespeed-warning">

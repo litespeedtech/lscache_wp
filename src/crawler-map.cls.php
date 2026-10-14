@@ -72,7 +72,7 @@ class Crawler_Map extends Root {
 	 * @since 1.1.0
 	 */
 	public function __construct() {
-		$this->_site_url     = get_site_url();
+		$this->_site_url     = rtrim( get_option( 'home' ), '/' );
 		$this->__data        = Data::cls();
 		$this->_tb           = $this->__data->tb( 'crawler' );
 		$this->_tb_blacklist = $this->__data->tb( 'crawler_blacklist' );
@@ -495,20 +495,21 @@ class Crawler_Map extends Root {
 	 * @access public
 	 *
 	 * @param bool $manual Whether triggered manually from UI.
-	 * @return void
+	 * @return bool Whether a new map was generated.
 	 */
 	public function gen( $manual = false ) {
 		$count = $this->_gen();
 
 		if ( ! $count ) {
 			Admin_Display::error( __( 'No valid sitemap parsed for crawler.', 'litespeed-cache' ) );
-			return;
+			return false;
 		}
 
 		if ( ! wp_doing_cron() && $manual ) {
 			$msg = sprintf( __( 'Sitemap created successfully: %d items', 'litespeed-cache' ), $count );
 			Admin_Display::success( $msg );
 		}
+		return true;
 	}
 
 	/**
@@ -537,12 +538,9 @@ class Crawler_Map extends Root {
 
 		$sitemap = Utility::sanitize_lines( $sitemap );
 
-		try {
-			foreach ( $sitemap as $this_map ) {
-				$this->_parse( $this_map );
-			}
-		} catch ( \Exception $e ) {
-			self::debug( '❌ failed to parse custom sitemap: ' . $e->getMessage() );
+		$visited = [];
+		foreach ( $sitemap as $this_map ) {
+			$this->_parse_available( $this_map, $visited );
 		}
 
 		if ( is_array( $this->_urls ) && ! empty( $this->_urls ) ) {
@@ -567,6 +565,9 @@ class Crawler_Map extends Root {
 			}
 
 			$this->_urls = array_values( array_unique( $this->_urls ) );
+		}
+		if ( ! $this->_urls ) {
+			return false;
 		}
 
 		self::debug( 'Truncate sitemap' );
@@ -654,16 +655,36 @@ class Crawler_Map extends Root {
 	}
 
 	/**
-	 * Parse custom sitemap and collect urls.
+	 * Parse one sitemap, reporting a failure without dropping the others.
 	 *
 	 * @since    1.1.1
 	 * @access private
 	 *
 	 * @param string $sitemap Absolute sitemap URL.
+	 * @param array  $visited Sitemap URLs already fetched in this rebuild.
 	 * @return void
-	 * @throws \Exception If remote read or parsing fails.
 	 */
-	private function _parse( $sitemap ) {
+	private function _parse_available( $sitemap, &$visited ) {
+		try {
+			$this->_parse( $sitemap, $visited );
+		} catch ( \Exception $error ) {
+			self::debug( 'Failed to parse sitemap: ' . $error->getMessage() );
+			Admin_Display::error( sprintf( __( 'Could not read sitemap: %s. Other available sitemaps will still be used.', 'litespeed-cache' ), esc_url( $sitemap ) ) );
+		}
+	}
+
+	/**
+	 * Fetch one sitemap and collect its urls, recursing into sitemap indexes.
+	 *
+	 * @param string $sitemap Sitemap URL.
+	 * @param array  $visited URLs visited in this rebuild.
+	 * @throws \Exception When fetching or parsing fails.
+	 */
+	private function _parse( $sitemap, &$visited ) {
+		if ( isset( $visited[ $sitemap ] ) ) {
+			return;
+		}
+		$visited[ $sitemap ] = true;
 		/**
 		 * Read via wp func to avoid allow_url_fopen = off
 		 *
@@ -676,17 +697,17 @@ class Crawler_Map extends Root {
 				'sslverify' => false,
 			]
 		);
-		if ( is_wp_error( $response ) ) {
-			$error_message = $response->get_error_message();
+		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+			$error_message = is_wp_error( $response ) ? $response->get_error_message() : 'Unexpected HTTP status';
 			self::debug( 'failed to read sitemap: ' . $error_message );
 			throw new \Exception( 'Failed to remote read ' . esc_url( $sitemap ) );
 		}
 
-		$xml_object = simplexml_load_string($response['body'], null, LIBXML_NOCDATA);
+		$xml_errors = libxml_use_internal_errors( true );
+		$xml_object = simplexml_load_string( $response['body'], null, LIBXML_NOCDATA );
+		libxml_clear_errors();
+		libxml_use_internal_errors( $xml_errors );
 		if (!$xml_object) {
-			if ($this->_urls) {
-				return;
-			}
 			throw new \Exception('Failed to parse xml ' . esc_url( $sitemap ));
 		}
 
@@ -700,13 +721,13 @@ class Crawler_Map extends Root {
 
 			if ( ! empty( $xml_array['sitemap']['loc'] ) ) {
 				// is single sitemap.
-				$this->_parse( (string) $xml_array['sitemap']['loc'] );
+				$this->_parse_available( (string) $xml_array['sitemap']['loc'], $visited );
 			} else {
 				// parse multiple sitemaps.
 				foreach ( (array) $xml_array['sitemap'] as $val ) {
 					$val = (array) $val;
 					if ( ! empty( $val['loc'] ) ) {
-						$this->_parse( (string) $val['loc'] ); // recursive parse sitemap.
+						$this->_parse_available( (string) $val['loc'], $visited );
 					}
 				}
 			}

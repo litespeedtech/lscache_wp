@@ -77,7 +77,7 @@ class Control extends Root {
 		$this->_response_header_ttls = $this->conf( Base::O_CACHE_TTL_STATUS );
 		foreach ( $this->_response_header_ttls as $k => $v ) {
 			$v = explode( ' ', $v );
-			if ( empty( $v[0] ) || empty( $v[1] ) ) {
+			if ( empty( $v[0] ) || ! isset( $v[1] ) || '' === $v[1] ) {
 				continue;
 			}
 			$this->_response_header_ttls[ $v[0] ] = $v[1];
@@ -366,7 +366,7 @@ class Control extends Root {
 			// return false;
 		// }
 
-		return (bool) ( self::$_control & self::BM_PRIVATE ) && ! self::is_public_forced();
+		return (bool) ( self::$_control & self::BM_PRIVATE );
 	}
 
 	/**
@@ -536,14 +536,17 @@ class Control extends Root {
 		// Check if is in timed url list or not.
 		$timed_urls      = Utility::wildcard2regex( $this->conf( Base::O_PURGE_TIMED_URLS ) );
 		$timed_urls_time = $this->conf( Base::O_PURGE_TIMED_URLS_TIME );
-		if ( $timed_urls && $timed_urls_time ) {
+		$scheduled_time  = $timed_urls_time ? \DateTimeImmutable::createFromFormat( 'H:i:s', $timed_urls_time, wp_timezone() ) : false;
+		if ( ! $scheduled_time && $timed_urls_time ) {
+			$scheduled_time = \DateTimeImmutable::createFromFormat( 'H:i', $timed_urls_time, wp_timezone() );
+		}
+		if ( $timed_urls && $scheduled_time ) {
 			$current_url = Tag::build_uri_tag( true );
 			// Use time limit ttl.
-			$scheduled_time = strtotime( $timed_urls_time );
-			$ttl            = $scheduled_time - current_time('timestamp'); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp
-			if ( $ttl < 0 ) {
-				$ttl += 86400; // add one day
+			if ( $scheduled_time->getTimestamp() <= time() ) {
+				$scheduled_time = $scheduled_time->modify( '+1 day' );
 			}
+			$ttl = $scheduled_time->getTimestamp() - time();
 			foreach ( $timed_urls as $v ) {
 				if ( false !== strpos( $v, '*' ) ) {
 					if ( preg_match( '#' . $v . '#iU', $current_url ) ) {
@@ -591,10 +594,10 @@ class Control extends Root {
 	public function check_redirect( $location, $status ) {
 		$script_uri = '';
 		if ( !empty( $_SERVER['SCRIPT_URI'] ) ) {
-			$script_uri = sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_URI'] ) );
+			$script_uri = wp_unslash( $_SERVER['SCRIPT_URI'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- URL comparison must preserve encoding.
 		} elseif ( !empty( $_SERVER['REQUEST_URI'] ) ) {
 			$home       = trailingslashit( home_url() );
-			$script_uri = $home . ltrim( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), '/' );
+			$script_uri = $home . ltrim( wp_unslash( $_SERVER['REQUEST_URI'] ), '/' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- URL comparison must preserve encoding.
 		}
 
 		if ( '' !== $script_uri ) {
@@ -605,7 +608,7 @@ class Control extends Root {
 
 			$is_same_redirect = true;
 
-			$query_string = ! empty( $_SERVER['QUERY_STRING'] ) ? sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ) ) : '';
+			$query_string = ! empty( $_SERVER['QUERY_STRING'] ) ? wp_unslash( $_SERVER['QUERY_STRING'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- URI comparisons must preserve percent encoding.
 			foreach ( $to_check as $v ) {
 				$url_parsed = PHP_URL_QUERY === $v ? $query_string : wp_parse_url( $script_uri, $v );
 
@@ -725,10 +728,10 @@ class Control extends Root {
 			return;
 		}
 
-		// Public logged-in caching is safe only for published objects without a password.
-		if ( is_user_logged_in() && function_exists( 'get_queried_object' ) ) {
+		// Public logged-in caching is safe only for published objects.
+		if ( is_user_logged_in() ) {
 			$queried = get_queried_object();
-			if ( is_object( $queried ) && isset( $queried->post_status ) && ( 'publish' !== $queried->post_status || ! empty( $queried->post_password ) ) ) {
+			if ( is_object( $queried ) && isset( $queried->post_status ) && 'publish' !== get_post_status( $queried ) ) {
 				self::set_nocache_hard( 'logged-in non-public object' );
 				return;
 			}
@@ -742,9 +745,9 @@ class Control extends Root {
 
 		// Check if URI is forced public cache.
 		$excludes = $this->conf( Base::O_CACHE_FORCE_PUB_URI );
-		$req_uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+		$req_uri  = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Matching must preserve encoded path characters.
 		$hit      = REST::str_hit_uri( $req_uri, $excludes, true );
-		if ( $hit && ! defined( 'LSCACHE_IS_ESI' ) && ! is_user_logged_in() ) {
+		if ( $hit && ! defined( 'LSCACHE_IS_ESI' ) ) {
 			list( $result, $this_ttl ) = $hit;
 			self::set_public_forced( 'Setting: ' . $result );
 			self::debug( 'Forced public cacheable due to setting: ' . $result );
@@ -803,32 +806,44 @@ class Control extends Root {
 		$is_mobile_conf = apply_filters( 'litespeed_is_mobile', false );
 		if ( ! $this->conf( Base::O_CACHE_MOBILE ) ) {
 			if ( $is_mobile_conf ) {
-				self::set_nocache( 'mobile' );
+				self::set_nocache_hard( 'mobile' );
 			}
 			return;
 		}
 
-		$env_vary = isset( $_SERVER['LSCACHE_VARY_VALUE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['LSCACHE_VARY_VALUE'] ) ) : '';
+		$env_vary  = isset( $_SERVER['LSCACHE_VARY_VALUE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['LSCACHE_VARY_VALUE'] ) ) : '';
+		$is_mobile = self::is_mobile();
 		if ( $env_vary && false !== strpos( $env_vary, 'ismobile' ) ) {
-			if ( ! wp_is_mobile() && ! $is_mobile_conf ) {
-				self::set_nocache( 'is not mobile' ); // todo: no need to uncache, it will correct vary value in vary finalize anyways.
+			if ( ! $is_mobile && ! $is_mobile_conf ) {
+				self::set_nocache_hard( 'is not mobile' );
 				return;
 			}
-		} elseif ( wp_is_mobile() || $is_mobile_conf ) {
-			self::set_nocache( 'is mobile' );
+		} elseif ( $is_mobile || $is_mobile_conf ) {
+			self::set_nocache_hard( 'is mobile' );
 			return;
 		}
 	}
 
 	/**
-	 * Check if is mobile for filter `litespeed_is_mobile` in API.
+	 * Match the server's effective mobile list; retain WordPress detection when no split is enabled.
 	 *
 	 * @since 3.0
 	 * @access public
 	 * @return bool
 	 */
 	public static function is_mobile() {
-		return wp_is_mobile();
+		$cls = self::cls();
+		if ( ! $cls->conf( Base::O_CACHE_MOBILE ) && ! $cls->conf( Base::O_GUEST ) ) {
+			return wp_is_mobile();
+		}
+		$rules = Htaccess::filter_list( $cls->conf( Base::O_CACHE_MOBILE_RULES ), Htaccess::PATTERN_REGEX_LITERAL, Base::O_CACHE_MOBILE_RULES, false );
+		$ua    = isset( $_SERVER['HTTP_USER_AGENT'] ) && is_string( $_SERVER['HTTP_USER_AGENT'] ) ? wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Literal matching must use the server's original UA bytes.
+		foreach ( $rules as $rule ) {
+			if ( false !== stripos( $ua, $rule ) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -889,7 +904,7 @@ class Control extends Root {
 
 		// Check private cache URI setting.
 		$excludes = $this->conf( Base::O_CACHE_PRIV_URI );
-		$req_uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+		$req_uri  = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Matching must preserve encoded path characters.
 		$result   = REST::str_hit_uri( $req_uri, $excludes );
 		if ( $result ) {
 			self::set_private( 'Admin cfg Private Cached URI: ' . $result );

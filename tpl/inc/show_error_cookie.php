@@ -19,7 +19,7 @@ $err =
 	' ' .
 	sprintf(
 		esc_html__('If not, please verify the setting in the %sAdvanced tab%s.', 'litespeed-cache'),
-		"<a href='" . esc_url(admin_url('admin.php?page=litespeed-cache#advanced')) . '">',
+		'<a href="' . esc_url(admin_url('admin.php?page=litespeed-cache#advanced')) . '">',
 		'</a>'
 	);
 

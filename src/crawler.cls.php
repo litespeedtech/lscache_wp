@@ -295,7 +295,7 @@ class Crawler extends Root {
 
 		parent::save_summary( $data, $reload, $overwrite );
 
-		File::save( LITESPEED_STATIC_DIR . '/crawler/' . $instance->_sitemeta, wp_json_encode( $data ), true );
+		File::save( LITESPEED_STATIC_DIR . '/crawler/' . $instance->_sitemeta, wp_json_encode( $instance->_summary ), true );
 	}
 
 	/**
@@ -378,7 +378,12 @@ class Crawler extends Root {
 
 		// for the first time running.
 		if ( ! $this->_summary || ! Data::cls()->tb_exist( 'crawler' ) || ! Data::cls()->tb_exist( 'crawler_blacklist' ) ) {
-			$this->cls( 'Crawler_Map' )->gen();
+			if ( ! $this->cls( 'Crawler_Map' )->gen() ) {
+				$this->_end_reason = 'sitemap_failed';
+				$this->_terminate_running();
+				$this->Release_lane();
+				return;
+			}
 		}
 
 		// if finished last time, regenerate sitemap.
@@ -391,7 +396,12 @@ class Crawler extends Root {
 				return;
 			}
 			self::debug( 'TouchedEnd. regenerate sitemap....' );
-			$this->cls( 'Crawler_Map' )->gen();
+			if ( ! $this->cls( 'Crawler_Map' )->gen() ) {
+				$this->_end_reason = 'sitemap_failed';
+				$this->_terminate_running();
+				$this->Release_lane();
+				return;
+			}
 		}
 
 		$crawlers       = $this->list_crawlers();
@@ -410,7 +420,7 @@ class Crawler extends Root {
 		}
 
 		// In case crawlers are all done but not reload, reload it.
-		if ( empty( $this->_summary['curr_crawler'] ) || empty( $this->_crawlers[ $this->_summary['curr_crawler'] ] ) ) {
+		if ( ! isset( $this->_summary['curr_crawler'], $this->_crawlers[ $this->_summary['curr_crawler'] ] ) ) {
 			$this->_summary['curr_crawler']                                     = 0;
 			$this->_summary['crawler_stats'][ $this->_summary['curr_crawler'] ] = [];
 		}
@@ -439,7 +449,7 @@ class Crawler extends Root {
 	 * @return bool True on success.
 	 */
 	private function load_conf() {
-		$this->_crawler_conf['base'] = site_url();
+		$this->_crawler_conf['base'] = rtrim( get_option( 'home' ), '/' );
 
 		$current_crawler = $this->_crawlers[ $this->_summary['curr_crawler'] ];
 
@@ -463,7 +473,8 @@ class Crawler extends Root {
 
 		// Mobile crawler.
 		if ( ! empty( $current_crawler['mobile'] ) ) {
-			$this->_crawler_conf['ua'] = 'Mobile iPhone';
+			$mobile_rules              = Htaccess::filter_list( $this->conf( Base::O_CACHE_MOBILE_RULES ), Htaccess::PATTERN_REGEX_LITERAL, Base::O_CACHE_MOBILE_RULES, false );
+			$this->_crawler_conf['ua'] = $mobile_rules ? $mobile_rules[0] : 'Mobile iPhone';
 		}
 
 		// Limit delay to use server setting.
@@ -1163,8 +1174,6 @@ class Crawler extends Root {
 			CURLOPT_HEADER           => true,
 			CURLOPT_CUSTOMREQUEST    => 'GET',
 			CURLOPT_FOLLOWLOCATION   => false,
-			CURLOPT_PROTOCOLS        => CURLPROTO_HTTP | CURLPROTO_HTTPS,
-			CURLOPT_REDIR_PROTOCOLS  => CURLPROTO_HTTP | CURLPROTO_HTTPS,
 			CURLOPT_ENCODING         => 'gzip',
 			CURLOPT_CONNECTTIMEOUT   => 10,
 			CURLOPT_TIMEOUT          => $crawler_timeout, // Larger timeout to avoid incorrect blacklist addition #900171.
@@ -1263,16 +1272,19 @@ class Crawler extends Root {
 
 		// Guest Mode on/off.
 		if ( $this->conf( Base::O_GUEST ) ) {
-			$vary_name = $this->cls( 'Vary' )->get_vary_name();
-			// Always hashed, matching Vary::finalize_default_vary() and guest.vary.php in every mode.
-			$crawler_factors[ 'cookie:' . $vary_name ] = [
-				hash_hmac( 'sha256', '12:guest_mode:1', hash_hmac( 'sha256', 'lscwp:vary:v1', (string) $this->conf( Base::HASH ), true ) ) => '',
-				'_null'   => '<font data-balloon-pos="up" aria-label="Guest Mode">👒</font>',
-			];
+			$guest_vary = $this->cls( 'Vary' )->guest_vary();
+			if ( false !== $guest_vary ) {
+				$vary_name = $this->cls( 'Vary' )->get_vary_name();
+				// Always hashed, matching Vary::finalize_default_vary() and guest.vary.php in every mode.
+				$crawler_factors[ 'cookie:' . $vary_name ] = [
+					$guest_vary => '',
+					'_null'    => '<font data-balloon-pos="up" aria-label="Guest Mode">👒</font>',
+				];
+			}
 		}
 
 		// Mobile crawler.
-		if ( $this->conf( Base::O_CACHE_MOBILE ) ) {
+		if ( ( $this->conf( Base::O_CACHE_MOBILE ) || $this->conf( Base::O_GUEST ) ) && Htaccess::filter_list( $this->conf( Base::O_CACHE_MOBILE_RULES ), Htaccess::PATTERN_REGEX_LITERAL, Base::O_CACHE_MOBILE_RULES, false ) ) {
 			$crawler_factors['mobile'] = [
 				1 => '<font data-balloon-pos="up" aria-label="Mobile">📱</font>',
 				0 => '',

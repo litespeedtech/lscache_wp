@@ -266,7 +266,7 @@ class Placeholder extends Base {
 			$additional_attr = ' data-placeholder-resp="' . esc_attr( Str::trim_quotes( $size ) ) . '"';
 		}
 
-		$snippet = ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_NOSCRIPT_RM ) ) ? '' : '<noscript>' . $html . '</noscript>';
+		$snippet = ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_NOSCRIPT_RM ) || false !== stripos( $html, '</noscript' ) ) ? '' : '<noscript>' . $html . '</noscript>';
 
 		foreach ( [ 'src', 'srcset', 'sizes' ] as $attr ) {
 			$html = preg_replace( '/\A(<img\b(?:"[^"]*"|\'[^\']*\'|[^\'">])*?)\s(' . $attr . ')=/i', '$1 data-$2=', $html, 1 );
@@ -407,7 +407,7 @@ class Placeholder extends Base {
 		// Drop domain.
 		$short_path = Utility::att_short_path( $src );
 		if ( false === $short_path ) {
-			// An internal URL outside the upload folder gets a digest path like a remote one, never the URL's own bytes.
+			// Internal URLs outside uploads use a digest path so they never share one placeholder file.
 			$md5 = md5( $src );
 
 			return LITESPEED_STATIC_DIR . $filepath_prefix . 'remote/' . substr( $md5, 0, 1 ) . '/' . substr( $md5, 1, 1 ) . '/' . $md5 . '.' . $size;

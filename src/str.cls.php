@@ -18,6 +18,8 @@ defined( 'WPINC' ) || exit();
  * @since 1.3
  */
 class Str {
+	/** Keep JSON literals safe inside HTML script elements. */
+	const JSON_HTML_FLAGS = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
 
 	/**
 	 * Translate QC HTML links from html.
@@ -54,7 +56,6 @@ class Str {
 	 */
 	public static function safe_html( $html ) {
 		$common_attrs = [
-			'style'  => [],
 			'class'  => [],
 			'target' => [],
 			'src'    => [],

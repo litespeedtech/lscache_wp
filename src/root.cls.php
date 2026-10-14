@@ -42,7 +42,7 @@ abstract class Root {
 	 * @access protected
 	 */
 	protected function _separate_mobile() {
-		return (wp_is_mobile() || apply_filters('litespeed_is_mobile', false)) && $this->conf(Base::O_CACHE_MOBILE);
+		return (Control::is_mobile() || apply_filters('litespeed_is_mobile', false)) && $this->conf(Base::O_CACHE_MOBILE);
 	}
 
 	/**
@@ -396,7 +396,8 @@ abstract class Root {
 			return null;
 		}
 
-		$val_setting = $this->conf($id, true);
+		// Missing-size rendering uses this legacy filter only as an enabled gate, with true as its input.
+		$val_setting = Base::O_MEDIA_ADD_MISSING_SIZES === $id ? true : $this->conf($id, true);
 		// if setting not found
 		if( null === $val_setting ){
 			$val_setting = '';
@@ -712,7 +713,6 @@ abstract class Root {
 	 * Save summary
 	 *
 	 * @since  3.0
-	 * @return bool Whether the merged summary can be read back.
 	 * @access public
 	 */
 	public static function save_summary( $data = false, $reload = false, $overwrite = false ) {
@@ -728,7 +728,7 @@ abstract class Root {
 		// self::debug2('Save after Reloaded summary', $new_summary);
 		static::cls()->_summary = $new_summary;
 
-		return self::update_option('_summary', $new_summary);
+		self::update_option('_summary', $new_summary);
 	}
 
 	/**

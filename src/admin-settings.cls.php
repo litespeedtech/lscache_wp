@@ -131,12 +131,7 @@ class Admin_Settings extends Base {
 							}
 
 							if ( self::CDN_MAPPING_URL === $child ) {
-								// Reject values that are unsafe in HTML/CSS URL sinks or fail WordPress URL validation.
-								if ( ! is_string( $v ) || ! wp_http_validate_url( $v ) || 0 !== strpos( $v, 'https://' ) || preg_match( '/[\s\x00-\x1f\x7f\'"<>]/', $v ) ) {
-									self::debug( '❌ CDN mapping set to OFF due to invalid URL' );
-									$the_matrix[ self::O_CDN ] = false;
-									$v                         = '';
-								} else {
+								if ( '' !== $v ) {
 									$v = trailingslashit( $v );
 								}
 							}

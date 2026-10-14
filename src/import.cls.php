@@ -18,6 +18,32 @@ class Import extends Base {
 	const TYPE_RESET  = 'reset';
 
 	/**
+	 * Decode exported settings shared by manual imports and presets.
+	 *
+	 * @param string $data Export contents, without a backup's PHP guard.
+	 * @return array|false Settings, or false for an invalid record.
+	 */
+	public static function parse_settings( $data ) {
+		if ( 0 !== strpos( $data, '["_version",' ) ) {
+			$settings = json_decode( base64_decode( $data ), true );
+			return is_array( $settings ) ? $settings : false;
+		}
+		$settings = [];
+		foreach ( explode( "\n", $data ) as $line ) {
+			$line = trim( $line );
+			if ( ! $line ) {
+				continue;
+			}
+			$entry = json_decode( $line, true );
+			if ( ! is_array( $entry ) || array_keys( $entry ) !== [ 0, 1 ] || ! is_string( $entry[0] ) ) {
+				return false;
+			}
+			$settings[ $entry[0] ] = $entry[1];
+		}
+		return $settings;
+	}
+
+	/**
 	 * Init
 	 *
 	 * @since  1.8.2
@@ -98,38 +124,18 @@ class Import extends Base {
 		$this->_summary['import_time'] = time();
 		self::save_summary();
 
-		$ori_data = array();
-		try {
-			// Check if the data is v4+ or not
-			if (strpos($data, '["_version",') === 0) {
-				Debug2::debug('[Import] Data version: v4+');
-				$data = explode("\n", $data);
-				foreach ($data as $v) {
-					$v = trim($v);
-					if (!$v) {
-						continue;
-					}
-					list($k, $v)  = \json_decode($v, true);
-					$ori_data[$k] = $v;
-				}
-			} else {
-				$ori_data = \json_decode(base64_decode($data), true);
-			}
-		} catch (\Exception $ex) {
-			Debug2::debug('[Import] ❌ Failed to parse serialized data');
-			return false;
-		}
+		$ori_data = self::parse_settings( $data );
 
-		if (!$ori_data) {
+		if ( ! is_array( $ori_data ) || ! $ori_data ) {
 			Debug2::debug('[Import] ❌ Failed to import, no data');
 			return false;
 		} else {
 			Debug2::debug('[Import] Importing settings');
 		}
 
-		// Imports are portable performance profiles, not a channel for identity, debug trust, or object-cache credentials/endpoints.
+		// Imports are portable performance profiles, not a channel for debug trust or object-cache credentials/endpoints; Conf::update() already refuses HASH and _VER.
 		foreach ( array_keys( $ori_data ) as $id ) {
-			if ( in_array( $id, [ Base::HASH, Base::_VER, Base::O_API_KEY, Base::O_DEBUG_IPS, Base::O_SERVER_IP ], true ) || 0 === strpos( $id, 'object-' ) ) {
+			if ( in_array( $id, [ Base::O_DEBUG_IPS, Base::O_SERVER_IP ], true ) || 0 === strpos( $id, 'object-' ) ) {
 				unset( $ori_data[ $id ] );
 			}
 		}

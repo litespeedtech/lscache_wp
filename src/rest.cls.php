@@ -314,7 +314,7 @@ class REST extends Root {
 			}
 		}
 
-		foreach ( $uris as $uri ) {
+		foreach ( array_unique( array_merge( $uris, array_map( 'rawurldecode', $uris ) ) ) as $uri ) {
 			$hit = Utility::str_hit_array( $uri, $rules, $has_ttl );
 			if ( $hit ) {
 				return $hit;
