@@ -230,11 +230,30 @@ trait Cloud_Misc {
 	 * @return int
 	 */
 	public function allowance( $service, &$err = false ) {
-		// Only auto sync usage at most one time per day
-		if ( empty( $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] ) || time() - (int) $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] > 86400 ) {
+		$allowance    = $this->_cached_allowance( $service, $err );
+		$last_request = (int) ( $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] ?? 0 );
+		$interval     = DAY_IN_SECONDS;
+		if ( ! $allowance ) {
+			// Recheck exhausted credit on demand; a failed usage request also starts the hourly interval.
+			$interval     = HOUR_IN_SECONDS;
+			$last_request = max( $last_request, (int) ( $this->_summary[ 'curr_request.' . self::SVC_D_USAGE ] ?? 0 ) );
+		}
+		if ( ! $last_request || time() - $last_request >= $interval ) {
 			$this->sync_usage();
+			$allowance = $this->_cached_allowance( $service, $err );
 		}
 
+		return $allowance;
+	}
+
+	/**
+	 * Calculate allowance from cached usage without issuing a cloud request.
+	 *
+	 * @param string      $service Service.
+	 * @param string|bool $err     Error code by ref.
+	 * @return int
+	 */
+	private function _cached_allowance( $service, &$err ) {
 		if ( in_array( $service, [ self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI ], true ) ) {
 			// @since 4.2
 			$service = self::SVC_PAGE_OPTM;
@@ -291,7 +310,7 @@ trait Cloud_Misc {
 	 */
 	public function sync_usage() {
 		$usage = $this->_post( self::SVC_D_USAGE );
-		if ( ! $usage ) {
+		if ( ! is_array( $usage ) || ! $usage ) {
 			return;
 		}
 
