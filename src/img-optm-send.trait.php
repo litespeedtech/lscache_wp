@@ -43,7 +43,7 @@ trait Img_Optm_Send {
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 				$list = $wpdb->get_results( $wpdb->prepare( $q, $post_id ) );
 				foreach ( $list as $v ) {
-					$this->_existed_src_list[] = $post_id . '.' . $v->src;
+					$this->_existed_src_list[] = $post_id . '.' . self::normalize_src( $v->src );
 				}
 			} else {
 				$this->__data->tb_create( 'img_optming' );
@@ -322,6 +322,9 @@ trait Img_Optm_Send {
 			}
 		}
 
+		// Legacy metadata may still hold `./` paths; queue and dedupe only normalized src values.
+		$short_file_path = self::normalize_src( $short_file_path );
+
 		// Check if src is gathered already or not
 		if ( in_array( $this->tmp_pid . '.' . $short_file_path, $this->_existed_src_list, true ) ) {
 			// Debug2::debug2( '[Img_Optm] bypass image due to gathered: pid ' . $this->tmp_pid . ' ' . $short_file_path );
@@ -499,7 +502,7 @@ trait Img_Optm_Send {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$list = $wpdb->get_results( "SELECT src FROM `$this->_table_img_optming`" );
 		foreach ( $list as $v ) {
-			$srcpath_list[] = $v->src;
+			$srcpath_list[] = self::normalize_src( $v->src );
 		}
 
 		foreach ( $this->_img_in_queue as $k => $v ) {
