@@ -264,6 +264,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
+* **Cache** Added a maximum cache folder size limit (wp-content/litespeed) with automatic oldest-first pruning to protect the disk from bot-traffic growth. (#777)
 
 = 7.9.2 - Coming soon 2026 =
 * **Cloud** Retry credit sync after one hour when credit is exhausted.

@@ -162,6 +162,7 @@
 	"misc-heartbeat_back_ttl": "60",
 	"misc-heartbeat_editor": "",
 	"misc-heartbeat_editor_ttl": "15",
+	"misc-max_folder_size": "",
 	"cdn": "",
 	"cdn-attr": ".src\n.data-src\n.href\n.poster\nsource.srcset",
 	"cdn-ori": "",
