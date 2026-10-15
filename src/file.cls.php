@@ -181,8 +181,10 @@ HTACCESS;
 		clearstatcache(true, $temp);
 		$size = is_file($temp) ? filesize($temp) : false;
 		if (!$size || self::REMOTE_MAX_BYTES < $size) {
+			// Tag a definite zero-byte body so callers can tell it apart from stat failures and oversize responses.
+			$is_empty = is_file($temp) && 0 === $size;
 			wp_delete_file($temp);
-			return new \WP_Error(self::E_DATA);
+			return $is_empty ? new \WP_Error(self::E_DATA, '', 'empty') : new \WP_Error(self::E_DATA);
 		}
 		return $temp;
 	}

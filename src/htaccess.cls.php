@@ -291,6 +291,60 @@ class Htaccess extends Root {
 	}
 
 	/**
+	 * Find LiteSpeed blocks that v7.9.1 wrote into an ancestor .htaccess outside the WordPress and frontend roots.
+	 *
+	 * Read-only: repeats the v7.9.1 upward search (first existing .htaccess outside the roots, stopping at DOCUMENT_ROOT or `/`); a .htaccess inside the roots does not end it. Never writes outside the proven roots.
+	 *
+	 * @since 7.9.2
+	 * @return array<int,string> Paths of ancestor .htaccess files still holding a LiteSpeed block.
+	 */
+	public function orphan_ancestor_rules() {
+		$frontend = Router::frontend_path();
+		$doc_root = ! empty( $_SERVER['DOCUMENT_ROOT'] ) ? wp_normalize_path( sanitize_text_field( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) ) : '';
+		$found    = [];
+		foreach ( array_unique( [ $frontend, realpath( ABSPATH ) ] ) as $path ) {
+			// An owned .htaccess created later (e.g. by v7.9.2) does not end the search: v7.9.1 may have written to an ancestor before it existed. The first ancestor file outside the roots (the v7.9.1 target) does.
+			while ( $path ) {
+				if ( file_exists( $path . '/.htaccess' ) && ! File::within( $path, ABSPATH ) && ! File::within( $path, $frontend ) ) {
+					$content = File::read( $path . '/.htaccess' );
+					// Accept LF and CRLF line endings.
+					if ( is_string( $content ) && preg_match( '/^[ \t]*# BEGIN (?:' . self::MARKER . '|' . self::MARKER_NONLS . ')[ \t]*\r?$/m', $content ) ) {
+						$found[] = $path . '/.htaccess';
+					}
+					break;
+				}
+				if ( '/' === $path || ( $doc_root && wp_normalize_path( $path ) === $doc_root ) || dirname( $path ) === $path ) {
+					break;
+				}
+				$path = dirname( $path );
+			}
+		}
+		return array_values( array_unique( $found ) );
+	}
+
+	/**
+	 * Ask the administrator to remove LiteSpeed blocks left in an ancestor .htaccess by v7.9.1.
+	 *
+	 * @since 7.9.2
+	 * @param bool $do_echo Echo for the current page instead of storing a pinned notice.
+	 * @return void
+	 */
+	public function notice_orphan_rules( $do_echo = false ) {
+		foreach ( $this->orphan_ancestor_rules() as $file ) {
+			$msg = sprintf(
+				/* translators: %s: .htaccess file path */
+				__( 'LiteSpeed Cache no longer manages %s because it is outside the WordPress directory. Please remove its LiteSpeed Cache blocks (between the "# BEGIN LSCACHE" / "# END LSCACHE" and "# BEGIN NON_LSCACHE" / "# END NON_LSCACHE" lines) manually.', 'litespeed-cache' ),
+				'<code>' . esc_html( $file ) . '</code>'
+			);
+			if ( $do_echo ) {
+				Admin_Display::note( $msg, true );
+			} else {
+				Admin_Display::add_unique_notice( 'note', [ 'htaccess_orphan_' . md5( $file ) => $msg ], true );
+			}
+		}
+	}
+
+	/**
 	 * Set the path class variables.
 	 *
 	 * @since 1.0.11
@@ -630,6 +684,27 @@ class Htaccess extends Root {
 	}
 
 	/**
+	 * Whether any site in the installation has CDN mapping enabled, for the shared CORS font block.
+	 *
+	 * Large networks always get the block: enumerating every site is too costly and the rules only add a wildcard ACAO header to font files.
+	 *
+	 * @since 7.9.2
+	 * @return bool
+	 */
+	private function _any_site_cdn_on() {
+		if ( wp_is_large_network( 'sites', get_main_network_id() ) ) {
+			return true;
+		}
+		$name = Conf::name( Base::O_CDN );
+		foreach ( get_sites( [ 'fields' => 'ids', 'number' => 0 ] ) as $blog_id ) {
+			if ( \get_blog_option( (int) $blog_id, $name, false ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Generate rewrite rules based on settings.
 	 *
 	 * @since 1.3
@@ -731,9 +806,9 @@ class Htaccess extends Root {
 			$new_rules[]         = '';
 		}
 
-		// CORS font rules.
+		// CORS font rules: the block is shared by the whole installation, so on multisite it follows every site's stored CDN switch, never the saving site's.
 		$id          = Base::O_CDN;
-		$cdn_enabled = is_multisite() ? \get_blog_option( get_main_site_id( get_main_network_id() ), Conf::name( $id ), false ) : ! empty( $cfg[ $id ] );
+		$cdn_enabled = is_multisite() ? $this->_any_site_cdn_on() : ! empty( $cfg[ $id ] );
 		if ( $cdn_enabled ) {
 			$new_rules[] = self::MARKER_CORS . self::MARKER_START;
 			$new_rules   = array_merge( $new_rules, $this->_cors_rules() );

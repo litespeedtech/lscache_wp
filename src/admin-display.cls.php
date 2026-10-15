@@ -732,6 +732,14 @@ class Admin_Display extends Base {
 		// If is in dev version, always check latest update
 		Cloud::cls()->check_dev_version();
 
+		// Computed per page load and echoed only (never stored), so fixing the mapping clears it immediately.
+		if ( ! $this->_is_network_admin && $this->conf( self::O_CDN ) ) {
+			$cdn_msg = CDN::invalid_mapping_msg( CDN::cls()->invalid_mapping_urls() );
+			if ( $cdn_msg ) {
+				self::note( $cdn_msg, true, true );
+			}
+		}
+
 		// One time msg
 		$messages       = self::get_option( self::DB_MSG, [] );
 		$added_thickbox = false;

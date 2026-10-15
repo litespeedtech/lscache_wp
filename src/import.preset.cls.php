@@ -265,6 +265,8 @@ class Preset extends Import {
 			return $debug(false, $name);
 		}
 
+		// Leave network-managed shared settings untouched with one summary instead of a per-option error under a success notice.
+		$parsed = $this->_strip_unwritable_shared( $parsed );
 		$this->cls('Conf')->update_confs($parsed);
 
 		return $debug(true, $name);

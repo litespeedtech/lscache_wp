@@ -13,6 +13,7 @@ defined( 'WPINC' ) || exit();
 use LiteSpeed\Debug2;
 use LiteSpeed\Cloud;
 use LiteSpeed\Conf;
+use LiteSpeed\Htaccess;
 
 /**
  * Check whether a DB table exists.
@@ -198,4 +199,20 @@ function litespeed_update_7_9() {
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange
 		$wpdb->query( "DROP TABLE IF EXISTS `{$tb}`" );
 	}
+}
+
+/**
+ * Remove debug, purge and crawler logs still named by the v7.9.1 formula. [2026-10-14]
+ *
+ * The log files were renamed in v7.9.2, so the old copies were neither cleared nor downloadable; this runs regardless of the debug setting.
+ * Also flags LiteSpeed blocks v7.9.1 left in an ancestor .htaccess, which v7.9.2 no longer manages.
+ *
+ * @since 7.9.2
+ * @return void
+ */
+function litespeed_update_7_9_2() {
+	Debug2::remove_legacy_logs();
+
+	// v7.9.2 no longer writes outside the WordPress/frontend roots; point the administrator to any block left there.
+	Htaccess::cls()->notice_orphan_rules();
 }

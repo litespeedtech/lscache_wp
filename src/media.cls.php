@@ -446,6 +446,48 @@ class Media extends Root {
 	 * @return bool
 	 */
 	public function rename( $short_file_path, $short_file_path_new, $post_id ) {
+		if ( ! $this->_move_local( $short_file_path, $short_file_path_new ) ) {
+			return false;
+		}
+
+		do_action( 'litespeed_media_rename', $short_file_path, $short_file_path_new, $post_id );
+		return true;
+	}
+
+	/**
+	 * Replace a media file with another one (e.g. restore a backup over an optimized file).
+	 *
+	 * Fires `litespeed_media_del` for the replaced destination and then `litespeed_media_rename`, matching the pre-7.9.2 del+rename event order, but only after the local move succeeded.
+	 *
+	 * @since  7.9.2
+	 * @access public
+	 *
+	 * @param string $short_file_path     Source relative path.
+	 * @param string $short_file_path_new Destination relative path being replaced.
+	 * @param int    $post_id             Post ID.
+	 * @return bool
+	 */
+	public function replace( $short_file_path, $short_file_path_new, $post_id ) {
+		if ( ! $this->_move_local( $short_file_path, $short_file_path_new ) ) {
+			return false;
+		}
+
+		do_action( 'litespeed_media_del', $short_file_path_new, $post_id );
+		do_action( 'litespeed_media_rename', $short_file_path, $short_file_path_new, $post_id );
+		return true;
+	}
+
+	/**
+	 * Move a local media file when it exists.
+	 *
+	 * @since  7.9.2
+	 * @access private
+	 *
+	 * @param string $short_file_path     Source relative path.
+	 * @param string $short_file_path_new Destination relative path.
+	 * @return bool False only when an existing local file could not be moved.
+	 */
+	private function _move_local( $short_file_path, $short_file_path_new ) {
 		$real_file     = $this->_wp_upload_dir['basedir'] . '/' . $short_file_path;
 		$real_file_new = $this->_wp_upload_dir['basedir'] . '/' . $short_file_path_new;
 
@@ -455,8 +497,6 @@ class Media extends Root {
 			Admin_Display::error( __( 'Could not move the image file.', 'litespeed-cache' ) );
 			return false;
 		}
-
-		do_action( 'litespeed_media_rename', $short_file_path, $short_file_path_new, $post_id );
 		return true;
 	}
 
@@ -858,9 +898,12 @@ class Media extends Root {
 				$size = $placeholder_list[ $k ];
 				$src  = $src_list[ $k ];
 
-				$v = Utility::remove_attr( $v, 'fetchpriority', 'high' );
-
-				$html_list[ $k ] = $__placeholder->replace( $v, $src, $size );
+				$v    = Utility::remove_attr( $v, 'fetchpriority', 'high' );
+				$lazy = $__placeholder->replace( $v, $src, $size );
+				// An unchanged tag means src could not be renamed: keep the original markup untouched.
+				if ( $lazy !== $v ) {
+					$html_list[ $k ] = $lazy;
+				}
 			}
 		}
 
@@ -876,11 +919,16 @@ class Media extends Root {
 			foreach ( $html_list as $k => $v ) {
 				$snippet     = $cfg_trim_noscript || false !== stripos( $v, '</noscript' ) ? '' : '<noscript>' . $v . '</noscript>';
 				$source_attr = $cfg_js_delay ? 'data-litespeed-src' : 'data-src';
-				$v           = preg_replace_callback( '/\A(<iframe\b(?:"[^"]*"|\'[^\']*\'|[^\'">])*?)\s+src\s*=/i', static function ( $matches ) use ( $source_attr ) {
+				$v           = preg_replace_callback( '/\A(<iframe\b' . Utility::HTML_ATTR_PREFIX . ')\s+src\s*=/i', static function ( $matches ) use ( $source_attr ) {
 					return $matches[1] . ' ' . $source_attr . '=';
-				}, $v, 1 );
-				$v           = preg_replace( '/\A<iframe\b/i', '<iframe data-lazyloaded="1" src="about:blank"', $v, 1 );
-				$snippet     = $v . $snippet;
+				}, $v, 1, $renamed );
+				// Only a real src rename may receive the about:blank src; otherwise keep the iframe untouched.
+				if ( null === $v || 1 !== $renamed ) {
+					$html_list[ $k ] = $html_list_ori[ $k ];
+					continue;
+				}
+				$v       = preg_replace( '/\A<iframe\b/i', '<iframe data-lazyloaded="1" src="about:blank"', $v, 1 );
+				$snippet = $v . $snippet;
 
 				$html_list[ $k ] = $snippet;
 			}

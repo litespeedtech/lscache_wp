@@ -1168,6 +1168,12 @@ class Optimize extends Base {
 					continue;
 				}
 
+				// ESI markers and HTML comments must stay in the page for the server to process; plain CSS `<` (e.g. range media queries) is still combined.
+				if ( preg_match( '#<(?:/?esi:|!--)#i', $match[3] ) ) {
+					self::debug2( 'Bypassed inline style containing ESI/HTML comment' );
+					continue;
+				}
+
 				if (!empty($attrs['media']) && $attrs['media'] !== 'all') {
 					$this_src_arr['media'] = $attrs['media'];
 				}
@@ -1271,8 +1277,12 @@ class Optimize extends Base {
 		}
 
 		if ($this->cfg_js_defer === 2) {
-			$ori = Utility::remove_attr( $ori, 'type' );
-			return preg_replace( '/\A(<script\b(?:"[^"]*"|\'[^\']*\'|[^\'">])*?)\ssrc=/i', '$1 type="litespeed/javascript" data-src=', $ori, 1 );
+			$delayed = preg_replace( '/\A(<script\b' . Utility::HTML_ATTR_PREFIX . ')\s+src\s*=/i', '$1 type="litespeed/javascript" data-src=', Utility::remove_attr( $ori, 'type' ), 1, $renamed );
+			// No real src attribute renamed: leave the script unprocessed rather than returning it with its type stripped.
+			if ( null === $delayed || 1 !== $renamed ) {
+				return false;
+			}
+			return $delayed;
 		}
 
 		return str_replace('></script>', ' defer data-deferred="1"></script>', $ori);

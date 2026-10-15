@@ -41,6 +41,13 @@ class Conf extends Base {
 	];
 
 	/**
+	 * Set while a network-wide activation runs, since WordPress records the plugin as network-active only after the hook.
+	 *
+	 * @var bool
+	 */
+	public static $_network_activating = false;
+
+	/**
 	 * IDs that were updated during a save cycle.
 	 *
 	 * @var array<string|int,mixed>
@@ -253,6 +260,27 @@ class Conf extends Base {
 	}
 
 	/**
+	 * Whether shared runtime settings follow the primary network, which applies only while the plugin is (being) network-activated.
+	 *
+	 * A per-site or MU-plugin install keeps the v7.9.1 per-site behaviour. Not cached because it changes inside the activation request.
+	 *
+	 * @since 7.9.2
+	 * @return bool
+	 */
+	public static function shares_network_settings() {
+		if ( ! is_multisite() ) {
+			return false;
+		}
+		if ( self::$_network_activating ) {
+			return true;
+		}
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once ABSPATH . '/wp-admin/includes/plugin.php';
+		}
+		return is_plugin_active_for_network( Core::PLUGIN_FILE );
+	}
+
+	/**
 	 * Check authority to change settings that feed shared runtime files and cookies.
 	 *
 	 * @param string $id      Option ID.
@@ -260,7 +288,7 @@ class Conf extends Base {
 	 * @return bool
 	 */
 	public function can_update_shared( $id, $network = false ) {
-		if ( ! is_multisite() || ! in_array( $id, self::SHARED_OPTIONS, true ) ) {
+		if ( ! self::shares_network_settings() || ! in_array( $id, self::SHARED_OPTIONS, true ) ) {
 			return true;
 		}
 		$owner = get_main_network_id();
@@ -279,7 +307,7 @@ class Conf extends Base {
 	 * @return void
 	 */
 	public function load_shared_options() {
-		if ( ! is_multisite() ) {
+		if ( ! self::shares_network_settings() ) {
 			return;
 		}
 		$owner    = get_main_network_id();
@@ -308,6 +336,18 @@ class Conf extends Base {
 			$this->set_primary_conf( $id, $value );
 			$this->set_network_conf( $id, $value );
 		}
+	}
+
+	/**
+	 * Read a network setting from the primary network, for installation-wide files written while network settings are shared.
+	 *
+	 * @since 7.9.2
+	 * @param string $id Network option ID.
+	 * @return mixed
+	 */
+	public function owner_network_conf( $id ) {
+		$value = get_network_option( get_main_network_id(), self::name( $id ), self::$_default_site_options[ $id ] );
+		return $this->type_casting( $value, $id, true );
 	}
 
 	/**
@@ -402,20 +442,8 @@ class Conf extends Base {
 			return false;
 		}
 
-		// Check if needs to use site_options or not
-		// todo: check if site settings are separate bcos it will affect .htaccess
-
-		/**
-		 * In case this is called outside the admin page
-		 *
-		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
-		 * @since  2.0
-		 */
-		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once ABSPATH . '/wp-admin/includes/plugin.php';
-		}
 		// If is not activated on network, it will not have site options
-		if ( ! is_plugin_active_for_network( Core::PLUGIN_FILE ) ) {
+		if ( ! self::shares_network_settings() ) {
 			if ( self::VAL_ON2 === (int) $this->conf( self::O_CACHE ) ) {
 				// Default to cache on
 				$this->set_conf( self::_CACHE, true );

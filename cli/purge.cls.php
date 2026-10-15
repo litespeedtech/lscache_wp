@@ -71,7 +71,19 @@ class Purge {
 		$action = is_multisite() ? Core::ACTION_QS_PURGE_EMPTYCACHE : Core::ACTION_QS_PURGE_ALL;
 
 		$this->dispatch( $action );
-		WP_CLI::success( __( 'Purged All!', 'litespeed-cache' ) );
+		$this->kick_or_fail();
+		WP_CLI::success( __( 'Purge all sent to the web server.', 'litespeed-cache' ) );
+	}
+
+	/**
+	 * Deliver the queued purge to the web server now; a failed delivery keeps the queue and exits with an error.
+	 *
+	 * @since 7.9.2
+	 */
+	private function kick_or_fail() {
+		if ( ! Core::kick_purge_queue() ) {
+			WP_CLI::error( 'Could not notify the web server to purge.' );
+		}
 	}
 
 	/**
@@ -113,8 +125,14 @@ class Purge {
 
 		switch_to_blog( $blogid );
 
-		$this->dispatch( Core::ACTION_QS_PURGE_ALL );
-		WP_CLI::success( __( 'Purged the blog!', 'litespeed-cache' ) );
+		try {
+			$this->dispatch( Core::ACTION_QS_PURGE_ALL );
+			// Kick on the target blog so its own queue and endpoint are used before restoring.
+			$this->kick_or_fail();
+		} finally {
+			restore_current_blog();
+		}
+		WP_CLI::success( __( 'Blog purge sent to the web server.', 'litespeed-cache' ) );
 	}
 
 	/**
@@ -219,7 +237,8 @@ class Purge {
 		);
 
 		$this->dispatch( Core::ACTION_PURGE_BY, $data );
-		WP_CLI::success( __( 'Purged!', 'litespeed-cache' ) );
+		$this->kick_or_fail();
+		WP_CLI::success( __( 'Purge sent to the web server.', 'litespeed-cache' ) );
 	}
 
 	/**

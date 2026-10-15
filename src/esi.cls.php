@@ -25,6 +25,7 @@ class ESI extends Root {
 	private $esi_args              = null;
 	private $_esi_preserve_list  = array();
 	private $_nonce_actions      = array( -1 => '' ); // val is cache control
+	private $_esi_invalid        = false; // True when this ESI request failed signature validation.
 
 	const QS_ACTION = 'lsesi';
 	const QS_PARAMS = 'esi';
@@ -263,6 +264,9 @@ class ESI extends Root {
 	private function _register_esi_actions() {
 		if ( ! $this->is_valid_request() ) {
 			Control::set_nocache_hard( 'invalid ESI signature' );
+			// Serve an empty, comment-free ESI response instead of the theme page; never publish the unverified block ID.
+			$this->_esi_invalid = true;
+			! defined( 'LSCACHE_ESI_SILENCE' ) && define( 'LSCACHE_ESI_SILENCE', true );
 			return;
 		}
 		/**
@@ -328,8 +332,8 @@ class ESI extends Root {
 	 * @return string The new template path.
 	 */
 	public function esi_template( $template ) {
-		// Check if is an ESI request
-		if (defined('LSCACHE_IS_ESI')) {
+		// Check if is an ESI request; an unsigned one gets the same template, which then renders nothing.
+		if ( $this->_esi_invalid || defined( 'LSCACHE_IS_ESI' ) ) {
 			self::debug('calling ESI template');
 
 			return LSCWP_DIR . 'tpl/esi.tpl.php';
@@ -635,6 +639,11 @@ class ESI extends Root {
 	 * @access public
 	 */
 	public function load_esi_block() {
+		// An invalid signature was already rejected: do not parse params or dispatch any block.
+		if ( $this->_esi_invalid ) {
+			return;
+		}
+
 		$params = $this->_parse_esi_param();
 
 		/**

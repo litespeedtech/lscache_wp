@@ -11,3 +11,4 @@ node_modules
 AGENTS.md
 .codex*
 /__*
+/tests

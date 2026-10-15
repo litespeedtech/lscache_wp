@@ -811,7 +811,8 @@ class Control extends Root {
 			return;
 		}
 
-		$env_vary  = isset( $_SERVER['LSCACHE_VARY_VALUE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['LSCACHE_VARY_VALUE'] ) ) : '';
+		// Without the server env, a non-LiteSpeed origin behind an edge cache receives the mobile split as a request header (cacheability parity only).
+		$env_vary  = isset( $_SERVER['LSCACHE_VARY_VALUE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['LSCACHE_VARY_VALUE'] ) ) : ( self::_mobile_vary_header() ? 'ismobile' : '' );
 		$is_mobile = self::is_mobile();
 		if ( $env_vary && false !== strpos( $env_vary, 'ismobile' ) ) {
 			if ( ! $is_mobile && ! $is_mobile_conf ) {
@@ -822,6 +823,29 @@ class Control extends Root {
 			self::set_nocache_hard( 'is mobile' );
 			return;
 		}
+	}
+
+	/**
+	 * Whether a non-LiteSpeed origin received the edge's `ismobile` vary token in the X-LSCACHE-VARY-VALUE request header.
+	 *
+	 * A LiteSpeed origin (identified by LSWS_EDITION or SERVER_SOFTWARE, regardless of LITESPEED_SERVER_TYPE) computes its own vary, so the header is ignored there.
+	 *
+	 * @since 7.9.2
+	 * @return bool
+	 */
+	private static function _mobile_vary_header() {
+		if ( ! isset( $_SERVER['HTTP_X_LSCACHE_VARY_VALUE'] ) ) {
+			return false;
+		}
+
+		$lsws_edition    = isset( $_SERVER['LSWS_EDITION'] ) ? sanitize_text_field( wp_unslash( $_SERVER['LSWS_EDITION'] ) ) : '';
+		$server_software = isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '';
+		if ( '' !== $lsws_edition || 0 === stripos( $server_software, 'LiteSpeed' ) ) {
+			return false;
+		}
+
+		$tokens = preg_split( '/[\s,]+/', strtolower( sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_LSCACHE_VARY_VALUE'] ) ) ), -1, PREG_SPLIT_NO_EMPTY );
+		return in_array( 'ismobile', $tokens, true );
 	}
 
 	/**

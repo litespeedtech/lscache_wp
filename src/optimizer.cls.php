@@ -14,6 +14,9 @@ defined('WPINC') || exit();
 
 class Optimizer extends Root {
 
+	// Remote asset HTTP statuses treated as permanent: the asset is skipped instead of failing the whole combine.
+	const PERMANENT_FAIL_STATUSES = [ 404, 410 ];
+
 	private $_conf_css_font_display;
 
 	/**
@@ -305,7 +308,14 @@ class Optimizer extends Root {
 
 		$temp = File::download($url, $today_file);
 		if (is_wp_error($temp)) {
-			Debug2::debug2('[Optimizer] ❌ Load Remote error [code] ' . $temp->get_error_code());
+			$err_code = $temp->get_error_code();
+			$err_data = $temp->get_error_data();
+			// Only definite permanent failures (404/410 or an empty body) are skipped; transient, network, disk and oversize failures keep the whole group on its original resources.
+			if ( ( File::E_HTTP === $err_code && in_array( (int) $err_data, self::PERMANENT_FAIL_STATUSES, true ) ) || ( File::E_DATA === $err_code && 'empty' === $err_data ) ) {
+				Debug2::debug('[Optimizer] skip permanently failing asset [status] ' . ( File::E_HTTP === $err_code ? (int) $err_data : 'empty' ) . ' [url] ' . $url);
+				return '';
+			}
+			Debug2::debug2('[Optimizer] ❌ Load Remote error [code] ' . $err_code);
 			return false;
 		}
 

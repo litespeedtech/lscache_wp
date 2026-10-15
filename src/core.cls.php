@@ -152,7 +152,7 @@ class Core extends Root {
 				$this->http_header( $purge_queue );
 				Debug2::debug( '[Core] Purge2 Queue found&sent: ' . $purge_queue );
 			}
-			// An upgrade queues this during Conf::init(); keep it for a later request in case this response aborts.
+			// When Conf::init() upgrades synchronously (Core built after wp_loaded, e.g. activation), keep the queued row for a later request.
 			if ( '-1' !== $purge_queue && ! ( defined( 'LSCWP_UPGRADE_PURGE_QUEUED' ) && Purge::UPGRADE_PURGE_HEADER === $purge_queue ) ) {
 				Purge::update_option( Purge::DB_QUEUE2, '-1' );
 			}

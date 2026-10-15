@@ -140,6 +140,7 @@ class Import extends Base {
 			}
 		}
 
+		$ori_data = $this->_strip_unwritable_shared( $ori_data );
 		$this->cls('Conf')->update_confs($ori_data);
 
 		if (!$file) {
@@ -162,6 +163,7 @@ class Import extends Base {
 	 */
 	public function reset() {
 		$options = $this->cls('Conf')->load_default_vals();
+		$options = $this->_strip_unwritable_shared( $options );
 
 		$this->cls('Conf')->update_confs($options);
 
@@ -169,6 +171,32 @@ class Import extends Base {
 
 		$msg = __('Reset successfully.', 'litespeed-cache');
 		Admin_Display::success($msg);
+	}
+
+	/**
+	 * Remove network-managed shared settings this site cannot write and report them once, instead of Conf::update() emitting a per-option error.
+	 *
+	 * @since 7.9.2
+	 * @param array<string,mixed> $matrix Option-value map.
+	 * @return array<string,mixed>
+	 */
+	protected function _strip_unwritable_shared( array $matrix ) {
+		$conf    = $this->cls( 'Conf' );
+		$skipped = [];
+		foreach ( $matrix as $id => $val ) {
+			if ( $conf->can_update_shared( $id ) ) {
+				continue;
+			}
+			if ( $conf->type_casting( $val, $id ) !== $conf->conf( $id ) ) {
+				$skipped[] = $id;
+			}
+			unset( $matrix[ $id ] );
+		}
+		if ( $skipped ) {
+			Debug2::debug( '[Import] Skipped network-managed shared settings: ' . implode( ', ', $skipped ) );
+			Admin_Display::info( __( 'Network-managed shared settings (object cache, Guest Mode, login cookie, HTTPS vary) were left unchanged; a network administrator can change them in the primary site or network settings.', 'litespeed-cache' ) );
+		}
+		return $matrix;
 	}
 
 	/**

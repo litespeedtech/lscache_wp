@@ -30,6 +30,7 @@ class Data extends Root {
 		'7.0.1-b1'  => [ 'litespeed_update_7_0_1' ],
 		'7.7-b28'   => [ 'litespeed_update_7_7' ],
 		'7.9-b5'    => [ 'litespeed_update_7_9' ],
+		'7.9.2-b60' => [ 'litespeed_update_7_9_2' ],
 	];
 
 	/**
@@ -249,7 +250,7 @@ class Data extends Root {
 		Admin_Display::info(
 			sprintf(
 				/* translators: %s: time string */
-				__( 'The database has been upgrading in the background since %s. This message will disappear once upgrade is complete.', 'litespeed-cache' ),
+				__( 'A database upgrade started %s has not completed yet. If it does not finish, it will be retried automatically within an hour of that start.', 'litespeed-cache' ),
 				'<code>' . Utility::readable_time( $is_upgrading ) . '</code>'
 			) . ' [LiteSpeed]',
 			true

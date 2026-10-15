@@ -268,16 +268,21 @@ class Placeholder extends Base {
 
 		$snippet = ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_NOSCRIPT_RM ) || false !== stripos( $html, '</noscript' ) ) ? '' : '<noscript>' . $html . '</noscript>';
 
+		$lazy = $html;
 		foreach ( [ 'src', 'srcset', 'sizes' ] as $attr ) {
-			$html = preg_replace( '/\A(<img\b(?:"[^"]*"|\'[^\']*\'|[^\'">])*?)\s(' . $attr . ')=/i', '$1 data-$2=', $html, 1 );
+			$lazy = preg_replace( '/\A(<img\b' . Utility::HTML_ATTR_PREFIX . ')\s+' . $attr . '\s*=/i', '$1 data-' . $attr . '=', $lazy, 1, $renamed );
+			// Only a real src rename may receive the placeholder src; otherwise keep the tag untouched to avoid a duplicate src.
+			if ( null === $lazy || ( 'src' === $attr && 1 !== $renamed ) ) {
+				return $html;
+			}
 		}
-		$html = preg_replace(
+		$lazy = preg_replace(
 			'/\A<img\s+/i',
 			'<img data-lazyloaded="1"' . $additional_attr . ' src="' . Str::trim_quotes($this_placeholder) . '" ',
-			$html
+			$lazy
 		);
 
-		$snippet = $html . $snippet;
+		$snippet = $lazy . $snippet;
 
 		return $snippet;
 	}

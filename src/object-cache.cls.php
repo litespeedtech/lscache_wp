@@ -136,6 +136,20 @@ class Object_Cache extends Root {
 	private $_cfg_enabled;
 
 	/**
+	 * Whether a backend is configured, kept even after a connection or command failure.
+	 *
+	 * @var bool
+	 */
+	private $_cfg_configured = false;
+
+	/**
+	 * Whether the most recent get() reached the backend and it confirmed the key is absent.
+	 *
+	 * @var bool
+	 */
+	private $_last_get_missed = false;
+
+	/**
 	 * True => Redis, false => Memcached.
 	 *
 	 * @var bool
@@ -244,7 +258,8 @@ class Object_Cache extends Root {
 			if ( $this->_cfg_method ) {
 				$this->_oc_driver = 'Redis';
 			}
-			$this->_cfg_enabled = $cfg[ Base::O_OBJECT ] && class_exists( $this->_oc_driver ) && $this->_cfg_host;
+			$this->_cfg_configured = $cfg[ Base::O_OBJECT ] && $this->_cfg_host;
+			$this->_cfg_enabled    = $this->_cfg_configured && class_exists( $this->_oc_driver );
 		} elseif ( defined( 'LITESPEED_CONF_LOADED' ) ) { // If OC is OFF, will hit here to init OC after conf initialized
 			$this->_cfg_debug             = $this->conf( Base::O_DEBUG ) ? $this->conf( Base::O_DEBUG ) : false;
 			$this->_cfg_method            = $this->conf( Base::O_OBJECT_KIND ) ? true : false;
@@ -261,7 +276,8 @@ class Object_Cache extends Root {
 			if ( $this->_cfg_method ) {
 				$this->_oc_driver = 'Redis';
 			}
-			$this->_cfg_enabled = $this->conf( Base::O_OBJECT ) && class_exists( $this->_oc_driver ) && $this->_cfg_host;
+			$this->_cfg_configured = $this->conf( Base::O_OBJECT ) && $this->_cfg_host;
+			$this->_cfg_enabled    = $this->_cfg_configured && class_exists( $this->_oc_driver );
 		} else {
 			// Loaded by the drop-in before the options exist: read the runtime configuration file.
 			$cfg = self::read_conf_file( WP_CONTENT_DIR );
@@ -281,7 +297,8 @@ class Object_Cache extends Root {
 				if ( $this->_cfg_method ) {
 					$this->_oc_driver = 'Redis';
 				}
-				$this->_cfg_enabled = class_exists( $this->_oc_driver ) && $this->_cfg_host;
+				$this->_cfg_configured = (bool) $this->_cfg_host;
+				$this->_cfg_enabled    = $this->_cfg_configured && class_exists( $this->_oc_driver );
 			} else {
 				$this->_cfg_enabled = false;
 			}
@@ -316,7 +333,7 @@ class Object_Cache extends Root {
 		}
 
 		// Without a real AUTH_KEY the log name falls back to the options API, which re-enters this drop-in before the connection exists.
-		if ( ! defined( 'AUTH_KEY' ) || false !== strpos( AUTH_KEY, 'put your unique phrase here' ) ) {
+		if ( '' === Debug2::auth_key_secret() ) {
 			return;
 		}
 
@@ -324,7 +341,11 @@ class Object_Cache extends Root {
 		$lscwp_content_dir     = defined( 'LSCWP_CONTENT_DIR' ) ? LSCWP_CONTENT_DIR : WP_CONTENT_DIR;
 		$litespeed_static_dir  = $lscwp_content_dir . '/' . $litespeed_data_folder;
 		$log_path_prefix       = $litespeed_static_dir . '/debug/';
-		$log_file              = $log_path_prefix . Debug2::FilePath( 'debug' );
+		$log_name              = Debug2::FilePath( 'debug' );
+		if ( ! $log_name ) {
+			return;
+		}
+		$log_file = $log_path_prefix . $log_name;
 
 		if ( file_exists( $log_path_prefix . 'index.php' ) && file_exists( $log_file ) ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
@@ -436,6 +457,25 @@ class Object_Cache extends Root {
 	 */
 	public function usable() {
 		return $this->_cfg_enabled && $this->_connect();
+	}
+
+	/**
+	 * Whether a backend is configured for this request, even if it later failed to connect or respond.
+	 *
+	 * @return bool
+	 */
+	public function configured() {
+		return $this->_cfg_configured;
+	}
+
+	/**
+	 * Whether reads of a group may reach the backend (false when Cache WP-Admin bypasses it).
+	 *
+	 * @param string $group Cache group name.
+	 * @return bool
+	 */
+	public function can_read( $group = '' ) {
+		return $this->_can_cache( $group );
 	}
 
 	/**
@@ -682,6 +722,8 @@ class Object_Cache extends Root {
 	 * @return mixed|false
 	 */
 	public function get( $key, $group = '' ) {
+		$this->_last_get_missed = false;
+
 		if ( ! $this->_cfg_enabled ) {
 			return false;
 		}
@@ -701,11 +743,26 @@ class Object_Cache extends Root {
 				$this->_redis_error( $ex );
 				return false;
 			}
+			// phpredis returns false only for an absent key once no exception was raised.
+			$this->_last_get_missed = false === $res;
 		} else {
 			$res = $this->_conn->get( $key );
+			// Memcached returns false for both a miss and a failure; only RES_NOTFOUND confirms absence.
+			$this->_last_get_missed = false === $res && \Memcached::RES_NOTFOUND === $this->_conn->getResultCode();
 		}
 
 		return $res;
+	}
+
+	/**
+	 * Whether the most recent get() reached the backend and it confirmed the key is absent.
+	 *
+	 * False after a hit and after any non-confirmed outcome: disabled, read bypass, no connection, Redis exception or a Memcached failure code.
+	 *
+	 * @return bool
+	 */
+	public function last_get_missed() {
+		return $this->_last_get_missed;
 	}
 
 	/**

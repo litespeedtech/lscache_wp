@@ -88,6 +88,11 @@ trait Cloud_Misc {
 			return;
 		}
 
+		// The banner's upgrade button runs a network-only action, so subsite administrators cannot use it.
+		if ( is_multisite() && ! current_user_can( 'manage_network_options' ) ) {
+			return;
+		}
+
 		$last_check = empty( $this->_summary[ 'last_request.' . self::API_VER ] ) ? 0 : $this->_summary[ 'last_request.' . self::API_VER ];
 
 		if ( time() - $last_check > 86400 ) {

@@ -562,6 +562,8 @@ class Router extends Base {
 				if ( $_can_network_option || ( ! $_is_multisite && $_can_option ) ) {
 					Debug2::tmp_disable();
 					Admin::redirect("?page=litespeed-toolbox#settings-debug");
+				} elseif ( $_is_multisite && $_can_option ) {
+					self::_network_permission_error();
 				}
 				return;
 
@@ -580,6 +582,8 @@ class Router extends Base {
 			case self::ACTION_DB_OPTM:
 			if ($_can_network_option || ( ! $_is_multisite && $_can_option )) {
 					self::$_action = $action;
+				} elseif ( $_is_multisite && $_can_option ) {
+					self::_network_permission_error();
 				}
 				return;
 
@@ -629,6 +633,8 @@ class Router extends Base {
 			case self::ACTION_REPORT:
 				if ( $_can_network_option || ( ! $_is_multisite && $_can_option ) ) {
 					self::$_action = $action;
+				} elseif ( $_is_multisite && $_can_option ) {
+					self::_network_permission_error();
 				}
 				return;
 
@@ -657,6 +663,17 @@ class Router extends Base {
             Debug2::debug('[Router] LSCWP_CTRL match failed: ' . $action);
 				return;
 		}
+	}
+
+	/**
+	 * Tell a subsite administrator why a network-only action was refused instead of ignoring it silently.
+	 *
+	 * @since 7.9.2
+	 * @return void
+	 */
+	private static function _network_permission_error() {
+		Debug2::debug( '[Router] Network-only action refused for a site administrator' );
+		Admin_Display::error( __( 'This action requires network administrator permission.', 'litespeed-cache' ) );
 	}
 
 	/**

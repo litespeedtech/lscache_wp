@@ -22,6 +22,9 @@ class CDN extends Root {
 
 	const BYPASS = 'LITESPEED_BYPASS_CDN';
 
+	/** Maximum nested noscript/template levels re-parsed for CDN rewriting; deeper content stays untouched. */
+	const FRAGMENT_MAX_DEPTH = 8;
+
 	/**
 	 * The working HTML/content buffer being processed.
 	 *
@@ -107,6 +110,54 @@ class CDN extends Root {
 		}
 		$parts = wp_parse_url( $url );
 		return is_array( $parts ) && isset( $parts['scheme'] ) && 'https' === strtolower( $parts['scheme'] ) && ! empty( $parts['host'] ) && ! isset( $parts['user'] ) && ! isset( $parts['pass'] );
+	}
+
+	/**
+	 * List stored CDN mapping URLs that init() ignores because they fail valid_mapping_url().
+	 *
+	 * Read-only: stored values are never migrated or changed.
+	 *
+	 * @since 7.9.2
+	 * @return array<int,string> Unique non-empty invalid URLs, in stored order.
+	 */
+	public function invalid_mapping_urls() {
+		$mapping = $this->conf( Base::O_CDN_MAPPING );
+		if ( ! is_array( $mapping ) ) {
+			return [];
+		}
+
+		$invalid = [];
+		foreach ( $mapping as $row ) {
+			if ( ! is_array( $row ) || empty( $row[ Base::CDN_MAPPING_URL ] ) ) {
+				continue;
+			}
+			$url = $row[ Base::CDN_MAPPING_URL ];
+			if ( ! self::valid_mapping_url( $url ) ) {
+				$invalid[] = is_string( $url ) ? $url : '';
+			}
+		}
+
+		return array_values( array_unique( $invalid ) );
+	}
+
+	/**
+	 * Build the escaped warning HTML listing ignored non-https CDN mapping URLs.
+	 *
+	 * @since 7.9.2
+	 * @param array<int,string> $urls Invalid URLs from invalid_mapping_urls().
+	 * @return string Escaped HTML, empty when there is nothing to report.
+	 */
+	public static function invalid_mapping_msg( $urls ) {
+		if ( empty( $urls ) ) {
+			return '';
+		}
+
+		$list = [];
+		foreach ( $urls as $url ) {
+			$list[] = '<code>' . esc_html( '' === $url ? __( '(invalid value)', 'litespeed-cache' ) : $url ) . '</code>';
+		}
+
+		return esc_html__( 'These CDN mapping URLs are ignored because they are not valid https:// URLs', 'litespeed-cache' ) . ': ' . implode( ', ', $list ) . '. ' . esc_html__( 'Change them to valid https:// URLs; CDN mappings cannot be saved until they are corrected.', 'litespeed-cache' );
 	}
 
 	/**
@@ -311,8 +362,7 @@ class CDN extends Root {
 
 		// Start replacing img src
 		if ( ! empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_INC_IMG ] ) ) {
-			$this->_replace_img();
-			$this->_replace_inline_css();
+			$this->_replace_img_css();
 		}
 
 		if ( ! empty( $this->_cfg_cdn_mapping[ Base::CDN_MAPPING_FILETYPE ] ) ) {
@@ -374,77 +424,117 @@ class CDN extends Root {
 	}
 
 	/**
-	 * Parse all images and replace their src attributes.
+	 * Rewrite image src attributes and inline CSS url() values in one token-aware pass.
 	 *
 	 * @since 1.2.3
+	 * @since 7.9.2 Merged image and inline CSS passes; also rewrites noscript bodies and template content.
 	 * @access private
 	 * @return void
 	 */
-	private function _replace_img() {
-		$content = Utility::html_mask( $this->content, [ 'img' ] );
-		if ( null === $content ) {
-			return;
-		}
-		preg_match_all( '#<img([^>]+?)src=([\'"\\\]*)([^\'"\s\\\>]+)([\'"\\\]*)([^>]*)>#i', $content, $matches );
-		$replacements = [];
-		foreach ( $matches[3] as $k => $url ) {
-			// Backslash by the quote = escaped JSON/JS context; rewriting would corrupt the escaping.
-			if ( false !== strpos( $matches[2][ $k ], '\\' ) || false !== strpos( $matches[4][ $k ], '\\' ) ) {
-				continue;
-			}
-
-			// Check if is a DATA-URI
-			if ( false !== strpos( $url, 'data:image' ) ) {
-				continue;
-			}
-
-			$url2 = $this->rewrite( $url, Base::CDN_MAPPING_INC_IMG );
-			if ( ! $url2 ) {
-				continue;
-			}
-
-			$replacements[ $matches[0][ $k ] ] = sprintf( '<img %1$s src=%2$s %3$s>', $matches[1][ $k ], $matches[2][ $k ] . $url2 . $matches[4][ $k ], $matches[5][ $k ] );
-		}
-		if ( $replacements ) {
-			$this->content = Utility::html_replace( array_keys( $replacements ), array_values( $replacements ), $this->content );
+	private function _replace_img_css() {
+		$content = $this->_rewrite_fragment( $this->content, 0 );
+		if ( null !== $content ) {
+			$this->content = $content;
+		} else {
+			self::debug( 'CDN image/CSS parsing skipped: ambiguous HTML or PCRE error ' . preg_last_error() );
 		}
 	}
 
 	/**
-	 * Parse and replace all inline styles containing url().
+	 * Rewrite img src and inline CSS url() inside an HTML fragment.
 	 *
-	 * @since 1.2.3
+	 * Noscript bodies and template content are parsed again as HTML so fallback images still map; script, textarea, svg and math stay opaque.
+	 *
+	 * @since 7.9.2
 	 * @access private
-	 * @return void
+	 * @param string $html  HTML fragment.
+	 * @param int    $depth Current noscript/template nesting depth.
+	 * @return string|null Rewritten fragment, or null when the fragment could not be tokenized.
 	 */
-	private function _replace_inline_css() {
-		$content = Utility::html_tokens( $this->content, function ( $token ) {
+	private function _rewrite_fragment( $html, $depth ) {
+		return Utility::html_tokens( $html, function ( $token ) use ( $depth ) {
 			if ( ! empty( $token['raw'] ) ) {
-				if ( 'style' !== strtolower( $token['raw'] ) ) {
+				$raw = strtolower( $token['raw'] );
+				if ( ! empty( $token['opaque'] ) || '' === $token['close'] ) {
 					return $token[0];
 				}
-				return '<' . $token['raw'] . $token['raw_attrs'] . '>' . $this->_rewrite_css_urls( $token['body'] ) . $token['close'];
+				if ( 'style' === $raw ) {
+					return '<' . $token['raw'] . $token['raw_attrs'] . '>' . $this->_rewrite_css_urls( $token['body'] ) . $token['close'];
+				}
+				if ( 'noscript' === $raw && $depth < self::FRAGMENT_MAX_DEPTH ) {
+					$body = $this->_rewrite_fragment( $token['body'], $depth + 1 );
+					return null === $body ? $token[0] : '<' . $token['raw'] . $token['raw_attrs'] . '>' . $body . $token['close'];
+				}
+				if ( 'template' === $raw && $depth < self::FRAGMENT_MAX_DEPTH ) {
+					return $this->_rewrite_template( $token[0], $token['close'], $depth );
+				}
+				return $token[0];
 			}
 			if ( empty( $token['tag'] ) || empty( $token['end'] ) ) {
 				return $token[0];
 			}
-			// Consume every attribute, including non-style quoted values, before advancing.
-			$attrs = preg_replace_callback( '~\G(\s+)([^\s=/>]+)(\s*=\s*)("[^"]*"|\'[^\']*\'|[^\s>]+)|\G\s+[^\s=/>]+(?!\s*=)~', function ( $attr ) {
-				if ( empty( $attr[2] ) || 'style' !== strtolower( $attr[2] ) ) {
+			$is_img = 'img' === strtolower( $token['tag'] );
+			$src    = false;
+			// Consume every attribute, including non-style quoted values, before advancing; like browsers, whitespace, `/` runs or a just-closed quote separate attributes (`<img/src=x>`, `alt="x"src=y`).
+			$attrs = preg_replace_callback( '~\G([\s/]+|(?<=["\']))([^\s=/>]+)(\s*=\s*)("[^"]*"|\'[^\']*\'|[^\s>]+)|\G(?:[\s/]+|(?<=["\']))[^\s=/>]++(?!\s*=)~', function ( $attr ) use ( $is_img, &$src ) {
+				if ( empty( $attr[2] ) ) {
+					return $attr[0];
+				}
+				$name = strtolower( $attr[2] );
+				if ( 'style' !== $name && ( ! $is_img || 'src' !== $name || $src ) ) {
 					return $attr[0];
 				}
 				$value = $attr[4];
 				$quote = '"' === $value[0] || "'" === $value[0] ? $value[0] : '';
-				$css   = $quote ? substr( $value, 1, -1 ) : $value;
-				return $attr[1] . $attr[2] . $attr[3] . $quote . $this->_rewrite_css_urls( $css ) . $quote;
+				$inner = $quote ? substr( $value, 1, -1 ) : $value;
+				if ( 'style' === $name ) {
+					return $attr[1] . $attr[2] . $attr[3] . $quote . $this->_rewrite_css_urls( $inner ) . $quote;
+				}
+				// Only the first src counts, matching how browsers resolve duplicate attributes.
+				$src  = true;
+				$url2 = $this->_rewrite_img_src( $inner );
+				return $url2 ? $attr[1] . $attr[2] . $attr[3] . $quote . $url2 . $quote : $attr[0];
 			}, $token['attrs'] );
 			return null === $attrs ? $token[0] : '<' . $token['tag'] . $attrs . '>';
 		} );
-		if ( null !== $content ) {
-			$this->content = $content;
-		} else {
-			self::debug( 'CDN CSS parsing skipped: ambiguous HTML or PCRE error ' . preg_last_error() );
+	}
+
+	/**
+	 * Rewrite the content of a complete template block, keeping its outer tags byte-exact.
+	 *
+	 * @since 7.9.2
+	 * @access private
+	 * @param string $block Whole template block including its opening and closing tags.
+	 * @param string $close The block's closing tag.
+	 * @param int    $depth Current nesting depth.
+	 * @return string
+	 */
+	private function _rewrite_template( $block, $close, $depth ) {
+		if ( ! preg_match( '~\A<template' . Utility::HTML_ATTR_PATTERN . '>~i', $block, $open ) ) {
+			return $block;
 		}
+		$inner_len = strlen( $block ) - strlen( $open[0] ) - strlen( $close );
+		if ( $inner_len < 0 ) {
+			return $block;
+		}
+		$inner = $this->_rewrite_fragment( substr( $block, strlen( $open[0] ), $inner_len ), $depth + 1 );
+		return null === $inner ? $block : $open[0] . $inner . $close;
+	}
+
+	/**
+	 * Map one img src value, skipping data URIs and escaped or ambiguous values.
+	 *
+	 * @since 7.9.2
+	 * @access private
+	 * @param string $url Attribute value without quotes.
+	 * @return string|false Mapped URL or false to keep the original.
+	 */
+	private function _rewrite_img_src( $url ) {
+		// Backslashes mean an escaped JSON/JS context; rewriting would corrupt the escaping.
+		if ( '' === $url || preg_match( '/[\s\\\\\'"<>]/', $url ) || false !== strpos( $url, 'data:image' ) ) {
+			return false;
+		}
+		return $this->rewrite( $url, Base::CDN_MAPPING_INC_IMG );
 	}
 
 	/**

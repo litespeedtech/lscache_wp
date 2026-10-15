@@ -249,10 +249,15 @@ abstract class Root {
 	 */
 	public static function read_conf_file( $dir ) {
 		foreach ([ self::CONF_FILE => false, self::CONF_FILE_LEGACY => true ] as $name => $legacy) {
-			$data = is_file($dir . '/' . $name) ? self::parse_conf_file(file_get_contents($dir . '/' . $name), $legacy) : false;
+			if (!is_file($dir . '/' . $name)) {
+				continue;
+			}
+			$data = self::parse_conf_file(file_get_contents($dir . '/' . $name), $legacy);
 			if (false !== $data) {
 				return $data;
 			}
+			// An existing but unreadable file usually means a root-owned 0600 copy (e.g. written by `wp --allow-root`); no-op unless debug logging is active.
+			self::debug('[Conf] Failed to read runtime configuration file: ' . $name);
 		}
 		return [];
 	}

@@ -513,6 +513,132 @@ class Crawler_Map extends Root {
 	}
 
 	/**
+	 * Normalize the port of a parsed http(s) URL for origin comparison.
+	 *
+	 * @since 7.9.2
+	 *
+	 * @param array<string,mixed> $parts Result of wp_parse_url().
+	 * @return int|null|false Explicit non-default port, null for the scheme default, false for a non-http(s) scheme.
+	 */
+	private static function _explicit_port( $parts ) {
+		$scheme = isset( $parts['scheme'] ) ? strtolower( $parts['scheme'] ) : '';
+		if ( 'http' !== $scheme && 'https' !== $scheme ) {
+			return false;
+		}
+		if ( ! isset( $parts['port'] ) ) {
+			return null;
+		}
+		$port = (int) $parts['port'];
+		return ( 'https' === $scheme ? 443 : 80 ) === $port ? null : $port;
+	}
+
+	/**
+	 * Build a host allowlist key: lowercase host plus an explicit non-default port.
+	 *
+	 * @since 7.9.2
+	 *
+	 * @param string   $host Host name.
+	 * @param int|null $port Explicit non-default port, or null for the scheme default.
+	 * @return string
+	 */
+	private static function _host_key( $host, $port ) {
+		return strtolower( $host ) . ( null === $port ? '' : ':' . $port );
+	}
+
+	/**
+	 * Normalize one allowlist entry (full URL, `host` or `host:port`) into host keys including its www/apex twin.
+	 *
+	 * @since 7.9.2
+	 *
+	 * @param mixed    $entry        Allowlist entry.
+	 * @param int|null $default_port Port used for a bare host without an explicit port (the home port).
+	 * @param bool     $as_key       Parse a bare entry as a host key: no port means the scheme default and an explicit port is kept verbatim, so keys round-trip unchanged.
+	 * @return array<int,string>
+	 */
+	private static function _host_keys( $entry, $default_port, $as_key = false ) {
+		if ( ! is_string( $entry ) ) {
+			return [];
+		}
+		$entry = trim( $entry );
+		if ( '' === $entry ) {
+			return [];
+		}
+		if ( false !== strpos( $entry, '://' ) ) {
+			$parts = wp_parse_url( $entry );
+			$port  = is_array( $parts ) ? self::_explicit_port( $parts ) : false;
+			if ( false === $port || empty( $parts['host'] ) ) {
+				return [];
+			}
+		} else {
+			$parts = wp_parse_url( '//' . $entry );
+			if ( ! is_array( $parts ) || empty( $parts['host'] ) ) {
+				return [];
+			}
+			$port = $as_key ? null : $default_port;
+			if ( isset( $parts['port'] ) ) {
+				$port = (int) $parts['port'];
+				if ( ! $as_key && ( 80 === $port || 443 === $port ) ) {
+					$port = null;
+				}
+			}
+		}
+
+		$host = strtolower( $parts['host'] );
+		$keys = [ self::_host_key( $host, $port ) ];
+		if ( 0 === strpos( $host, 'www.' ) ) {
+			$keys[] = self::_host_key( substr( $host, 4 ), $port );
+		} elseif ( false === strpos( $host, '[' ) && ! filter_var( $host, FILTER_VALIDATE_IP ) ) {
+			$keys[] = self::_host_key( 'www.' . $host, $port );
+		}
+		return $keys;
+	}
+
+	/**
+	 * Hosts whose sitemap URLs may be crawled outside drop-domain mode.
+	 *
+	 * Covers home, siteurl, filtered home_url(), litespeed_internal_domains (e.g. WPML language domains), the current network's site domains and their www/apex twins; foreign hosts never receive crawler cookies.
+	 *
+	 * @since 7.9.2
+	 *
+	 * @param int|null $home_port Explicit non-default home port, or null for the scheme default.
+	 * @return array<string,bool> Map of allowed host keys (`host` or `host:port`).
+	 */
+	private function _sitemap_hosts( $home_port ) {
+		$sources = [ $this->_site_url, (string) get_option( 'siteurl' ), home_url() ];
+		$sources = array_merge( $sources, (array) apply_filters( 'litespeed_internal_domains', [] ) );
+		if ( is_multisite() ) {
+			foreach ( get_sites( [ 'network_id' => get_current_network_id(), 'number' => 0 ] ) as $site ) {
+				if ( isset( $site->domain ) ) {
+					$sources[] = $site->domain;
+				}
+			}
+		}
+
+		$hosts = [];
+		foreach ( $sources as $source ) {
+			$hosts = array_merge( $hosts, self::_host_keys( $source, $home_port ) );
+		}
+
+		/**
+		 * Filter the hosts the crawler may fetch from the sitemap (non drop-domain mode).
+		 *
+		 * @since 7.9.2
+		 *
+		 * @param array<int,string> $hosts Host keys: `host` (scheme default port) or `host:port` (that exact port); full URLs are accepted too.
+		 */
+		$filtered = apply_filters( 'litespeed_crawler_sitemap_hosts', array_values( array_unique( $hosts ) ) );
+
+		$allowed = [];
+		foreach ( (array) $filtered as $entry ) {
+			$keys = self::_host_keys( $entry, $home_port, true );
+			if ( $keys ) {
+				$allowed[ $keys[0] ] = true;
+			}
+		}
+		return $allowed;
+	}
+
+	/**
 	 * Generate the sitemap.
 	 *
 	 * @since    1.1.0
@@ -546,22 +672,36 @@ class Crawler_Map extends Root {
 		if ( is_array( $this->_urls ) && ! empty( $this->_urls ) ) {
 			$crawler_drop_domain = defined( 'LITESPEED_CRAWLER_DROP_DOMAIN' ) && constant( 'LITESPEED_CRAWLER_DROP_DOMAIN' );
 			$site                = wp_parse_url( $this->_site_url );
-			$site_port           = isset( $site['port'] ) ? (int) $site['port'] : ( 'https' === strtolower( $site['scheme'] ) ? 443 : 80 );
+			$site_port           = is_array( $site ) ? self::_explicit_port( $site ) : false;
+			$allowed_hosts       = $crawler_drop_domain ? [] : $this->_sitemap_hosts( false === $site_port ? null : $site_port );
+			$dropped             = 0;
 			foreach ( $this->_urls as $k => $v ) {
 				$url      = wp_parse_url( $v );
-				$url_port = is_array( $url ) && isset( $url['port'] ) ? (int) $url['port'] : ( is_array( $url ) && isset( $url['scheme'] ) && 'https' === strtolower( $url['scheme'] ) ? 443 : 80 );
-				if ( ! is_array( $url ) || empty( $url['scheme'] ) || empty( $url['host'] ) || strtolower( $url['scheme'] ) !== strtolower( $site['scheme'] ) || strtolower( $url['host'] ) !== strtolower( $site['host'] ) || $url_port !== $site_port ) {
+				$url_port = is_array( $url ) ? self::_explicit_port( $url ) : false;
+				// http/80 and https/443 on the same host are one origin (e.g. http home behind an https proxy); other schemes and non-equivalent explicit ports are foreign.
+				if ( false === $url_port || empty( $url['host'] ) ) {
 					unset( $this->_urls[ $k ] );
+					++$dropped;
 					continue;
 				}
-				// Preserve the relative URL contract used by Crawler::_multi_request().
-				if ( $crawler_drop_domain ) {
-					if ( 0 !== stripos( $v, $this->_site_url ) ) {
+				if ( ! $crawler_drop_domain ) {
+					// Only allowlisted hosts receive crawler role/vary cookies.
+					if ( ! isset( $allowed_hosts[ self::_host_key( $url['host'], $url_port ) ] ) ) {
 						unset( $this->_urls[ $k ] );
-						continue;
+						++$dropped;
 					}
-					$this->_urls[ $k ] = substr( $v, strlen( $this->_site_url ) );
+					continue;
 				}
+				// Drop-domain mode rebuilds URLs on home, so only the home origin is kept, relative to home as Crawler::_multi_request() expects.
+				if ( false === $site_port || empty( $site['host'] ) || strtolower( $url['host'] ) !== strtolower( $site['host'] ) || $url_port !== $site_port || 0 !== stripos( $v, $this->_site_url ) ) {
+					unset( $this->_urls[ $k ] );
+					++$dropped;
+					continue;
+				}
+				$this->_urls[ $k ] = substr( $v, strlen( $this->_site_url ) );
+			}
+			if ( $dropped ) {
+				self::debug( 'Dropped sitemap URLs outside the allowed hosts: ' . $dropped );
 			}
 
 			$this->_urls = array_values( array_unique( $this->_urls ) );

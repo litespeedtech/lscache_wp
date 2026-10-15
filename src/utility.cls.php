@@ -35,6 +35,13 @@ class Utility extends Root {
 		. '|</[^>]*(?:>|\z)~is';
 
 	const HTML_TOKEN_PATTERN = self::HTML_TOKEN_PREFIX . '.*?' . self::HTML_TOKEN_SUFFIX;
+
+	/**
+	 * Lazy attribute-token prefix for `\A(<tag\b PREFIX)\s+name\s*=` rewrites of one opening tag.
+	 *
+	 * Quotes are consumed only as a complete value after `=`, and no branch consumes a lone quote or `=`, so an unquoted value may contain quotes (`data-x=it's`) while an unclosed quote (`alt="x src=/evil>`) makes the whole match fail and the tag stays untouched.
+	 */
+	const HTML_ATTR_PREFIX = '(?>\s+|[^\s"\'>=]+|=\s*"[^"]*"|=\s*\'[^\']*\'|=\s*[^\s"\'>][^\s>]*|=(?=[\s>]))*?';
 	// CDATA can contain raw-element end tags inside an opaque foreign block.
 	private const HTML_OPAQUE_TOKEN_PATTERN = self::HTML_TOKEN_PREFIX . '(?:<!\[CDATA\[.*?(?:\]\]>|\z)|(?!<!\[CDATA\[).)*?' . self::HTML_TOKEN_SUFFIX;
 

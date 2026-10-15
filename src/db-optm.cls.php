@@ -327,7 +327,7 @@ class DB_Optm extends Root {
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$result = (array) $wpdb->get_results(
 					$wpdb->prepare(
-						"SELECT table_name, DATA_FREE FROM information_schema.tables WHERE TABLE_SCHEMA = %s AND TABLE_NAME LIKE %s AND ENGINE <> 'InnoDB' AND DATA_FREE > 0",
+						"SELECT TABLE_NAME AS table_name, DATA_FREE AS data_free FROM information_schema.tables WHERE TABLE_SCHEMA = %s AND TABLE_NAME LIKE %s AND ENGINE <> 'InnoDB' AND DATA_FREE > 0",
 						DB_NAME,
 						$wpdb->esc_like( $wpdb->prefix ) . '%'
 					)

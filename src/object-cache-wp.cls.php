@@ -157,7 +157,7 @@ class WP_Object_Cache {
 		 */
 		if ( ! defined( 'LSOC_PREFIX' ) ) {
 			global $table_prefix;
-			$identity = ( defined( 'WP_CACHE_KEY_SALT' ) ? WP_CACHE_KEY_SALT : '' ) . "\0" . DB_NAME . "\0" . (string) $table_prefix;
+			$identity = ( defined( 'WP_CACHE_KEY_SALT' ) ? WP_CACHE_KEY_SALT : '' ) . "\0" . ( defined( 'DB_NAME' ) ? DB_NAME : ABSPATH ) . "\0" . (string) $table_prefix;
 			define( 'LSOC_PREFIX', hash( 'sha256', $identity ) );
 		}
 	}
@@ -424,6 +424,10 @@ class WP_Object_Cache {
 		}
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- Preserve the existing drop-in payload format.
 		if ( $backend && ! $this->_object_cache->$method( $id, serialize( [ 'data' => $data ] ), $expire ) ) {
+			// Cache-aside refill after this request's read-bypassed miss: keep the refused add's value for this request only, never overwriting a runtime value.
+			if ( 'add' === $method && array_key_exists( $id, $this->_cache_404 ) && ! array_key_exists( $id, $this->_cache ) && ! $this->_object_cache->can_read( $group ) ) {
+				$this->_cache[ $id ] = $data;
+			}
 			unset( $this->_cache_404[ $id ] );
 			return false;
 		}
@@ -502,11 +506,22 @@ class WP_Object_Cache {
 		$found_in_oc = false;
 		$cache_val   = false;
 
-		if ( array_key_exists( $id, $this->_cache ) && ( ! $force || ! $persistent ) ) {
+		// Force bypasses the runtime copy only when the backend can actually answer for this group.
+		$readable      = null;
+		$force_backend = false;
+		if ( $force && $persistent ) {
+			$readable      = $this->_backend_readable( $group );
+			$force_backend = $readable;
+		}
+
+		if ( array_key_exists( $id, $this->_cache ) && ! $force_backend ) {
 			$found     = true;
 			$cache_val = $this->_cache[ $id ];
 			++$this->count_hit_incall;
-		} elseif ( $persistent && ( $force || ! array_key_exists( $id, $this->_cache_404 ) ) ) {
+		} elseif ( $persistent && ( $force_backend || ! array_key_exists( $id, $this->_cache_404 ) ) ) {
+			if ( null === $readable ) {
+				$readable = $this->_backend_readable( $group );
+			}
 			$v = $this->_object_cache->get( $id, $group );
 
 			if ( false !== $v ) {
@@ -519,10 +534,22 @@ class WP_Object_Cache {
 				$found       = true;
 				$found_in_oc = true;
 				$cache_val   = $v['data'];
-			} else {
-				// Can't find key, cache it to 404.
+			} elseif ( ! $readable ) {
+				// Local miss (read bypass or backend unavailable): the runtime is empty here; record 404 as the cache-aside refill marker.
+				$this->_cache_404[ $id ] = 1;
+				++$this->count_miss;
+			} elseif ( false !== $v || $this->_object_cache->last_get_missed() ) {
+				// Confirmed miss (or an unreadable payload): drop the stale runtime copy and cache the 404.
 				unset( $this->_cache[ $id ] );
 				$this->_cache_404[ $id ] = 1;
+				++$this->count_miss;
+			} elseif ( array_key_exists( $id, $this->_cache ) ) {
+				// Read error on a forced lookup: keep the runtime copy and never cache a 404 for a failed read.
+				$found     = true;
+				$cache_val = $this->_cache[ $id ];
+				++$this->count_hit_incall;
+			} else {
+				// Read error without a runtime copy: report a miss without caching a 404.
 				++$this->count_miss;
 			}
 		} else {
@@ -541,6 +568,16 @@ class WP_Object_Cache {
 		++$this->cache_total;
 
 		return $cache_val;
+	}
+
+	/**
+	 * Whether a backend read of this group may happen and the backend is currently usable.
+	 *
+	 * @param string $group Cache group name.
+	 * @return bool
+	 */
+	private function _backend_readable( $group ) {
+		return $this->_object_cache->can_read( $group ) && $this->_object_cache->usable();
 	}
 
 	/**
@@ -707,10 +744,15 @@ class WP_Object_Cache {
 	 * @since 1.8
 	 * @access public
 	 *
-	 * @return bool Whether the persistent cache was flushed.
+	 * @return bool True when no backend is configured; otherwise whether the persistent cache was flushed.
 	 */
 	public function flush() {
 		$this->flush_runtime();
+
+		// Without a configured backend the runtime cache is the whole cache; a configured backend that fails still reports false.
+		if ( ! $this->_object_cache->configured() ) {
+			return true;
+		}
 
 		return $this->_object_cache->flush();
 	}

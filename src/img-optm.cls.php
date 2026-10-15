@@ -58,6 +58,10 @@ class Img_Optm extends Base {
 
 	const DB_NEED_PULL = 'need_pull';
 
+	// `_summary` keys carrying failed-attachment counts across batch_switch / destroy redirects.
+	const SUMMARY_SWITCH_FAILED  = 'switch_failed';
+	const SUMMARY_DESTROY_FAILED = 'destroy_failed';
+
 	/**
 	 * WordPress upload directory info.
 	 *
