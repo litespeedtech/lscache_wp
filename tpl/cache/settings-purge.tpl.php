@@ -83,7 +83,7 @@ $break_arr = array(
 		<td>
 			<?php $this->build_switch( $option_id ); ?>
 			<div class="litespeed-desc">
-				<?php esc_html_e( 'If ON, the stale copy of a cached page will be shown to visitors until a new cache copy is available. Reduces the server load for following visits. If OFF, the page will be dynamically generated while visitors wait.', 'litespeed-cache' ); ?>
+				<?php esc_html_e( 'If ON, LiteSpeed will serve the stale copy of a cached page to visitors while it revalidates from the origin in the background (asynchronous revalidation / stale-while-revalidate). This keeps the site fast and avoids the wait for a fresh cache copy. If OFF, the page will be dynamically generated while visitors wait for the new copy.', 'litespeed-cache' ); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/cache/#serve-stale' ); ?>
 			</div>
 			<div class="litespeed-callout notice notice-warning inline">
