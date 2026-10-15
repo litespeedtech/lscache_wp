@@ -191,7 +191,7 @@ if ( is_multisite() && is_network_admin() ) {
 
 <?php $this->form_action( Core::ACTION_PURGE_BY ); ?>
 	<div class="litespeed-row">
-		<div class="litespeed-switch litespeed-mini litespeed-right20 litespeed-margin-bottom10">
+		<div class="litespeed-switch litespeed-mini litespeed-right20 litespeed-margin-bottom10" style="--litespeed-switch-count:4;">
 			<?php $val = Admin_Display::PURGEBY_CAT; ?>
 			<input type="radio" autocomplete="off" name="<?php echo esc_attr( Admin_Display::PURGEBYOPT_SELECT ); ?>" id="purgeby_option_category" value="<?php echo esc_attr( $val ); ?>" checked />
 			<label for="purgeby_option_category"><?php esc_html_e( 'Category', 'litespeed-cache' ); ?></label>
