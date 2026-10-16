@@ -146,8 +146,8 @@ class WooCommerce extends Base {
 	 * @return mixed
 	 */
 	public function nocache_store_api( $result, $server, $request ) {
-		$route = $request->get_route();
-		if ( '/wc/store/' === substr( $route, 0, 10 ) || '/wc/store' === $route ) {
+		$route = is_object( $request ) && is_callable( [ $request, 'get_route' ] ) ? $request->get_route() : '';
+		if ( is_string( $route ) && ( '/wc/store/' === substr( $route, 0, 10 ) || '/wc/store' === $route ) ) {
 			Control::set_nocache_hard( 'WooCommerce Store API' );
 		}
 		return $result;
@@ -1056,7 +1056,7 @@ class WooCommerce extends Base {
 		 *      )
 		 *  )
 		 */
-		$stock_string_arr = [];
+		$product_ids = [];
 
 		// Ensure data is unslashed before processing.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Third-party plugin may not send nonce. Data format defined by third-party plugin.
@@ -1066,18 +1066,23 @@ class WooCommerce extends Base {
 			if ( ! is_string( $stock_value ) ) {
 				continue;
 			}
-			$stock_string_arr = array_merge( $stock_string_arr, explode( '#^#', $stock_value ) );
+			foreach ( explode( '#^#', $stock_value ) as $edited_stock ) {
+				$product_id = (int) strtok( $edited_stock, '$' );
+				if ( $product_id > 0 ) {
+					$product_ids[ $product_id ] = true;
+				}
+			}
+		}
+
+		if ( ! $product_ids ) {
+			return;
 		}
 
 		$lscwp_3rd_woocommerce = new self();
 
-		if ( count( $stock_string_arr ) < 1 ) {
-			return;
-		}
-
-		foreach ( $stock_string_arr as $edited_stock ) {
-			$product_id = (int) strtok( $edited_stock, '$' );
-			$product    = wc_get_product( $product_id );
+		// The same product can appear in several edited columns; purge it once per request.
+		foreach ( array_keys( $product_ids ) as $product_id ) {
+			$product = wc_get_product( $product_id );
 
 			if ( empty( $product ) ) {
 				do_action( 'litespeed_debug', '3rd woo purge: ' . $product_id . ' not found.' );

@@ -1174,6 +1174,8 @@ class Crawler extends Root {
 			CURLOPT_HEADER           => true,
 			CURLOPT_CUSTOMREQUEST    => 'GET',
 			CURLOPT_FOLLOWLOCATION   => false,
+			CURLOPT_PROTOCOLS        => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+			CURLOPT_REDIR_PROTOCOLS  => CURLPROTO_HTTP | CURLPROTO_HTTPS,
 			CURLOPT_ENCODING         => 'gzip',
 			CURLOPT_CONNECTTIMEOUT   => 10,
 			CURLOPT_TIMEOUT          => $crawler_timeout, // Larger timeout to avoid incorrect blacklist addition #900171.
