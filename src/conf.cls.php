@@ -664,6 +664,11 @@ class Conf extends Base {
 					$this->cls( 'Crawler' )->clear_disabled_list();
 				}
 			}
+
+			// CCSS queue keys depend on these options, old entries can not be used anymore and would still spend quota
+			if ( array_intersect( [ self::O_OPTM_CCSS_PER_URL, self::O_OPTM_CCSS_SEP_POSTTYPE, self::O_OPTM_CCSS_SEP_URI ], $this->_updated_ids ) ) {
+				$this->cls( 'CSS' )->clear_q( 'ccss', true );
+			}
 		}
 
 		do_action( 'litespeed_update_confs', $the_matrix );
