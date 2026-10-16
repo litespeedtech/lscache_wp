@@ -228,13 +228,23 @@ class CSS extends Cloud_Queue_Svc {
 		Core::comment( 'QUIC.cloud CCSS in queue' );
 		$this->_queue = $this->load_queue( 'ccss' );
 
+		// Low quota plans only run a few items per day, so priority pages skip the line.
+		$priority = (bool) apply_filters( 'litespeed_ccss_priority', is_front_page(), $request_url );
+
+		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
+
 		if ( count( $this->_queue ) > $this->_max_queue_size() ) {
 			self::debug( 'Queue is full - ' . $this->_max_queue_size() );
-			return null;
+			if ( ! $priority ) {
+				return null;
+			}
+			// Drop the tail so the queue stays capped
+			if ( ! isset( $this->_queue[ $queue_k ] ) ) {
+				array_pop( $this->_queue );
+			}
 		}
 
-		$queue_k                  = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
-		$this->_queue[ $queue_k ] = [
+		$item = [
 			'url'        => apply_filters( 'litespeed_ccss_url', $request_url ),
 			'user_agent' => substr( $ua, 0, 200 ),
 			'is_mobile'  => $this->_separate_mobile(),
@@ -243,8 +253,14 @@ class CSS extends Cloud_Queue_Svc {
 			'vary'       => $vary,
 			'url_tag'    => $url_tag,
 		]; // Current UA will be used to request
+		if ( $priority ) {
+			unset( $this->_queue[ $queue_k ] );
+			$this->_queue = [ $queue_k => $item ] + $this->_queue;
+		} else {
+			$this->_queue[ $queue_k ] = $item;
+		}
 		$this->save_queue( 'ccss', $this->_queue );
-		self::debug( 'Added queue_ccss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary . ' [uid] ' . $uid );
+		self::debug( 'Added queue_ccss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary . ' [uid] ' . $uid . ( $priority ? ' [priority]' : '' ) );
 
 		// Prepare cache tag for later purge
 		Tag::add( 'CCSS.' . md5( $queue_k ) );
