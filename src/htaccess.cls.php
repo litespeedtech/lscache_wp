@@ -1117,12 +1117,20 @@ class Htaccess extends Root {
 		$failed = [];
 		$kinds  = $this->frontend_htaccess !== $this->backend_htaccess ? [ 'frontend', 'backend' ] : [ 'frontend' ];
 		foreach ( $kinds as $kind ) {
-			foreach ( [ self::MARKER, self::MARKER_NONLS ] as $marker ) {
-				try {
-					$this->_insert_wrapper( false, $kind, $marker );
-				} catch ( \Exception $error ) {
-					$failed[] = $error->getMessage();
+			// Remove our blocks with their markers, leaving the rest of the file as is.
+			$path    = $this->htaccess_path( $kind );
+			$content = File::read( $path );
+			$cleaned = preg_replace( '/^[ \t]*# BEGIN (' . self::MARKER . '|' . self::MARKER_NONLS . ')[ \t]*\r?$.*?^[ \t]*# END \1[ \t]*(?:\r?\n|\z)/ms', '', (string) $content );
+			if ( $cleaned === $content ) {
+				continue;
+			}
+			try {
+				$this->_htaccess_backup( $kind );
+				if ( ! is_string( $cleaned ) || ! File::save( $path, $cleaned ) ) {
+					throw new \Exception( 'Could not update the rewrite rules.' );
 				}
+			} catch ( \Exception $error ) {
+				$failed[] = $error->getMessage();
 			}
 		}
 		if ( $failed ) {
