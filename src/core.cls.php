@@ -498,8 +498,8 @@ class Core extends Root {
 		 * CDN
 		 */
 		if ( ! defined( 'LITESPEED_NO_OPTM' ) || ! LITESPEED_NO_OPTM ) {
-			// Optimax: first priority check — skip all hooks if ox HTML is cached
-			$ox_html = $this->cls( 'Optimax' )->serve();
+			// Optimax: first priority check — skip all hooks if ox HTML is cached. Checked here: building Optimax reads its summary option.
+			$ox_html = $this->conf( Base::O_OPTIMAX ) ? $this->cls( 'Optimax' )->serve() : false;
 			if ( false !== $ox_html ) {
 				Debug2::debug( '[Core] Optimax served, skip litespeed_buffer_finalize' );
 				define( 'LITESPEED_OX_SERVED', true );
