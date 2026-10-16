@@ -1252,7 +1252,9 @@ class Optimize extends Base {
 	 * @since  3.5
 	 */
 	private function _js_defer( $ori, $src ) {
-		if ( isset( Utility::parse_attr( $ori )['defer'] ) ) {
+		// Already deferred is enough for Deferred mode. Delayed mode still queues it: a native defer would run before its delayed inline data (e.g. WooCommerce's woocommerce_params).
+		$native_defer = isset( Utility::parse_attr( $ori )['defer'] );
+		if ( $native_defer && 2 !== $this->cfg_js_defer ) {
 			return false;
 		}
 		$ori = Utility::remove_attr( $ori, 'async' );
@@ -1277,6 +1279,7 @@ class Optimize extends Base {
 		}
 
 		if ($this->cfg_js_defer === 2) {
+			$ori     = $native_defer ? Utility::remove_attr( $ori, 'defer' ) : $ori;
 			$delayed = preg_replace( '/\A(<script\b' . Utility::HTML_ATTR_PREFIX . ')\s+src\s*=/i', '$1 type="litespeed/javascript" data-src=', Utility::remove_attr( $ori, 'type' ), 1, $renamed );
 			// No real src attribute renamed: leave the script unprocessed rather than returning it with its type stripped.
 			if ( null === $delayed || 1 !== $renamed ) {
