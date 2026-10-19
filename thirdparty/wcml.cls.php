@@ -78,12 +78,17 @@ class WCML {
 	}
 
 	/**
-	 * Appends WCML currency to the vary list.
+	 * Appends WCML currency to the vary list, unless it is the shop currency.
+	 *
+	 * Guests in the shop currency keep the default vary: no vary cookie is set for
+	 * them, so their first visit can be served from cache. Not when WCML can pick
+	 * the currency from the visitor's location: one URL then serves visitors in
+	 * different currencies, and only PHP can tell them apart.
 	 *
 	 * @since 3.0
 	 * @access public
 	 * @param array $vary_list The existing vary list.
-	 * @return array The updated vary list including WCML currency.
+	 * @return array The updated vary list, with WCML currency when it differs from the shop currency or can follow the visitor's location.
 	 */
 	public static function apply_vary( $vary_list ) {
 		if (empty(self::$_currency)) {
@@ -99,7 +104,9 @@ class WCML {
 			}
 		}
 
-		$vary_list['wcml_currency'] = self::$_currency;
+		if (self::_by_location() || get_option('woocommerce_currency', 'USD') !== self::$_currency) {
+			$vary_list['wcml_currency'] = self::$_currency;
+		}
 		return $vary_list;
 	}
 
@@ -292,6 +299,34 @@ class WCML {
 		}
 
 		return [];
+	}
+
+	/**
+	 * Whether WCML can pick the visitor's currency from their location.
+	 *
+	 * True in currency-by-location mode (which WCML also forces when it runs without
+	 * WPML) and in currency-by-language mode when a language's default currency is
+	 * the visitor's location.
+	 *
+	 * @since 7.9.2
+	 * @access private
+	 * @return bool
+	 */
+	private static function _by_location() {
+		// WCML 4.12.1+ covers both cases, and only while multi-currency is on.
+		if (class_exists('WCML\MultiCurrency\Geolocation') && method_exists('WCML\MultiCurrency\Geolocation', 'isUsed')) {
+			return \WCML\MultiCurrency\Geolocation::isUsed();
+		}
+
+		// Older WCML: the same two cases, read from its settings option.
+		$settings = get_option('_wcml_settings', []);
+		if (!is_array($settings)) {
+			return false;
+		}
+		if (isset($settings['currency_mode']) && 'by_location' === $settings['currency_mode']) {
+			return true;
+		}
+		return !empty($settings['default_currencies']) && is_array($settings['default_currencies']) && in_array('location', $settings['default_currencies'], true);
 	}
 
 	/**
