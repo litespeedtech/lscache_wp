@@ -4,7 +4,7 @@ Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cac
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 7.9.1
+Stable tag: 7.9.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -265,7 +265,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
-= 7.9.2 - Coming soon 2026 =
+= 7.9.2 - Oct 20 2026 =
 * **Image Optimize** Fixed thumbnails skipped for images in the uploads root. (AsFLY-902 PR#1059)
 * **Cloud** Retry credit sync after one hour when credit is exhausted.
 * **Cache** URI rules like `Do Not Cache URIs` now ignore a leading or trailing `*`, so `/wp-json/mcp/*` matches the same as `/wp-json/mcp/`. (#1040)
