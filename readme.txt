@@ -286,6 +286,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Task** Isolated asynchronous tokens by job type, used constant-time validation, and excluded tokens from logs.
 * **Purge** Corrected unpublished-post and empty-archive purges, preserved encoded paths, and prevented site cron from flushing shared backends.
 * **3rd** Corrected WooCommerce and NextGEN purges, protected unvaried cart responses, and validated bulk-edit and WCML settings permissions.
+* **3rd** WCML: guests in the shop currency now use the default cache, and the crawler warms it. (#1057)
 * **Core** Hardened file writes, admin output and static asset headers, replaced React and Babel with plain jQuery/JavaScript forms, and improved installation, upgrade and uninstall handling.
 * **Localization** Validated resource patterns while preserving comments, limited remote JavaScript downloads to 10 seconds, cleaned failed downloads, and restored HTTPS fallback redirects.
 

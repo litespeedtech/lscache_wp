@@ -113,6 +113,8 @@ class WCML {
 	/**
 	 * Inject the WCML vary row into the crawler cookie list.
 	 *
+	 * A currency that needs no vary cookie (the shop currency without location mode, Guest Mode off) maps to `_null`, so the crawler also runs it cookie-less.
+	 *
 	 * @since 7.9
 	 * @access public
 	 * @param mixed $cookies Crawler cookie list.
@@ -131,6 +133,11 @@ class WCML {
 
 		$vals = [];
 		foreach ($selected as $code) {
+			if (self::_is_cookieless($code)) {
+				$vals[] = '_null';
+				continue;
+			}
+			// A false hash here is a HASH failure or LITESPEED_GUEST bypass, never proof of no vary: skip it.
 			$h = self::_vary_hash($code);
 			if (!empty($h)) {
 				$vals[] = $h;
@@ -154,9 +161,14 @@ class WCML {
 				$other_rows[] = $c;
 			}
 		}
+		$vals = array_values(array_unique(array_merge($existing_vals, $vals)));
+		// Without an existing or selected hash, the default guest crawl is already cookie-less.
+		if (!array_diff($vals, [ '_null' ])) {
+			return $cookies;
+		}
 		$other_rows[] = [
 			'name' => $vary_name,
-			'vals' => array_values(array_unique(array_merge($existing_vals, $vals))),
+			'vals' => $vals,
 		];
 		return $other_rows;
 	}
@@ -327,6 +339,28 @@ class WCML {
 			return true;
 		}
 		return !empty($settings['default_currencies']) && is_array($settings['default_currencies']) && in_array('location', $settings['default_currencies'], true);
+	}
+
+	/**
+	 * Whether a guest in the given currency needs no vary cookie at all.
+	 *
+	 * Mirrors the guest vary list of Vary::finalize_default_vary(-1) with Guest Mode off. With Guest Mode on the crawler already presets a `_null` run.
+	 *
+	 * @since 7.9.2
+	 * @access private
+	 * @param string $currency Currency code.
+	 * @return bool
+	 */
+	private static function _is_cookieless( $currency ) {
+		if (apply_filters('litespeed_conf', \LiteSpeed\Base::O_GUEST)) {
+			return false;
+		}
+
+		$prev            = self::$_currency;
+		self::$_currency = $currency;
+		$vary            = apply_filters('litespeed_vary', []);
+		self::$_currency = $prev;
+		return empty($vary);
 	}
 
 	/**
