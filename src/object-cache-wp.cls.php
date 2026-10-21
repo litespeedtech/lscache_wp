@@ -424,8 +424,8 @@ class WP_Object_Cache {
 		}
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- Preserve the existing drop-in payload format.
 		if ( $backend && ! $this->_object_cache->$method( $id, serialize( [ 'data' => $data ] ), $expire ) ) {
-			// Cache-aside refill after this request's read-bypassed miss: keep the refused add's value for this request only, never overwriting a runtime value.
-			if ( 'add' === $method && array_key_exists( $id, $this->_cache_404 ) && ! array_key_exists( $id, $this->_cache ) && ! $this->_object_cache->can_read( $group ) ) {
+			// Cache-aside refill after this request's miss (read bypass, oversized value or backend error): keep the refused add's value for this request only, never overwriting a runtime value.
+			if ( 'add' === $method && array_key_exists( $id, $this->_cache_404 ) && ! array_key_exists( $id, $this->_cache ) ) {
 				$this->_cache[ $id ] = $data;
 			}
 			unset( $this->_cache_404[ $id ] );
