@@ -686,9 +686,10 @@ class Purge extends Base {
 		 * Fires each time public tags are added to the purge list of this request.
 		 *
 		 * One hook for every kind of public purge (post save, URL, category, tag,
-		 * post type, Purge All, ...), so an integration that follows purges, for
-		 * example a CDN outside of LiteSpeed, does not need to listen to every
-		 * litespeed_purged_* action. Tags already in the list do not fire again.
+		 * post type, Purge All, ...), so code that follows purges, for example a
+		 * purge log, cache warming or the revalidation of a headless frontend,
+		 * does not need to listen to every litespeed_purged_* action. Tags
+		 * already in the list do not fire again.
 		 *
 		 * @since 8.0
 		 * @param array<int,string> $tags   Tags added, with the blog ID prefix ('*' for Purge All).
