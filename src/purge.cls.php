@@ -682,6 +682,20 @@ class Purge extends Base {
 
 		self::debug( 'added ' . implode( ',', $tags ) . ( $purge2 ? ' [Purge2]' : '' ), 8 );
 
+		/**
+		 * Fires each time public tags are added to the purge list of this request.
+		 *
+		 * One hook for every kind of public purge (post save, URL, category, tag,
+		 * post type, Purge All, ...), so an integration that follows purges, for
+		 * example a CDN outside of LiteSpeed, does not need to listen to every
+		 * litespeed_purged_* action. Tags already in the list do not fire again.
+		 *
+		 * @since 8.0
+		 * @param array<int,string> $tags   Tags added, with the blog ID prefix ('*' for Purge All).
+		 * @param bool              $purge2 Whether they go out via X-LiteSpeed-Purge2.
+		 */
+		do_action( 'litespeed_purged', $tags, $purge2 );
+
 		// Send purge header immediately or queue if headers already sent or delayed.
 		$curr_built = $this->_build( $purge2 );
 
