@@ -393,7 +393,7 @@ class WP_Object_Cache {
 	}
 
 	/**
-	 * Store an unchanged wire envelope and update runtime state only after a conditional write succeeds.
+	 * Store an unchanged wire envelope, retaining a refused cache-aside refill only when no shared value is readable.
 	 *
 	 * @param int|string $key    Cache key.
 	 * @param mixed      $data   Value to store.
@@ -424,9 +424,17 @@ class WP_Object_Cache {
 		}
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- Preserve the existing drop-in payload format.
 		if ( $backend && ! $this->_object_cache->$method( $id, serialize( [ 'data' => $data ] ), $expire ) ) {
-			// Cache-aside refill after this request's read-bypassed miss: keep the refused add's value for this request only, never overwriting a runtime value.
-			if ( 'add' === $method && array_key_exists( $id, $this->_cache_404 ) && ! array_key_exists( $id, $this->_cache ) && ! $this->_object_cache->can_read( $group ) ) {
-				$this->_cache[ $id ] = $data;
+			// A refused refill may be an oversized value or a competing add. Never overwrite an existing runtime value.
+			if ( 'add' === $method && array_key_exists( $id, $this->_cache_404 ) && ! array_key_exists( $id, $this->_cache ) ) {
+				if ( ! $this->_object_cache->can_read( $group ) ) {
+					$this->_cache[ $id ] = $data;
+				} else {
+					// Bypass the earlier miss to retain any concurrent winner; only a confirmed miss permits local refill.
+					$this->get( $key, $group, true, $found );
+					if ( ! $found && $this->_object_cache->last_get_missed() ) {
+						$this->_cache[ $id ] = $data;
+					}
+				}
 			}
 			unset( $this->_cache_404[ $id ] );
 			return false;

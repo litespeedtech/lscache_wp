@@ -265,6 +265,9 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
+= 7.9.3 - Coming soon 2026 =
+* **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)
+
 = 7.9.2 - Oct 20 2026 =
 * **Image Optimize** Fixed thumbnails skipped for images in the uploads root. (AsFLY-902 PR#1059)
 * **Cloud** Retry credit sync after one hour when credit is exhausted.
