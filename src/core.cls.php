@@ -93,15 +93,17 @@ class Core extends Root {
 		}
 
 		/**
-		 * Register plugin activate/deactivate/uninstall hooks
+		 * Register plugin activate/deactivate hooks
 		 * NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed
+		 *
+		 * Uninstall runs from uninstall.php: register_uninstall_hook() reads the non-autoloaded
+		 * `uninstall_plugins` option on every call, which cost one query per page view here.
 		 *
 		 * @since 2.7.1 Disabled admin&CLI check to make frontend able to enable cache too
 		 */
 		$plugin_file = LSCWP_DIR . 'litespeed-cache.php';
 		register_activation_hook( $plugin_file, [ __NAMESPACE__ . '\Activation', 'register_activation' ] );
 		register_deactivation_hook( $plugin_file, [ __NAMESPACE__ . '\Activation', 'register_deactivation' ] );
-		register_uninstall_hook( $plugin_file, __NAMESPACE__ . '\Activation::uninstall_litespeed_cache' );
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// Register purge_all actions
