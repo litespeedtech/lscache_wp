@@ -864,7 +864,7 @@ class Optimize extends Base {
 			self::debug( 'JS parsing skipped: ambiguous HTML or PCRE error ' . preg_last_error() );
 			return [ $src_list, $html_list ];
 		}
-		preg_match_all('#<script(' . Utility::HTML_ATTR_PATTERN . ')>(.*?)</script(?=[\s/>])' . Utility::HTML_ATTR_PATTERN . '>#is', $content, $matches, PREG_SET_ORDER);
+		preg_match_all('#<script(' . Utility::HTML_ATTR_PATTERN . ')>([^<]*+(?:<(?!/script(?=[\s/>])' . Utility::HTML_ATTR_PATTERN . '>)[^<]*+)*+)</script(?=[\s/>])' . Utility::HTML_ATTR_PATTERN . '>#is', $content, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
 			$attrs = empty($match[1]) ? [] : Utility::parse_attr($match[1]);
 			if ( isset( $attrs['nomodule'] ) ) {
@@ -1063,7 +1063,7 @@ class Optimize extends Base {
 			self::debug( 'CSS parsing skipped: ambiguous HTML or PCRE error ' . preg_last_error() );
 			return [ $src_list, $html_list ];
 		}
-		preg_match_all('#<link\s+(' . Utility::HTML_ATTR_PATTERN . ')>|<style(' . Utility::HTML_ATTR_PATTERN . ')>(.*?)</style(?=[\s/>])' . Utility::HTML_ATTR_PATTERN . '>#is', $content, $matches, PREG_SET_ORDER);
+		preg_match_all('#<link\s+(' . Utility::HTML_ATTR_PATTERN . ')>|<style(' . Utility::HTML_ATTR_PATTERN . ')>([^<]*+(?:<(?!/style(?=[\s/>])' . Utility::HTML_ATTR_PATTERN . '>)[^<]*+)*+)</style(?=[\s/>])' . Utility::HTML_ATTR_PATTERN . '>#is', $content, $matches, PREG_SET_ORDER);
 
 		foreach ($matches as $match) {
 			// to avoid multiple replacement
