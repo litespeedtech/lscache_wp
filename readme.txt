@@ -267,6 +267,8 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 
 = 7.9.3 - Coming soon 2026 =
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)
+* **Core** Moved uninstall handling to uninstall.php to avoid unnecessary option reads on normal requests. (Contributolo PR#1078)
+* **Purge** Added the litespeed_purged action for public purge tag additions. (Contributolo PR#1072)
 
 = 7.9.2 - Oct 20 2026 =
 * **Image Optimize** Fixed thumbnails skipped for images in the uploads root. (AsFLY-902 PR#1059)
