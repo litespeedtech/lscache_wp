@@ -228,13 +228,8 @@ class CSS extends Cloud_Queue_Svc {
 		Core::comment( 'QUIC.cloud CCSS in queue' );
 		$this->_queue = $this->load_queue( 'ccss' );
 
-		if ( count( $this->_queue ) > $this->_max_queue_size() ) {
-			self::debug( 'Queue is full - ' . $this->_max_queue_size() );
-			return null;
-		}
-
-		$queue_k                  = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
-		$this->_queue[ $queue_k ] = [
+		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
+		$item    = [
 			'url'        => apply_filters( 'litespeed_ccss_url', $request_url ),
 			'user_agent' => substr( $ua, 0, 200 ),
 			'is_mobile'  => $this->_separate_mobile(),
@@ -243,6 +238,9 @@ class CSS extends Cloud_Queue_Svc {
 			'vary'       => $vary,
 			'url_tag'    => $url_tag,
 		]; // Current UA will be used to request
+		if ( ! $this->_enqueue( $queue_k, $item, $request_url ) ) {
+			return null;
+		}
 		$this->save_queue( 'ccss', $this->_queue );
 		self::debug( 'Added queue_ccss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary . ' [uid] ' . $uid );
 

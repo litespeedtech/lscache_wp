@@ -141,11 +141,6 @@ class VPI extends Cloud_Queue_Svc {
 		// Store it to prepare for cron.
 		$this->_queue = $this->load_queue( 'vpi' );
 
-		if ( count( $this->_queue ) >= $this->_max_queue_size() ) {
-			self::debug( 'Queue is full - ' . $this->_max_queue_size() );
-			return;
-		}
-
 		$home_id = (int) get_option( 'page_for_posts' );
 
 		if ( ! is_singular() && ! ( $home_id > 0 && is_home() ) ) {
@@ -156,17 +151,15 @@ class VPI extends Cloud_Queue_Svc {
 		$post_id = is_home() ? $home_id : get_the_ID();
 
 		$queue_k = ( $is_mobile ? 'mobile' : '' ) . ' ' . $request_url;
-		if ( ! empty( $this->_queue[ $queue_k ] ) ) {
-			self::debug( 'queue k existed ' . $queue_k );
-			return;
-		}
-
-		$this->_queue[ $queue_k ] = [
+		$item    = [
 			'url'        => apply_filters( 'litespeed_vpi_url', $request_url ),
 			'post_id'    => $post_id,
 			'user_agent' => substr( $ua, 0, 200 ),
 			'is_mobile'  => $is_mobile,
 		]; // Current UA will be used to request.
+		if ( ! $this->_enqueue( $queue_k, $item, $request_url ) ) {
+			return;
+		}
 		$this->save_queue( 'vpi', $this->_queue );
 		self::debug( 'Added queue_vpi [url] ' . $queue_k . ' [UA] ' . $ua );
 

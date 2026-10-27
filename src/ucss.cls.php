@@ -180,13 +180,8 @@ class UCSS extends Cloud_Queue_Svc {
 		// Store it for cron
 		$this->_queue = $this->load_queue( 'ucss' );
 
-		if ( count( $this->_queue ) > $this->_max_queue_size() ) {
-			self::debug( 'UCSS Queue is full - ' . $this->_max_queue_size() );
-			return false;
-		}
-
-		$queue_k                  = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
-		$this->_queue[ $queue_k ] = [
+		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
+		$item    = [
 			'url'        => apply_filters( 'litespeed_ucss_url', $request_url ),
 			'user_agent' => substr( $ua, 0, 200 ),
 			'is_mobile'  => $this->_separate_mobile(),
@@ -195,6 +190,9 @@ class UCSS extends Cloud_Queue_Svc {
 			'vary'       => $vary,
 			'url_tag'    => $url_tag,
 		]; // Current UA will be used to request
+		if ( ! $this->_enqueue( $queue_k, $item, $request_url ) ) {
+			return false;
+		}
 		$this->save_queue( 'ucss', $this->_queue );
 		self::debug( 'Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary . ' [uid] ' . $uid );
 
@@ -221,16 +219,11 @@ class UCSS extends Cloud_Queue_Svc {
 	 * @since  5.3
 	 *
 	 * @param array $url_files Array of URL file data.
-	 * @return false|void False if queue is full.
+	 * @return void
 	 */
 	public function add_to_q( $url_files ) {
 		// Store it for cron
 		$this->_queue = $this->load_queue( 'ucss' );
-
-		if ( count( $this->_queue ) > $this->_max_queue_size() ) {
-			self::debug( 'UCSS Queue is full - ' . $this->_max_queue_size() );
-			return false;
-		}
 
 		$ua = $this->_get_ua();
 		foreach ( $url_files as $url_file ) {
@@ -240,8 +233,8 @@ class UCSS extends Cloud_Queue_Svc {
 			$is_webp     = $url_file['webp'];
 			$url_tag     = self::get_url_tag( $request_url );
 
-			$queue_k                  = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
-			$this->_queue[ $queue_k ] = [
+			$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
+			$item    = [
 				'url'        => apply_filters( 'litespeed_ucss_url', $request_url ),
 				'user_agent' => substr( $ua, 0, 200 ),
 				'is_mobile'  => $is_mobile,
@@ -250,6 +243,9 @@ class UCSS extends Cloud_Queue_Svc {
 				'vary'       => $vary,
 				'url_tag'    => $url_tag,
 			]; // Current UA will be used to request
+			if ( ! $this->_enqueue( $queue_k, $item, $request_url ) ) {
+				continue;
+			}
 
 			self::debug( 'Added queue_ucss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary . ' [uid] false' );
 		}

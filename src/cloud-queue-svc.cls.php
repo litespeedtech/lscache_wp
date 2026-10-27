@@ -89,13 +89,46 @@ abstract class Cloud_Queue_Svc extends Base {
 	}
 
 	/**
-	 * Maximum queue length before refusing further enqueues. Concrete classes
-	 * call _max_queue_size() at enqueue sites; the base loop does not enforce.
+	 * Maximum queue length before refusing new ordinary entries.
 	 *
 	 * @return int
 	 */
 	protected function _max_queue_size() {
 		return 500;
+	}
+
+	/**
+	 * Add or refresh a page in the loaded queue. The caller saves the queue.
+	 *
+	 * Priority pages go first and may displace the tail when full. Existing
+	 * ordinary entries keep their position, even in a legacy oversized queue.
+	 *
+	 * @param string $queue_k     Queue key.
+	 * @param array  $item        Queue payload.
+	 * @param string $request_url Original page URL, before service URL filters.
+	 * @return bool Whether the item was accepted.
+	 */
+	protected function _enqueue( $queue_k, $item, $request_url ) {
+		// Match the front page by URL so this works in cron and admin too, where is_front_page() is unreliable.
+		$is_front_page = untrailingslashit( $request_url ) === untrailingslashit( home_url( '/' ) );
+		// Service filters: litespeed_ccss_priority, litespeed_ucss_priority, litespeed_vpi_priority and litespeed_optimax_priority.
+		$priority = (bool) apply_filters( 'litespeed_' . $this->_svc_id() . '_priority', $is_front_page, $request_url );
+		if ( ! isset( $this->_queue[ $queue_k ] ) && count( $this->_queue ) >= $this->_max_queue_size() ) {
+			if ( ! $priority ) {
+				self::debug( 'Queue is full - ' . $this->_max_queue_size() );
+				return false;
+			}
+			// Replace one pending item; do not bulk-trim legacy oversized queues.
+			array_pop( $this->_queue );
+		}
+
+		if ( $priority ) {
+			unset( $this->_queue[ $queue_k ] );
+			$this->_queue = [ $queue_k => $item ] + $this->_queue;
+		} else {
+			$this->_queue[ $queue_k ] = $item;
+		}
+		return true;
 	}
 
 	/**

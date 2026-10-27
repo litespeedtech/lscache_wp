@@ -229,11 +229,7 @@ class Optimax extends Cloud_Queue_Svc {
 		$this->_queue = $this->load_queue( 'optimax' );
 
 		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
-		if ( ! isset( $this->_queue[ $queue_k ] ) && count( $this->_queue ) >= $this->_max_queue_size() ) {
-			self::debug( 'Queue is full - ' . $this->_max_queue_size() );
-			return false;
-		}
-		$this->_queue[ $queue_k ] = [
+		$item    = [
 			'url'        => apply_filters( 'litespeed_optimax_url', $request_url ),
 			'user_agent' => substr( $ua, 0, 200 ),
 			'is_mobile'  => $this->_separate_mobile(),
@@ -242,6 +238,9 @@ class Optimax extends Cloud_Queue_Svc {
 			'vary'       => $vary,
 			'url_tag'    => $url_tag,
 		];
+		if ( ! $this->_enqueue( $queue_k, $item, $request_url ) ) {
+			return false;
+		}
 		$this->save_queue( 'optimax', $this->_queue );
 		self::debug( 'Added Optimax queue item [request] ' . substr( hash( 'sha256', $queue_k ), 0, 12 ) );
 
