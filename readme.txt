@@ -270,6 +270,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Core** Moved uninstall handling to uninstall.php to avoid unnecessary option reads on normal requests. (Contributolo PR#1078)
 * **Purge** Added the litespeed_purged action for public purge tag additions. (Contributolo PR#1072)
 * **Page Optimize** Prioritized the front page in CCSS, UCSS, VPI and OptiMax queues and corrected queue capacity handling. (Faisal Ahammad PR#1064)
+* **Guest Mode** Fixed PHP 8.5 deprecation warnings in CIDR checks. (deltafactory PR#1080)
 
 = 7.9.2 - Oct 20 2026 =
 * **Image Optimize** Fixed thumbnails skipped for images in the uploads root. (AsFLY-902 PR#1059)
