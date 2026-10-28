@@ -34,7 +34,10 @@ class Utility extends Root {
 		. '|</[a-z][^\x09\x0a\x0c\x0d />]*' . self::HTML_ATTR_PATTERN . '(?:>|\z)'
 		. '|</[^>]*(?:>|\z)~is';
 
-	const HTML_TOKEN_PATTERN = self::HTML_TOKEN_PREFIX . '.*?' . self::HTML_TOKEN_SUFFIX;
+	// A raw-text body takes runs without `<` whole and stops only before its complete end tag, so large blocks never backtrack past PCRE limits.
+	private const HTML_RAW_END = '</(?P=raw)(?=[\x09\x0a\x0c\x0d />])' . self::HTML_ATTR_PATTERN . '>';
+
+	const HTML_TOKEN_PATTERN = self::HTML_TOKEN_PREFIX . '[^<]*+(?:(?!' . self::HTML_RAW_END . ')<[^<]*+)*+' . self::HTML_TOKEN_SUFFIX;
 
 	/**
 	 * Lazy attribute-token prefix for `\A(<tag\b PREFIX)\s+name\s*=` rewrites of one opening tag.
@@ -43,7 +46,7 @@ class Utility extends Root {
 	 */
 	const HTML_ATTR_PREFIX = '(?>\s+|[^\s"\'>=]+|=\s*"[^"]*"|=\s*\'[^\']*\'|=\s*[^\s"\'>][^\s>]*|=(?=[\s>]))*?';
 	// CDATA can contain raw-element end tags inside an opaque foreign block.
-	private const HTML_OPAQUE_TOKEN_PATTERN = self::HTML_TOKEN_PREFIX . '(?:<!\[CDATA\[.*?(?:\]\]>|\z)|(?!<!\[CDATA\[).)*?' . self::HTML_TOKEN_SUFFIX;
+	private const HTML_OPAQUE_TOKEN_PATTERN = self::HTML_TOKEN_PREFIX . '[^<]*+(?:(?:<!\[CDATA\[.*?(?:\]\]>|\z)|(?!' . self::HTML_RAW_END . ')<)[^<]*+)*+' . self::HTML_TOKEN_SUFFIX;
 
 	/**
 	 * Walk HTML boundaries, retaining opaque blocks without stopping later rewrites.
