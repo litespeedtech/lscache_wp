@@ -666,8 +666,8 @@ class Base extends Root {
 			return self::get_option( $id, $default_v );
 		}
 
-		// Preload all options for this blog if not cached.
-		if ( ! isset( self::$_blog_options_cache[ $blog_id ] ) ) {
+		// Reload if a third-party option was registered after this blog's preload.
+		if ( ! isset( self::$_blog_options_cache[ $blog_id ] ) || ! array_key_exists( $id, self::$_blog_options_cache[ $blog_id ] ) ) {
 			self::_preload_blog_options( $blog_id );
 		}
 
