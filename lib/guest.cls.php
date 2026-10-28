@@ -331,7 +331,7 @@ class Guest {
 
 		$mask_bin = str_repeat( "\xff", $full_bytes );
 		if ( $rem_bits > 0 ) {
-			$mask_bin .= chr( 0xff << ( 8 - $rem_bits ) );
+			$mask_bin .= chr( ( 0xff << ( 8 - $rem_bits ) ) & 0xff );
 		}
 		$mask_bin = str_pad( $mask_bin, $byte_len, "\x00" );
 
