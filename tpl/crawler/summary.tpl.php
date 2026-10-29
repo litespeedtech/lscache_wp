@@ -72,6 +72,18 @@ if ( $crawler_run_interval > 0 ) :
 		</div>
 	<?php endif; ?>
 
+	<?php if ( 80 === (int) ( $summary['test_port'] ?? 0 ) ) : ?>
+		<div class="litespeed-callout notice notice-warning inline">
+			<h4><?php esc_html_e( 'WARNING', 'litespeed-cache' ); ?></h4>
+			<p>
+				<?php esc_html_e( 'The crawler is using plain HTTP on port 80 because the HTTPS (443) test on the Server IP failed.', 'litespeed-cache' ); ?>
+				<?php if ( defined( 'LITESPEED_SERVER_TYPE' ) && 'LITESPEED_SERVER_OLS' === LITESPEED_SERVER_TYPE ) : ?>
+					<?php esc_html_e( 'On OpenLiteSpeed the cache key includes the port, so pages crawled on port 80 may not be served to HTTPS visitors.', 'litespeed-cache' ); ?>
+				<?php endif; ?>
+			</p>
+		</div>
+	<?php endif; ?>
+
 	<?php if ( $summary['this_full_beginning_time'] ) : ?>
 		<p>
 			<b><?php esc_html_e( 'Current sitemap crawl started at', 'litespeed-cache' ); ?>:</b>
