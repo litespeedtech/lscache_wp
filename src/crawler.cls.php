@@ -776,6 +776,7 @@ class Crawler extends Root {
 			return false;
 		}
 		$this->_summary['test_port_tts'] = time();
+		$this->_summary['test_port']     = 0; // Clear prior result so a failed probe cannot reuse a stale port.
 		self::save_summary();
 
 		$options = $this->_get_curl_options();
@@ -799,14 +800,16 @@ class Crawler extends Root {
 		curl_setopt_array( $ch, $options );
 		curl_setopt( $ch, CURLOPT_URL, $url );
 		$result      = curl_exec( $ch );
+		$errno       = curl_errno( $ch );
 		$test_result = false;
-		if ( curl_errno( $ch ) || $result !== $home ) {
-			if ( curl_errno( $ch ) ) {
-				self::debug( '❌ Test port curl error: [errNo] ' . curl_errno( $ch ) . ' [err] ' . curl_error( $ch ) );
-			} elseif ( $result !== $home ) {
-				self::debug( '❌ Test port response is wrong: ' . $result );
-			}
-			self::debug( '❌ Test local 443 port failed, try port 80' );
+		if ( 0 === $errno && $result === $home ) {
+			self::debug( '✅ Tested local 443 port successfully' );
+			define( 'LITESPEED_CRAWLER_LOCAL_PORT', 443 );
+			$this->_summary['test_port'] = 443;
+			$test_result                 = true;
+		} elseif ( CURLE_COULDNT_CONNECT === $errno ) {
+			// Fall back only on connection failure; this does not prove ports 80 and 443 share a cache.
+			self::debug( '❌ Test local 443 port could not connect, try port 80' );
 
 			// Try port 80.
 			$resolved                   = $parsed_url['host'] . ':80:' . $this->_server_ip;
@@ -829,11 +832,10 @@ class Crawler extends Root {
 				$this->_summary['test_port'] = 80;
 				$test_result                 = true;
 			}
+		} elseif ( $errno ) {
+			self::debug( '❌ Test local 443 port failed, no fallback: [errNo] ' . $errno . ' [err] ' . curl_error( $ch ) );
 		} else {
-			self::debug( '✅ Tested local 443 port successfully' );
-			define( 'LITESPEED_CRAWLER_LOCAL_PORT', 443 );
-			$this->_summary['test_port'] = 443;
-			$test_result                 = true;
+			self::debug( '❌ Test local 443 port failed, no fallback, response is wrong: ' . $result );
 		}
 		self::save_summary();
 		unset( $ch );
