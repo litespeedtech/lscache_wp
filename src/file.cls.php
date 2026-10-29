@@ -38,7 +38,8 @@ class File {
 	 * @return string Full .htaccess body.
 	 */
 	public static function build_static_dir_htaccess() {
-		$home_path = parse_url(home_url('/'), PHP_URL_PATH);
+		// All sites in a network share this file, so the rewrite target must not depend on the current blog.
+		$home_path = parse_url(is_multisite() ? network_home_url('/') : home_url('/'), PHP_URL_PATH);
 		if (!is_string($home_path) || '' === $home_path) {
 			$home_path = '/';
 		}
@@ -96,7 +97,7 @@ HTACCESS;
 	 * Seed .htaccess + robots.txt into LITESPEED_STATIC_DIR if missing or outdated.
 	 *
 	 * Re-seeds whenever the on-disk body differs from the freshly built template — covers template
-	 * bumps, hand edits that drop critical rules, partial writes, and home_url() changes that would
+	 * bumps, hand edits that drop critical rules, partial writes, and home URL changes that would
 	 * otherwise leave a stale rewrite target in the file.
 	 *
 	 * @since 7.9
