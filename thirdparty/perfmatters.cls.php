@@ -32,20 +32,26 @@ class Perfmatters {
 		}
 
 		if (has_action('shutdown', 'perfmatters_script_manager') !== false) {
-			add_action('init', __CLASS__ . '::disable_litespeed_esi', 4);
+			add_action('init', __CLASS__ . '::disable_script_manager_on_esi', 20);
 		}
 	}
 
 	/**
-	 * Disable LiteSpeed ESI when Perfmatters Script Manager is active.
+	 * Disable Perfmatters Script Manager during LiteSpeed ESI requests.
 	 *
 	 * @since 4.4.5
 	 * @return void
 	 */
-	public static function disable_litespeed_esi() {
-		if (!defined('LITESPEED_ESI_OFF')) {
-			define('LITESPEED_ESI_OFF', true);
+	public static function disable_script_manager_on_esi() {
+		if (!defined('LSCACHE_IS_ESI')) {
+			return;
 		}
-		do_action('litespeed_debug', 'Disable ESI due to Perfmatters script manager');
+
+		$priority = has_action('shutdown', 'perfmatters_script_manager');
+
+		if ($priority !== false) {
+			remove_action('shutdown', 'perfmatters_script_manager', $priority);
+			do_action('litespeed_debug', 'Disable Perfmatters script manager on ESI request');
+		}
 	}
 }
