@@ -276,6 +276,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Crawler** Limited automatic HTTP fallback to connection failures during the Server IP HTTPS test. (unsetfocus #1074)
 * **Core** Fixed constant rewrites of the shared static folder .htaccess on subdirectory multisite. (#869638)
 * **Purge** Fixed excessive cache purges from non-public custom post types. (markhysted #1044, models118)
+* **Purge** Updating a post or product no longer purges every other post of the same type when Purge Post Type Archive is enabled. (John-belt #310, models118)
 
 = 7.9.2 - Oct 20 2026 =
 * **Image Optimize** Fixed thumbnails skipped for images in the uploads root. (AsFLY-902 PR#1059)

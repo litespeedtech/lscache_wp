@@ -1452,10 +1452,9 @@ class Purge extends Base {
 			$purge_tags[] = Tag::TYPE_AUTHOR . get_post_field( 'post_author', $post_id );
 		}
 
-		// Post type archives.
+		// Only purge archives here; the bare post type tag also matches every singular page.
 		if ( $this->conf( self::O_PURGE_POST_POSTTYPE ) && get_post_type_archive_link( $post_type ) ) {
 			$purge_tags[] = Tag::TYPE_ARCHIVE_POSTTYPE . $post_type;
-			$purge_tags[] = $post_type;
 		}
 
 		if ( $this->conf( self::O_PURGE_POST_FRONTPAGE ) ) {
