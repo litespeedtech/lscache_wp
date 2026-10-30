@@ -884,8 +884,14 @@ class WooCommerce extends Base {
 			return;
 		}
 
-		if ( ! isset( $post_id ) || false === wc_get_product( $post_id ) ) {
+		$product = isset( $post_id ) ? wc_get_product( $post_id ) : false;
+		if ( ! $product ) {
 			return;
+		}
+
+		// A variation's post type is not public; its product page lives under the parent.
+		if ( $product->is_type( 'variation' ) && $product->get_parent_id() ) {
+			do_action( 'litespeed_purge_post', $product->get_parent_id() );
 		}
 
 		$cats = $this->get_cats( $post_id );
