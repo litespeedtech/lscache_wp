@@ -24,6 +24,22 @@ class Object_Cache extends Root {
 	const REDIS_TIMEOUT = 1.0;
 
 	/**
+	 * Local marker left by a request that could not update the backend; the next connection flushes.
+	 *
+	 * @since 7.9.2
+	 */
+	const STALE_MARKER_FILE = '.litespeed_oc_stale';
+
+	/**
+	 * Whether this request already left the stale marker.
+	 *
+	 * @since 7.9.2
+	 * @var bool
+	 */
+	private $_stale_marked = false;
+
+
+	/**
 	 * Debug option key.
 	 *
 	 * @var string
@@ -606,7 +622,7 @@ class Object_Cache extends Root {
 				if ( $matches && $this->_validate_mem_server() ) {
 					// error_log( 'Object: _validate_mem_server' );
 					$this->debug_oc( 'Got persistent ' . $this->_oc_driver . ' connection' );
-					return true;
+					return $this->_flush_if_stale();
 				}
 
 				$this->debug_oc( 'No persistent ' . $this->_oc_driver . ' server list!' );
@@ -665,7 +681,7 @@ class Object_Cache extends Root {
 
 		$this->debug_oc( '✅ Connected to ' . $this->_oc_driver . ' server.' );
 
-		return true;
+		return $this->_flush_if_stale();
 	}
 
 	/**
@@ -814,7 +830,8 @@ class Object_Cache extends Root {
 	 * @return bool|string Backend acknowledgement or false.
 	 */
 	private function _store( $key, $data, $expire, $method ) {
-		if ( ! $this->_cfg_enabled ) {
+		if ( ! $this->_cfg_enabled || ! $this->_connect() ) {
+			$this->_mark_stale();
 			return false;
 		}
 
@@ -825,10 +842,6 @@ class Object_Cache extends Root {
 		// if ( ! $this->_can_cache() ) {
 		// return false;
 		// }
-
-		if ( ! $this->_connect() ) {
-			return false;
-		}
 
 		// Per WP Object Cache API, expire=0 means "no expiration".
 		// Key eviction is handled by the cache backend (Redis maxmemory / Memcached LRU).
@@ -844,10 +857,15 @@ class Object_Cache extends Root {
 			} catch ( \RedisException $ex ) {
 				$res = false;
 				$this->_redis_error( $ex );
+				$this->_mark_stale();
 			}
 		} else {
 			// Memcached treats expirations above 30 days as Unix timestamps.
 			$res = $this->_conn->$method( $key, $data, $ttl > 30 * DAY_IN_SECONDS ? time() + $ttl : $ttl );
+			// Memcached reports a dead server as false too; only a refused add/replace is a normal outcome.
+			if ( false === $res && ! in_array( $this->_conn->getResultCode(), [ \Memcached::RES_NOTSTORED, \Memcached::RES_DATA_EXISTS ], true ) ) {
+				$this->_mark_stale();
+			}
 		}
 
 		return $res;
@@ -895,11 +913,8 @@ class Object_Cache extends Root {
 	 * @return bool
 	 */
 	public function delete( $key ) {
-		if ( ! $this->_cfg_enabled ) {
-			return false;
-		}
-
-		if ( ! $this->_connect() ) {
+		if ( ! $this->_cfg_enabled || ! $this->_connect() ) {
+			$this->_mark_stale();
 			return false;
 		}
 
@@ -908,10 +923,14 @@ class Object_Cache extends Root {
 				$res = $this->_conn->del( $key );
 			} catch ( \RedisException $ex ) {
 				$this->_redis_error( $ex );
+				$this->_mark_stale();
 				return false;
 			}
 		} else {
 			$res = $this->_conn->delete( $key );
+			if ( ! $res && \Memcached::RES_NOTFOUND !== $this->_conn->getResultCode() ) {
+				$this->_mark_stale();
+			}
 		}
 
 		return (bool) $res;
@@ -926,12 +945,9 @@ class Object_Cache extends Root {
 	 * @return bool
 	 */
 	public function flush() {
-		if ( ! $this->_cfg_enabled ) {
+		if ( ! $this->_cfg_enabled || ! $this->_connect() ) {
 			$this->debug_oc( 'bypass flushing' );
-			return false;
-		}
-
-		if ( ! $this->_connect() ) {
+			$this->_mark_stale();
 			return false;
 		}
 
@@ -945,6 +961,7 @@ class Object_Cache extends Root {
 				$res = $this->_conn->flushDb();
 			} catch ( \RedisException $ex ) {
 				$this->_redis_error( $ex );
+				$this->_mark_stale();
 				return false;
 			} finally {
 				$this->_conn->setOption( \Redis::OPT_READ_TIMEOUT, $read_timeout );
@@ -976,6 +993,88 @@ class Object_Cache extends Root {
 		if ( did_action( 'plugins_loaded' ) ) {
 			Admin_Display::error( 'LiteSpeed Object Cache: Redis is unavailable. Check Redis server status (memory, connectivity) and the plugin debug log for details.' );
 		}
+	}
+
+	/**
+	 * Note that this request changed data the backend did not get.
+	 *
+	 * After a failed connection or a Redis error, writes and deletes are skipped for the rest of the
+	 * request while the database still changes, and most WordPress groups are cached with no expiry,
+	 * so the backend would serve the old values for good (a stale `session_tokens` logs users out).
+	 * A local file marks it; the marker cannot live in the backend that was unreachable.
+	 *
+	 * @since 7.9.2
+	 * @access private
+	 *
+	 * @return void
+	 */
+	private function _mark_stale() {
+		// Only a configured backend that could not be reached holds stale copies.
+		if ( $this->_stale_marked || ! $this->_cfg_configured || ! class_exists( $this->_oc_driver ) ) {
+			return;
+		}
+		$this->_stale_marked = true;
+
+		$marker = $this->_stale_marker();
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_touch
+		if ( ! @touch( $marker ) ) {
+			$this->debug_oc( 'Cannot write the stale marker ' . $marker );
+		}
+	}
+
+	/**
+	 * Stale marker path: the plugin's data folder, or wp-content before that folder exists.
+	 *
+	 * @since 7.9.2
+	 * @access private
+	 *
+	 * @return string
+	 */
+	private function _stale_marker() {
+		$content_dir = defined( 'LSCWP_CONTENT_DIR' ) ? LSCWP_CONTENT_DIR : WP_CONTENT_DIR;
+		$data_dir    = $content_dir . '/' . ( defined( 'LITESPEED_DATA_FOLDER' ) ? LITESPEED_DATA_FOLDER : 'litespeed' );
+		return ( is_dir( $data_dir ) ? $data_dir : $content_dir ) . '/' . self::STALE_MARKER_FILE;
+	}
+
+	/**
+	 * After requests that could not update the backend, flush it once on a working connection.
+	 *
+	 * Keys stay as they are; the flush removes the values that missed their update, on Redis and Memcached alike.
+	 * On multisite the marker is network-wide: a write skipped on any subsite can leave stale global groups
+	 * (users, site options), so the whole network starts over, as with Purge All.
+	 * Removing the marker first lets concurrent requests flush only once.
+	 *
+	 * @since 7.9.2
+	 * @access private
+	 *
+	 * @return bool False when the flush failed; the connection is then dropped for this request.
+	 */
+	private function _flush_if_stale() {
+		$marker = $this->_stale_marker();
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.unlink_unlink
+		if ( ! file_exists( $marker ) || ! @unlink( $marker ) ) {
+			return true;
+		}
+
+		$this->debug_oc( 'Flush after writes skipped while the backend was unreachable' );
+		try {
+			// Not self::flush(): that resets the Memcached server list this request still needs.
+			$ok = 'Redis' === $this->_oc_driver ? $this->_conn->flushDb() : $this->_conn->flush();
+		} catch ( \RedisException $ex ) {
+			$this->debug_oc( 'Stale flush failed: ' . $ex->getMessage() );
+			$ok = false;
+		}
+
+		if ( $ok ) {
+			return true;
+		}
+
+		// Keep the old values out of this request and retry on the next one.
+		$this->_conn         = null;
+		$this->_cfg_enabled  = false;
+		$this->_stale_marked = false;
+		$this->_mark_stale();
+		return false;
 	}
 
 	/**
