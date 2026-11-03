@@ -282,6 +282,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Heartbeat** Kept the configured interval on post lists and editors. (#1082)
 * **3rd** Perfmatters script manager no longer disables ESI site-wide; it is now skipped only on ESI requests. (VIP PR#1055)
 * **Cache** Fixed mobile cache vary detection behind LiteSpeed ADC on Apache origins. (PR#1088)
+* **VPI** Preloaded responsive VPI images with their srcset and sizes, so the browser fetches the same candidate the page renders. (PR#1089)
 
 = 7.9.2 - Oct 20 2026 =
 * **Image Optimize** Fixed thumbnails skipped for images in the uploads root. (AsFLY-902 PR#1059)
