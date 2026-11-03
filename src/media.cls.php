@@ -39,9 +39,9 @@ class Media extends Root {
 	private $_wp_upload_dir;
 
 	/**
-	 * List of VPI (viewport images) to preload in <head>.
+	 * List of VPI (viewport images) source descriptors to preload in <head>.
 	 *
-	 * @var array
+	 * @var array<int,array{src:string,srcset:string,sizes:string}>
 	 */
 	private $_vpi_preload_list = [];
 
@@ -310,7 +310,14 @@ class Media extends Root {
 		// <link rel="preload" as="image" href="xx">
 		if ( $this->_vpi_preload_list ) {
 			foreach ( $this->_vpi_preload_list as $v ) {
-				$content .= '<link rel="preload" fetchpriority="high" as="image" href="' . esc_url( Str::trim_quotes( $v ) ) . '">';
+				$content .= '<link rel="preload" fetchpriority="high" as="image" href="' . esc_url( Str::trim_quotes( $v['src'] ) ) . '"';
+				if ( '' !== $v['srcset'] ) {
+					$content .= ' imagesrcset="' . esc_attr( $v['srcset'] ) . '"';
+					if ( '' !== $v['sizes'] ) {
+						$content .= ' imagesizes="' . esc_attr( $v['sizes'] ) . '"';
+					}
+				}
+				$content .= '>';
 			}
 		}
 		return $content;
@@ -956,7 +963,7 @@ class Media extends Root {
 	}
 
 	/**
-	 * Parse img src for VPI preload only.
+	 * Parse img source and responsive candidates for VPI preload only.
 	 * Note: Didn't reuse the _parse_img() because it contains replacement logic which is not needed for preload.
 	 *
 	 * @since 6.2
@@ -1012,7 +1019,14 @@ class Media extends Root {
 
 			self::debug2( 'VPI preload found and matched: ' . $attrs['src'] );
 
-			$this->_vpi_preload_list[] = $attrs['src'];
+			$preload = [
+				'src'    => $attrs['src'],
+				'srcset' => isset( $attrs['srcset'] ) ? $attrs['srcset'] : '',
+				'sizes'  => isset( $attrs['sizes'] ) ? $attrs['sizes'] : '',
+			];
+			if ( ! in_array( $preload, $this->_vpi_preload_list, true ) ) {
+				$this->_vpi_preload_list[] = $preload;
+			}
 
 			// Add attributes fetchpriority="high" and decode="sync"
 			// after WP 6.3.0 use: wp_img_tag_add_loading_optimization_attrs().
