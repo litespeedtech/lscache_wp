@@ -64,7 +64,8 @@ class Optimizer extends Root {
 				Debug2::debug('Failed to minify HTML: HTML minification resulted in empty HTML');
 				return $content;
 			}
-			if (!defined('LSCACHE_ESI_SILENCE')) {
+			// Same switch as the footer comment in Core::send_headers_force().
+			if (!defined('LSCACHE_ESI_SILENCE') && apply_filters('litespeed_comment', true)) {
 				$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET) . ' -->';
 			}
 			return $content_final;
