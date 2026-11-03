@@ -201,7 +201,7 @@ class Admin_Display extends Base {
 		],
 		// Page Optimization - Media.
 		self::O_MEDIA_ADD_MISSING_SIZES => [
-			'filter' => 'litespeed_media_ignore_remote_missing_sizes',
+			'filter' => 'litespeed_media_add_missing_sizes',
 			'type'   => 'boolean',
 		],
 		// Page Optimization - Media Exclude.
@@ -209,9 +209,6 @@ class Admin_Display extends Base {
 			'filter' => 'litespeed_media_lazy_img_excludes',
 		],
 		// Page Optimization - Tuning (JS).
-		self::O_OPTM_JS_DELAY_INC => [
-			'filter' => 'litespeed_optm_js_delay_inc',
-		],
 		self::O_OPTM_JS_EXC => [
 			'filter' => 'litespeed_optimize_js_excludes',
 		],
@@ -428,21 +425,13 @@ class Admin_Display extends Base {
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if ( 'admin.php' === $pagenow && $page && ( 0 === strpos( $page, 'litespeed-' ) || 'litespeed' === $page ) ) {
-			if ( in_array( $page, [ 'litespeed-crawler', 'litespeed-cdn' ], true ) ) {
-				// Babel JS type correction
-				add_filter( 'script_loader_tag', [ $this, 'babel_type' ], 10, 3 );
-
-				wp_enqueue_script( Core::PLUGIN_NAME . '-lib-react', LSWCP_PLUGIN_URL . 'assets/js/react.min.js', [], Core::VER, false );
-				wp_enqueue_script( Core::PLUGIN_NAME . '-lib-babel', LSWCP_PLUGIN_URL . 'assets/js/babel.min.js', [], Core::VER, false );
-			}
-
 			// Crawler Cookie Simulation
 			if ( 'litespeed-crawler' === $page ) {
-				wp_enqueue_script( Core::PLUGIN_NAME . '-crawler', LSWCP_PLUGIN_URL . 'assets/js/component.crawler.js', [], Core::VER, false );
+				wp_enqueue_script( Core::PLUGIN_NAME . '-crawler', LSWCP_PLUGIN_URL . 'assets/js/component.crawler.js', [ 'jquery' ], Core::VER, false );
 
 				$localize_data['lang']                              = [];
 				$localize_data['lang']['cookie_name']               = __( 'Cookie Name', 'litespeed-cache' );
-				$localize_data['lang']['cookie_value']              = __( 'Cookie Values', 'litespeed-cache' );
+				$localize_data['lang']['cookie_values']             = __( 'Cookie Values', 'litespeed-cache' );
 				$localize_data['lang']['one_per_line']              = Doc::one_per_line( true );
 				$localize_data['lang']['remove_cookie_simulation']  = __( 'Remove cookie simulation', 'litespeed-cache' );
 				$localize_data['lang']['add_cookie_simulation_row'] = __( 'Add new cookie to simulate', 'litespeed-cache' );
@@ -461,7 +450,7 @@ class Admin_Display extends Base {
 				}
 				$cdn_url = 'https://cdn.' . substr( $home_url, 2 );
 
-				wp_enqueue_script( Core::PLUGIN_NAME . '-cdn', LSWCP_PLUGIN_URL . 'assets/js/component.cdn.js', [], Core::VER, false );
+				wp_enqueue_script( Core::PLUGIN_NAME . '-cdn', LSWCP_PLUGIN_URL . 'assets/js/component.cdn.js', [ 'jquery' ], Core::VER, false );
 				$localize_data['lang']                             = [];
 				$localize_data['lang']['cdn_mapping_url']          = Lang::title( self::CDN_MAPPING_URL );
 				$localize_data['lang']['cdn_mapping_inc_img']      = Lang::title( self::CDN_MAPPING_INC_IMG );
@@ -510,25 +499,6 @@ class Admin_Display extends Base {
 	 */
 	public function add_deactivation_html() {
 		require LSCWP_DIR . 'tpl/inc/modal.deactivation.php';
-	}
-
-	/**
-	 * Filter the script tag for specific handles to set Babel type.
-	 *
-	 * @since 3.6
-	 *
-	 * @param string $tag    The script tag.
-	 * @param string $handle Script handle.
-	 * @param string $src    Script source URL.
-	 * @return string The filtered script tag.
-	 */
-	public function babel_type( $tag, $handle, $src ) {
-		if ( Core::PLUGIN_NAME . '-crawler' !== $handle && Core::PLUGIN_NAME . '-cdn' !== $handle ) {
-			return $tag;
-		}
-
-		// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
-		return '<script src="' . Str::trim_quotes( $src ) . '" type="text/babel"></script>';
 	}
 
 	/**
@@ -708,7 +678,7 @@ class Admin_Display extends Base {
 					$msg = [ $msg ];
 				}
 				foreach ( $msg as $v ) {
-					$v = wp_strip_all_tags( $v );
+					$v = html_entity_decode( wp_strip_all_tags( $v ), ENT_QUOTES, 'UTF-8' );
 					if ( self::NOTICE_RED === $color ) {
 						\WP_CLI::error( $v, false );
 					} else {
@@ -761,6 +731,14 @@ class Admin_Display extends Base {
 
 		// If is in dev version, always check latest update
 		Cloud::cls()->check_dev_version();
+
+		// Computed per page load and echoed only (never stored), so fixing the mapping clears it immediately.
+		if ( ! $this->_is_network_admin && $this->conf( self::O_CDN ) ) {
+			$cdn_msg = CDN::invalid_mapping_msg( CDN::cls()->invalid_mapping_urls() );
+			if ( $cdn_msg ) {
+				self::note( $cdn_msg, true, true );
+			}
+		}
 
 		// One time msg
 		$messages       = self::get_option( self::DB_MSG, [] );
@@ -1418,7 +1396,7 @@ class Admin_Display extends Base {
 
 		foreach ( $val as $v ) {
 			if ( ! Utility::syntax_checker( $v ) ) {
-				echo '<br /><span class="litespeed-warning"> ❌ ' . esc_html__( 'Invalid rewrite rule', 'litespeed-cache' ) . ': <code>' . wp_kses_post( $v ) . '</code></span>';
+				echo '<br /><span class="litespeed-warning"> ❌ ' . esc_html__( 'Invalid rewrite rule', 'litespeed-cache' ) . ': <code>' . esc_html( $v ) . '</code></span>';
 			}
 		}
 	}

@@ -286,7 +286,8 @@ class REST extends Root {
 	 * @return bool|string|array
 	 */
 	public static function str_hit_uri( $req_uri, $rules, $has_ttl = false ) {
-		$uris = [ $req_uri ];
+		$rules = self::_trim_uri_wildcards( $rules, $has_ttl );
+		$uris  = [ $req_uri ];
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Type is checked before sanitization.
 		$route = isset( $_GET['rest_route'] ) ? wp_unslash( $_GET['rest_route'] ) : '';
 		$route = is_string( $route ) ? sanitize_text_field( $route ) : '';
@@ -314,13 +315,57 @@ class REST extends Root {
 			}
 		}
 
-		foreach ( $uris as $uri ) {
+		foreach ( array_unique( array_merge( $uris, array_map( 'rawurldecode', $uris ) ) ) as $uri ) {
 			$hit = Utility::str_hit_array( $uri, $rules, $has_ttl );
 			if ( $hit ) {
 				return $hit;
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Drop leading/trailing `*` from URI rules.
+	 *
+	 * Rules are substring matches, so `/wp-json/mcp/*` means the same as `/wp-json/mcp/`. Without this the `*` was compared literally and the rule never hit.
+	 *
+	 * @since 7.9.2
+	 * @param array $rules   URI rules.
+	 * @param bool  $has_ttl Whether rules include a TTL.
+	 * @return array
+	 */
+	private static function _trim_uri_wildcards( $rules, $has_ttl ) {
+		if ( ! is_array( $rules ) ) {
+			return $rules;
+		}
+
+		foreach ( $rules as $k => $rule ) {
+			if ( ! is_string( $rule ) || false === strpos( $rule, '*' ) ) {
+				continue;
+			}
+
+			$ttl = '';
+			if ( $has_ttl && false !== strpos( $rule, ' ' ) ) {
+				list( $rule, $ttl ) = explode( ' ', $rule, 2 );
+				$ttl                = ' ' . $ttl;
+			}
+
+			// Only trim a side without anchor, `^/a*$` is not the same as `^/a$`.
+			$trimmed = $rule;
+			if ( '^' !== substr( $trimmed, 0, 1 ) ) {
+				$trimmed = ltrim( $trimmed, '*' );
+			}
+			if ( '$' !== substr( $trimmed, -1 ) ) {
+				$trimmed = rtrim( $trimmed, '*' );
+			}
+
+			// A rule of only `*` must not turn into an empty rule that hits every URI.
+			if ( '' !== trim( $trimmed, '^$' ) ) {
+				$rules[ $k ] = $trimmed . $ttl;
+			}
+		}
+
+		return $rules;
 	}
 
 	/**

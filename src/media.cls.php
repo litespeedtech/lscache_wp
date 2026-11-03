@@ -19,7 +19,8 @@ class Media extends Root {
 
 	const LOG_TAG = '📺';
 
-	const LIB_FILE_IMG_LAZYLOAD = 'assets/js/lazyload.min.js';
+	const LIB_FILE_IMG_LAZYLOAD     = 'assets/js/lazyload.min.js';
+	const DIMENSION_PROBE_MAX_BYTES = 262144;
 
 	const TYPE_BATCH_RESCALE_ORI = 'batch_rescale_ori';
 
@@ -270,8 +271,10 @@ class Media extends Root {
 				continue;
 			}
 
-			// Move scaled file → original file using WP_Filesystem via rename().
-			$this->rename( $scaled_path, $original_path, $attachment_id );
+			// Move scaled file → original file via rename().
+			if ( ! $this->rename( $scaled_path, $original_path, $attachment_id ) ) {
+				continue;
+			}
 
 			// Update metadata: point file to original, remove original_image key.
 			$meta_value['file'] = $subdir . '/' . $meta_value['original_image'];
@@ -440,25 +443,61 @@ class Media extends Root {
 	 * @param string $short_file_path     Old relative path.
 	 * @param string $short_file_path_new New relative path.
 	 * @param int    $post_id             Post ID.
-	 * @return void
+	 * @return bool
 	 */
 	public function rename( $short_file_path, $short_file_path_new, $post_id ) {
-		$real_file     = $this->_wp_upload_dir['basedir'] . '/' . $short_file_path;
-		$real_file_new = $this->_wp_upload_dir['basedir'] . '/' . $short_file_path_new;
-
-		if ( file_exists( $real_file ) ) {
-			global $wp_filesystem;
-			if ( ! $wp_filesystem ) {
-				require_once ABSPATH . '/wp-admin/includes/file.php';
-				\WP_Filesystem();
-			}
-			if ( $wp_filesystem ) {
-				$wp_filesystem->move( $real_file, $real_file_new, true );
-			}
-			self::debug( 'renamed ' . $real_file . ' to ' . $real_file_new );
+		if ( ! $this->_move_local( $short_file_path, $short_file_path_new ) ) {
+			return false;
 		}
 
 		do_action( 'litespeed_media_rename', $short_file_path, $short_file_path_new, $post_id );
+		return true;
+	}
+
+	/**
+	 * Replace a media file with another one (e.g. restore a backup over an optimized file).
+	 *
+	 * Fires `litespeed_media_del` for the replaced destination and then `litespeed_media_rename`, matching the pre-7.9.2 del+rename event order, but only after the local move succeeded.
+	 *
+	 * @since  7.9.2
+	 * @access public
+	 *
+	 * @param string $short_file_path     Source relative path.
+	 * @param string $short_file_path_new Destination relative path being replaced.
+	 * @param int    $post_id             Post ID.
+	 * @return bool
+	 */
+	public function replace( $short_file_path, $short_file_path_new, $post_id ) {
+		if ( ! $this->_move_local( $short_file_path, $short_file_path_new ) ) {
+			return false;
+		}
+
+		do_action( 'litespeed_media_del', $short_file_path_new, $post_id );
+		do_action( 'litespeed_media_rename', $short_file_path, $short_file_path_new, $post_id );
+		return true;
+	}
+
+	/**
+	 * Move a local media file when it exists.
+	 *
+	 * @since  7.9.2
+	 * @access private
+	 *
+	 * @param string $short_file_path     Source relative path.
+	 * @param string $short_file_path_new Destination relative path.
+	 * @return bool False only when an existing local file could not be moved.
+	 */
+	private function _move_local( $short_file_path, $short_file_path_new ) {
+		$real_file     = $this->_wp_upload_dir['basedir'] . '/' . $short_file_path;
+		$real_file_new = $this->_wp_upload_dir['basedir'] . '/' . $short_file_path_new;
+
+		// Missing local files are left to offload integrations via the action; a failed local move is reported so callers keep their metadata.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename -- Atomic replacement of local image files.
+		if ( is_file( $real_file ) && ! rename( $real_file, $real_file_new ) ) {
+			Admin_Display::error( __( 'Could not move the image file.', 'litespeed-cache' ) );
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -727,19 +766,19 @@ class Media extends Root {
 			}
 
 			if ( preg_match( '/iPhone OS (\d+)_/i', $ua, $matches ) ) {
-				if ( $matches[1] >= 14 ) {
+				if ( $matches[1] >= ( 'avif' === $this->_sys_format ? 16 : 14 ) ) {
 					return true;
 				}
 			}
 
-			if ( preg_match( '/Macintosh.+Version\/([0-9.]+)/i', $ua, $matches ) ) {
+			if ( 'webp' === $this->_sys_format && preg_match( '/Macintosh.+Version\/([0-9.]+)/i', $ua, $matches ) ) {
 				if ( version_compare( $matches[1], '16.4', '>=' ) ) {
 					return true;
 				}
 			}
 
 			if ( preg_match( '/Firefox\/(\d+)/i', $ua, $matches ) ) {
-				if ( $matches[1] >= 65 ) {
+				if ( $matches[1] >= ( 'avif' === $this->_sys_format ? 93 : 65 ) ) {
 					return true;
 				}
 			}
@@ -801,6 +840,7 @@ class Media extends Root {
 	 * Run lazyload replacement for images in buffer.
 	 *
 	 * @since  1.4
+	 * @since 7.9.2 Remove high fetch priority from images selected for lazy loading.
 	 * @access private
 	 * @return void
 	 */
@@ -821,7 +861,7 @@ class Media extends Root {
 		 */
 		$excludes = $this->conf( Base::O_MEDIA_LAZY_URI_EXC );
 		if ( ! defined( 'LITESPEED_GUEST_OPTM' ) ) {
-			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Matching must preserve encoded path characters.
 			$result      = $request_uri ? REST::str_hit_uri( $request_uri, $excludes ) : false;
 			if ( $result ) {
 				self::debug( 'bypass lazyload: hit URI Excludes setting: ' . $result );
@@ -858,12 +898,17 @@ class Media extends Root {
 				$size = $placeholder_list[ $k ];
 				$src  = $src_list[ $k ];
 
-				$html_list[ $k ] = $__placeholder->replace( $v, $src, $size );
+				$v    = Utility::remove_attr( $v, 'fetchpriority', 'high' );
+				$lazy = $__placeholder->replace( $v, $src, $size );
+				// An unchanged tag means src could not be renamed: keep the original markup untouched.
+				if ( $lazy !== $v ) {
+					$html_list[ $k ] = $lazy;
+				}
 			}
 		}
 
 		if ( $cfg_lazy ) {
-			$this->content = str_replace( $html_list_ori, $html_list, $this->content );
+			$this->content = Utility::html_replace( $html_list_ori, $html_list, $this->content );
 		}
 
 		// iframe lazy load.
@@ -872,24 +917,32 @@ class Media extends Root {
 			$html_list_ori = $html_list;
 
 			foreach ( $html_list as $k => $v ) {
-				$snippet = $cfg_trim_noscript ? '' : '<noscript>' . $v . '</noscript>';
-				if ( $cfg_js_delay ) {
-					$v = str_replace( ' src=', ' data-litespeed-src=', $v );
-				} else {
-					$v = str_replace( ' src=', ' data-src=', $v );
+				$snippet     = $cfg_trim_noscript || false !== stripos( $v, '</noscript' ) ? '' : '<noscript>' . $v . '</noscript>';
+				$source_attr = $cfg_js_delay ? 'data-litespeed-src' : 'data-src';
+				$v           = preg_replace_callback( '/\A(<iframe\b' . Utility::HTML_ATTR_PREFIX . ')\s+src\s*=/i', static function ( $matches ) use ( $source_attr ) {
+					return $matches[1] . ' ' . $source_attr . '=';
+				}, $v, 1, $renamed );
+				// Only a real src rename may receive the about:blank src; otherwise keep the iframe untouched.
+				if ( null === $v || 1 !== $renamed ) {
+					$html_list[ $k ] = $html_list_ori[ $k ];
+					continue;
 				}
-				$v       = str_replace( '<iframe ', '<iframe data-lazyloaded="1" src="about:blank" ', $v );
+				$v       = preg_replace( '/\A<iframe\b/i', '<iframe data-lazyloaded="1" src="about:blank"', $v, 1 );
 				$snippet = $v . $snippet;
 
 				$html_list[ $k ] = $snippet;
 			}
 
-			$this->content = str_replace( $html_list_ori, $html_list, $this->content );
+			// Replace right to left at source offsets; identical iframe text in scripts stays untouched.
+			krsort( $html_list );
+			foreach ( $html_list as $offset => $replacement ) {
+				$this->content = substr_replace( $this->content, $replacement, $offset, strlen( $html_list_ori[ $offset ] ) );
+			}
 		}
 
 		// Include lazyload lib js and init lazyload.
 		if ( $cfg_lazy || $cfg_iframe_lazy ) {
-			$lazy_lib = '<script data-no-optimize="1">window.lazyLoadOptions=Object.assign({},{threshold:' . apply_filters( 'litespeed_lazyload_threshold', 300 ) . '},window.lazyLoadOptions||{});' . File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>';
+			$lazy_lib = '<script data-no-optimize="1">window.lazyLoadOptions=Object.assign({},{threshold:' . (int) apply_filters( 'litespeed_lazyload_threshold', 300 ) . '},window.lazyLoadOptions||{});' . File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>';
 			if ( $cfg_js_delay ) {
 				// Load JS delay lib.
 				if ( ! defined( 'LITESPEED_JS_DELAY_LIB_LOADED' ) ) {
@@ -898,7 +951,7 @@ class Media extends Root {
 				}
 			}
 
-			$this->content = str_replace( '</body>', $lazy_lib . '</body>', $this->content );
+			$this->content = Utility::insert_before_last_tag( $this->content, '</body>', $lazy_lib );
 		}
 	}
 
@@ -924,15 +977,18 @@ class Media extends Root {
 			return;
 		}
 
-		$content = preg_replace( [ '#<!--.*-->#sU', '#<noscript([^>]*)>.*</noscript>#isU' ], '', $this->content );
-		if ( ! $content ) {
+		$replacements = [];
+		$content      = Utility::html_mask( $this->content, [ 'img' ] );
+		if ( null === $content ) {
 			return;
 		}
-
-		$vpi_fp_search  = [];
-		$vpi_fp_replace = [];
-		preg_match_all('#<img\s+([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER);
-		foreach ($matches as $match) {
+		// Keep source offsets and skip non-rendered markup, even when it contains the same image tag.
+		preg_match_all( '#<img\s+(?P<attrs>' . Utility::HTML_ATTR_PATTERN . ')>#is', $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE );
+		foreach ($matches as $source_match) {
+			if ( ! isset( $source_match['attrs'] ) || -1 === $source_match['attrs'][1] || ! preg_match( '//u', $source_match['attrs'][0] ) ) {
+				continue;
+			}
+			$match = [ $source_match[0][0], $source_match['attrs'][0] ];
 			$attrs = Utility::parse_attr($match[1]);
 
 			if ( empty( $attrs['src'] ) ) {
@@ -974,17 +1030,35 @@ class Media extends Root {
 			}
 
 			if ( $new_html ) {
-				$vpi_fp_search[]  = $match[1];
-				$vpi_fp_replace[] = implode( ' ', $new_html);
+				$replacements[] = [ $source_match[0][1], strlen( $match[0] ), '<img ' . implode( ' ', $new_html ) . '>' ];
 			}
 		}
 
-		// if VPI fetchpriority changes, do the replacement
-		if ( $vpi_fp_search && $vpi_fp_replace ) {
-			$this->content = str_replace( $vpi_fp_search, $vpi_fp_replace, $this->content );
+		// Replace from the end so earlier source offsets remain valid.
+		foreach ( array_reverse( $replacements ) as $replacement ) {
+			$this->content = substr_replace( $this->content, $replacement[2], $replacement[0], $replacement[1] );
 		}
-		unset( $vpi_fp_search );
-		unset( $vpi_fp_replace );
+	}
+
+	/**
+	 * Mask excluded parent blocks without shifting source offsets.
+	 *
+	 * @param string $tag     Resource element to retain.
+	 * @param array  $classes Excluded parent classes.
+	 * @return string|null Masked content, or null on a PCRE failure.
+	 */
+	private function _mask_lazyload_parents( $tag, $classes ) {
+		$content = $this->content;
+		foreach ( $classes as $class ) {
+			$content = preg_replace_callback( '#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote( $class, '#' ) . '[^\'"]*\2[^>]*>.*</\1>#sU', static function ( $fragment ) {
+				return str_repeat( ' ', strlen( $fragment[0] ) );
+			}, $content );
+			if ( null === $content ) {
+				return null;
+			}
+		}
+		// Callers also check original eligibility: masking must not expose inert text.
+		return Utility::html_mask( $content, [ $tag ] );
 	}
 
 	/**
@@ -1010,15 +1084,11 @@ class Media extends Root {
 		$html_list        = [];
 		$placeholder_list = [];
 
-		$content = preg_replace(
-			[
-				'#<!--.*-->#sU',
-				'#<noscript([^>]*)>.*</noscript>#isU',
-				'#<script([^>]*)>.*</script>#isU', // Remove script to avoid false matches and warnings, when image size detection is turned ON.
-			],
-			'',
-			$this->content
-		);
+		$eligible_content = Utility::html_mask( $this->content, [ 'img' ] );
+		if ( null === $eligible_content ) {
+			return [ $src_list, $html_list, $placeholder_list ];
+		}
+		$content = $eligible_content;
 		/**
 		 * Exclude parent classes.
 		 *
@@ -1027,16 +1097,23 @@ class Media extends Root {
 		$parent_cls_exc = apply_filters( 'litespeed_media_lazy_img_parent_cls_excludes', $this->conf( Base::O_MEDIA_LAZY_PARENT_CLS_EXC ) );
 		if ( $parent_cls_exc ) {
 			self::debug2( 'Lazyload Class excludes', $parent_cls_exc );
-			foreach ( $parent_cls_exc as $v ) {
-				$content = preg_replace('#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote($v, '#') . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content);
-			}
+			$content = $this->_mask_lazyload_parents( 'img', $parent_cls_exc );
+		}
+		if ( null === $content ) {
+			return [ $src_list, $html_list, $placeholder_list ];
 		}
 
 		$add_missing_sizes = ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_MEDIA_ADD_MISSING_SIZES ) )
 			&& apply_filters( 'litespeed_media_add_missing_sizes', true );
+		$replacements      = [];
 
-		preg_match_all( '#<img\s+([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER );
-		foreach ( $matches as $match ) {
+		preg_match_all( '#<img\s+(' . Utility::HTML_ATTR_PATTERN . ')>#is', $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE );
+		foreach ( $matches as $source_match ) {
+			$match = [ $source_match[0][0], $source_match[1][0] ];
+			// Exclusion masks may hide tokens, but must never expose previously inert text.
+			if ( substr( $eligible_content, $source_match[0][1], strlen( $match[0] ) ) !== $match[0] ) {
+				continue;
+			}
 			$attrs = Utility::parse_attr( $match[1] );
 
 			if ( empty( $attrs['src'] ) ) {
@@ -1114,14 +1191,16 @@ class Media extends Root {
 						}
 
 						// Remove existing width/height, then append new values
-						$inner    = Utility::remove_attr( $match[1], 'width' );
+						$inner    = Utility::html_self_closing( $match[1] ) ? substr( $match[1], 0, -1 ) : $match[1];
+						$inner    = Utility::remove_attr( $inner, 'width' );
 						$inner    = Utility::remove_attr( $inner, 'height' );
+						$inner    = rtrim( $inner, " \t\n\r\f" );
 						$new_html = '<img ' . $inner . ' width="' . (int) $ori_width . '" height="' . (int) $ori_height . '" />';
 						self::debug( 'Add missing sizes ' . $ori_width . 'x' . $ori_height . ' to ' . $attrs['src'] );
-						$this->content   = str_replace( $match[0], $new_html, $this->content );
-						$match[0]        = $new_html;
-						$attrs['width']  = $ori_width;
-						$attrs['height'] = $ori_height;
+						$replacements[ $match[0] ] = $new_html;
+						$match[0]                  = $new_html;
+						$attrs['width']            = $ori_width;
+						$attrs['height']           = $ori_height;
 					}
 				}
 			}
@@ -1136,6 +1215,9 @@ class Media extends Root {
 			$placeholder_list[] = $placeholder;
 		}
 
+		if ( $replacements ) {
+			$this->content = Utility::html_replace( array_keys( $replacements ), array_values( $replacements ), $this->content );
+		}
 		return [ $src_list, $html_list, $placeholder_list ];
 	}
 
@@ -1152,7 +1234,7 @@ class Media extends Root {
 		if ( $pathinfo ) {
 			$src = $pathinfo[0];
 		} elseif ( apply_filters( 'litespeed_media_ignore_remote_missing_sizes', true ) ) {
-			// Measuring a remote image means getimagesize() fetching whatever URL the page carries, which turns any post author into a request forger
+			// Remote measuring fetches URLs taken from page content (SSRF), so it is opt-in.
 			self::debug2( 'Skipped remote image dimension check for ' . $src );
 			return false;
 		}
@@ -1162,7 +1244,17 @@ class Media extends Root {
 		}
 
 		try {
-			$sizes = getimagesize( $src );
+			if ( $pathinfo ) {
+				$sizes = getimagesize( $src );
+			} else {
+				// A bounded prefix is enough for image headers; it need not contain the full image.
+				$response = wp_safe_remote_get( $src, [ 'timeout' => 10, 'limit_response_size' => self::DIMENSION_PROBE_MAX_BYTES ] );
+				$body     = wp_remote_retrieve_body( $response );
+				if ( 200 !== wp_remote_retrieve_response_code( $response ) || '' === $body ) {
+					return false;
+				}
+				$sizes = @getimagesizefromstring( $body ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- A remote response may not be an image.
+			}
 		} catch ( \Exception $e ) {
 			return false;
 		}
@@ -1179,7 +1271,7 @@ class Media extends Root {
 	 *
 	 * @since  1.4
 	 * @access private
-	 * @return array All the related raw html list (full <iframe> tags).
+	 * @return array Full iframe tags keyed by their original byte offsets.
 	 */
 	private function _parse_iframe() {
 		$cls_excludes   = apply_filters( 'litespeed_media_iframe_lazy_cls_excludes', $this->conf( Base::O_MEDIA_IFRAME_LAZY_CLS_EXC ) );
@@ -1187,7 +1279,11 @@ class Media extends Root {
 
 		$html_list = [];
 
-		$content = preg_replace( '#<!--.*-->#sU', '', $this->content );
+		$eligible_content = Utility::html_mask( $this->content, [ 'iframe' ] );
+		if ( null === $eligible_content ) {
+			return $html_list;
+		}
+		$content = $eligible_content;
 
 		/**
 		 * Exclude parent classes.
@@ -1197,13 +1293,20 @@ class Media extends Root {
 		$parent_cls_exc = apply_filters( 'litespeed_media_iframe_lazy_parent_cls_excludes', $this->conf( Base::O_MEDIA_IFRAME_LAZY_PARENT_CLS_EXC ) );
 		if ( $parent_cls_exc ) {
 			self::debug2( 'Iframe Lazyload Class excludes', $parent_cls_exc );
-			foreach ( $parent_cls_exc as $v ) {
-				$content = preg_replace('#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote($v, '#') . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content);
-			}
+			$content = $this->_mask_lazyload_parents( 'iframe', $parent_cls_exc );
 		}
-
-		preg_match_all( '#<iframe \s*([^>]+)></iframe>#isU', $content, $matches, PREG_SET_ORDER );
-		foreach ( $matches as $match ) {
+		if ( null === $content ) {
+			return $html_list;
+		}
+		preg_match_all( '#<iframe\s+(?P<attrs>' . Utility::HTML_ATTR_PATTERN . ')>.*?</iframe\s*>#is', $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE );
+		foreach ( $matches as $source_match ) {
+			if ( ! isset( $source_match['attrs'] ) || -1 === $source_match['attrs'][1] ) {
+				continue;
+			}
+			$match = [ $source_match[0][0], $source_match['attrs'][0] ];
+			if ( substr( $eligible_content, $source_match[0][1], strlen( $match[0] ) ) !== $match[0] ) {
+				continue;
+			}
 			$attrs = Utility::parse_attr( $match[1] );
 
 			if ( empty( $attrs['src'] ) ) {
@@ -1228,12 +1331,8 @@ class Media extends Root {
 				continue;
 			}
 
-			// to avoid multiple replacement.
-			if ( in_array( $match[0], $html_list, true ) ) {
-				continue;
-			}
-
-			$html_list[] = $match[0];
+			// The mask locates eligible tags; only original bytes belong in the output.
+			$html_list[ $source_match[0][1] ] = substr( $this->content, $source_match[0][1], strlen( $match[0] ) );
 		}
 
 		return $html_list;
@@ -1450,7 +1549,8 @@ class Media extends Root {
 			// check if has webp/avif file.
 			$has_next = apply_filters( 'litespeed_media_check_webp', Utility::is_internal_file( $url, $this->_sys_format ), $url );
 			if ( $has_next ) {
-				$url .= '.' . $this->_sys_format;
+				$end = strcspn( $url, '?#' );
+				$url = substr( $url, 0, $end ) . '.' . $this->_sys_format . substr( $url, $end );
 			} else {
 				self::debug2( '-no WebP or AVIF file, bypassed' );
 				return false;

@@ -21,7 +21,7 @@ $img_optm_summary        = Img_Optm::get_summary();
 $img_count               = Img_Optm::cls()->img_count();
 $img_finished_percentage = 0;
 if ( ! empty( $img_count['groups_all'] ) ) {
-	$img_finished_percentage = 100 - floor( $img_count['groups_new'] * 100 / $img_count['groups_all'] );
+	$img_finished_percentage = 100 - (int) floor( $img_count['groups_new'] * 100 / $img_count['groups_all'] );
 }
 if ( 100 === $img_finished_percentage && ! empty( $img_count['groups_new'] ) ) {
 	$img_finished_percentage = 99;
@@ -221,9 +221,9 @@ $can_page_load_time      = defined( 'LITESPEED_SERVER_TYPE' ) && 'NONE' !== LITE
 
 					if ( ! empty( $cloud_summary[ 'usage.' . $svc ] ) ) {
 						$usage               = $cloud_summary[ 'usage.' . $svc ];
-						$finished_percentage = floor( $usage['used'] * 100 / $usage['quota'] );
 						$used                = (int) $usage['used'];
 						$quota               = (int) $usage['quota'];
+						$finished_percentage = $quota > 0 ? floor( $used * 100 / $quota ) : 0;
 						$pag_used            = ! empty( $usage['pag_used'] ) ? (int) $usage['pag_used'] : 0;
 						$pag_bal             = ! empty( $usage['pag_bal'] ) ? (int) $usage['pag_bal'] : 0;
 						$pag_total           = $pag_used + $pag_bal;
@@ -529,7 +529,7 @@ $can_page_load_time      = defined( 'LITESPEED_SERVER_TYPE' ) && 'NONE' !== LITE
 										<div>
 											<div class="litespeed-dashboard-stats">
 												<a data-litespeed-onlyonce class="button button-primary"
-													<?php if ( ! empty( $img_count['groups_new'] ) || ! empty( $img_count[ 'groups.' . Img_Optm::STATUS_RAW ] ) ) : ?>
+													<?php if ( ! empty( $img_count['groups_new'] ) || ! empty( $img_count[ 'group.' . Img_Optm::STATUS_RAW ] ) ) : ?>
 														href="<?php echo esc_url( Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_NEW_REQ ) ); ?>"
 													<?php else : ?>
 														href="javascript:;" disabled

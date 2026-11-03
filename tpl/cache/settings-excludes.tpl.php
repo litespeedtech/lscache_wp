@@ -87,7 +87,9 @@ defined( 'WPINC' ) || exit;
 				if ( $this->conf( $option_id ) ) {
 					$tag_names = array();
 					foreach ( array_map( 'get_tag', $this->conf( $option_id ) ) as $curr_tag ) {
-						$tag_names[] = $curr_tag->name;
+						if ( $curr_tag && ! is_wp_error( $curr_tag ) ) {
+							$tag_names[] = $curr_tag->name;
+						}
 					}
 					if ( ! empty( $tag_names ) ) {
 						$excludes_buf = implode( "\n", $tag_names );

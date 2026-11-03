@@ -12,6 +12,11 @@ namespace LiteSpeed;
 
 defined( 'WPINC' ) || exit;
 
+if ( is_multisite() && ! current_user_can( 'manage_network_options' ) ) {
+	esc_html_e( 'Network Administrator permissions are required to manage the database.', 'litespeed-cache' );
+	return;
+}
+
 $_panels = array(
     'all' => array(
         'title' => esc_html__( 'Clean All', 'litespeed-cache' ),
@@ -27,7 +32,7 @@ $_panels = array(
     ),
     'auto_draft' => array(
         'title' => esc_html__( 'Auto Drafts', 'litespeed-cache' ),
-        'desc'  => esc_html__( 'Clean all auto saved drafts', 'litespeed-cache' ),
+        'desc'  => esc_html__( 'Clean auto drafts older than 7 days', 'litespeed-cache' ),
     ),
     'trash_post' => array(
         'title' => esc_html__( 'Trashed Posts', 'litespeed-cache' ),
@@ -94,7 +99,7 @@ $autoload_summary = DB_Optm::cls()->autoload_summary();
 <div class="litespeed-panel-wrapper litespeed-cards-wrapper">
 
     <?php foreach ( $_panels as $key => $v ) : ?>
-        <a href="<?php echo esc_url( $v['link'] ); ?>" class="litespeed-panel postbox">
+        <a href="<?php echo esc_url( $v['link'] ); ?>" class="litespeed-panel postbox" data-litespeed-cfm="<?php echo esc_attr__( 'Are you sure?', 'litespeed-cache' ); ?>">
             <section class="litespeed-panel-wrapper-icon">
                 <span class="litespeed-panel-icon-<?php echo esc_attr( $key ); ?>"></span>
             </section>
@@ -137,7 +142,7 @@ $autoload_summary = DB_Optm::cls()->autoload_summary();
                         <td><?php echo esc_html( $v->table_name ); ?></td>
                         <td><?php echo esc_html( $v->engine ); ?></td>
                         <td>
-                            <a href="<?php echo esc_url( Utility::build_url( Router::ACTION_DB_OPTM, DB_Optm::TYPE_CONV_TB, false, false, array( 'litespeed_tb' => $v->table_name ) ) ); ?>">
+                            <a data-litespeed-cfm="<?php echo esc_attr__( 'Are you sure?', 'litespeed-cache' ); ?>" href="<?php echo esc_url( Utility::build_url( Router::ACTION_DB_OPTM, DB_Optm::TYPE_CONV_TB, false, false, array( 'litespeed_tb' => $v->table_name ) ) ); ?>">
                                 <?php esc_html_e( 'Convert to InnoDB', 'litespeed-cache' ); ?>
                             </a>
                         </td>

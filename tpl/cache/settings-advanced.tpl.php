@@ -45,7 +45,7 @@ defined( 'WPINC' ) || exit;
 		<?php if ( ! $this->_is_multisite ) : ?>
 			<?php require LSCWP_DIR . 'tpl/cache/settings_inc.login_cookie.tpl.php'; ?>
 		<?php endif; ?>
-
+		<?php if ( $this->cls( 'Conf' )->can_update_shared( Base::O_UTIL_NO_HTTPS_VARY ) ) : ?>
 		<tr>
 			<th scope="row">
 				<?php $option_id = Base::O_UTIL_NO_HTTPS_VARY; ?>
@@ -59,6 +59,7 @@ defined( 'WPINC' ) || exit;
 				</div>
 			</td>
 		</tr>
+		<?php endif; ?>
 
 		<tr>
 			<th scope="row">

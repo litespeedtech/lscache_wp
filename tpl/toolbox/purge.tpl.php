@@ -50,7 +50,7 @@ $_panels[] = array(
 	'append_url' => Purge::TYPE_PURGE_ALL_CSSJS,
 );
 
-if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
+if ( defined( 'LSCWP_OBJECT_CACHE' ) && ( ! is_multisite() || current_user_can( 'manage_network_options' ) ) ) {
 	$_panels[] = array(
 		'title'      => esc_html__( 'Purge All', 'litespeed-cache' ) . ' - ' . esc_html__( 'Object Cache', 'litespeed-cache' ),
 		'desc'       => esc_html__( 'Purge all the object caches', 'litespeed-cache' ),
@@ -59,7 +59,7 @@ if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
 	);
 }
 
-if ( Router::opcache_enabled() ) {
+if ( Router::opcache_enabled() && ( ! is_multisite() || current_user_can( 'manage_network_options' ) ) ) {
 	$_panels[] = array(
 		'title'      => esc_html__( 'Purge All', 'litespeed-cache' ) . ' - ' . esc_html__( 'Opcode Cache', 'litespeed-cache' ),
 		'desc'       => esc_html__( 'Reset the entire opcode cache', 'litespeed-cache' ),

@@ -72,6 +72,18 @@ if ( $crawler_run_interval > 0 ) :
 		</div>
 	<?php endif; ?>
 
+	<?php if ( 80 === (int) ( $summary['test_port'] ?? 0 ) ) : ?>
+		<div class="litespeed-callout notice notice-warning inline">
+			<h4><?php esc_html_e( 'WARNING', 'litespeed-cache' ); ?></h4>
+			<p>
+				<?php esc_html_e( 'The crawler is using plain HTTP on port 80 because the HTTPS (443) test on the Server IP failed.', 'litespeed-cache' ); ?>
+				<?php if ( defined( 'LITESPEED_SERVER_TYPE' ) && 'LITESPEED_SERVER_OLS' === LITESPEED_SERVER_TYPE ) : ?>
+					<?php esc_html_e( 'On OpenLiteSpeed the cache key includes the port, so pages crawled on port 80 may not be served to HTTPS visitors.', 'litespeed-cache' ); ?>
+				<?php endif; ?>
+			</p>
+		</div>
+	<?php endif; ?>
+
 	<?php if ( $summary['this_full_beginning_time'] ) : ?>
 		<p>
 			<b><?php esc_html_e( 'Current sitemap crawl started at', 'litespeed-cache' ); ?>:</b>
@@ -218,7 +230,7 @@ if ( $crawler_run_interval > 0 ) :
 										esc_html__( 'Click here to set.', 'litespeed-cache' ),
 										true,
 										false,
-										true
+										false
 									);
 									?>
 								</div>
@@ -333,7 +345,7 @@ var _litespeed_dots;
 				var crawler_id = Number(crawler_id.split('-').pop());
 				var that = this;
 				$.ajax({
-					url: '<?php echo function_exists('get_rest_url') ? get_rest_url(null, 'litespeed/v1/toggle_crawler_state') : '/'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>',
+					url: <?php echo wp_json_encode( function_exists('get_rest_url') ? get_rest_url(null, 'litespeed/v1/toggle_crawler_state') : '/', Str::JSON_HTML_FLAGS ); ?>,
 					dataType: 'json',
 					method: 'POST',
 					cache: false,
@@ -424,24 +436,22 @@ function _litespeed_adjust_interval(changed) {
 
 function _litespeed_build_meta(meta) {
 	var string =
-		'<li>' +
 		litespeed_date(meta.last_update_time) +
-		'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: ' +
+		'\u00a0\u00a0\u00a0\u00a0\u00a0Size: ' +
 		meta.list_size +
-		'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Crawler: #' +
+		'\u00a0\u00a0\u00a0\u00a0\u00a0Crawler: #' +
 		(meta.curr_crawler * 1 + 1) +
-		'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Position: ' +
+		'\u00a0\u00a0\u00a0\u00a0\u00a0Position: ' +
 		(meta.last_pos * 1 + 1) +
-		'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Threads: ' +
+		'\u00a0\u00a0\u00a0\u00a0\u00a0Threads: ' +
 		meta.last_count +
-		'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status: ';
+		'\u00a0\u00a0\u00a0\u00a0\u00a0Status: ';
 	if (meta.is_running) {
 		string += 'crawling, ' + meta.last_status;
 	} else {
 		string += meta.end_reason ? meta.end_reason : '-';
 	}
-	string += '</li>';
-	return string;
+	return jQuery('<li>').text(string);
 }
 
 function _litespeed_dynamic_timeout() {

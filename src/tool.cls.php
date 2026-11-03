@@ -117,6 +117,7 @@ class Tool extends Root {
 			if ( ! $this->conf( Base::O_MISC_HEARTBEAT_EDITOR_TTL ) ) {
 				$this->_disable_heartbeat();
 				Debug2::debug( '[Tool] Deregistered editor heartbeat' );
+				return;
 			}
 		} else {
 			if ( ! $this->conf( Base::O_MISC_HEARTBEAT_BACK ) ) {
@@ -126,8 +127,23 @@ class Tool extends Root {
 			if ( ! $this->conf( Base::O_MISC_HEARTBEAT_BACK_TTL ) ) {
 				$this->_disable_heartbeat();
 				Debug2::debug( '[Tool] Deregistered backend heartbeat' );
+				return;
 			}
 		}
+
+		// WordPress sets 10 seconds on post lists and editors after load; apply the configured interval again then and on each tick.
+		wp_add_inline_script(
+			'heartbeat',
+			'jQuery( function ( $ ) {
+				var apply = function () {
+					if ( window.heartbeatSettings && heartbeatSettings.interval ) {
+						wp.heartbeat.interval( parseInt( heartbeatSettings.interval, 10 ) );
+					}
+				};
+				setTimeout( apply );
+				$( document ).on( "heartbeat-tick", apply );
+			} );'
+		);
 	}
 
 	/**

@@ -125,7 +125,8 @@ class CSS extends Cloud_Queue_Svc {
 	 * @return string
 	 */
 	public function prepare_html_lazy() {
-		return '<style>' . implode( ',', $this->conf( self::O_OPTM_HTML_LAZY ) ) . '{content-visibility:auto;contain-intrinsic-size:1px 1000px;}</style>';
+		$selectors = str_ireplace( '</style', '<\\/style', implode( ',', $this->conf( self::O_OPTM_HTML_LAZY ) ) );
+		return '<style>' . $selectors . '{content-visibility:auto;contain-intrinsic-size:1px 1000px;}</style>';
 	}
 
 	/**
@@ -151,6 +152,7 @@ class CSS extends Cloud_Queue_Svc {
 
 		// Append default critical css
 		$rules .= $this->conf( self::O_OPTM_CCSS_CON );
+		$rules  = str_ireplace( '</style', '<\\/style', $rules );
 
 		return '<style id="litespeed-ccss"' . $error_tag . '>' . $rules . '</style>';
 	}
@@ -226,13 +228,8 @@ class CSS extends Cloud_Queue_Svc {
 		Core::comment( 'QUIC.cloud CCSS in queue' );
 		$this->_queue = $this->load_queue( 'ccss' );
 
-		if ( count( $this->_queue ) > $this->_max_queue_size() ) {
-			self::debug( 'Queue is full - ' . $this->_max_queue_size() );
-			return null;
-		}
-
-		$queue_k                  = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
-		$this->_queue[ $queue_k ] = [
+		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
+		$item    = [
 			'url'        => apply_filters( 'litespeed_ccss_url', $request_url ),
 			'user_agent' => substr( $ua, 0, 200 ),
 			'is_mobile'  => $this->_separate_mobile(),
@@ -241,6 +238,9 @@ class CSS extends Cloud_Queue_Svc {
 			'vary'       => $vary,
 			'url_tag'    => $url_tag,
 		]; // Current UA will be used to request
+		if ( ! $this->_enqueue( $queue_k, $item, $request_url ) ) {
+			return null;
+		}
 		$this->save_queue( 'ccss', $this->_queue );
 		self::debug( 'Added queue_ccss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary . ' [uid] ' . $uid );
 

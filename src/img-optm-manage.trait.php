@@ -69,6 +69,7 @@ trait Img_Optm_Manage {
 	 *
 	 * @since 2.1.2
 	 * @access public
+	 * @return bool Whether the unfinished rows were deleted.
 	 */
 	public function clean() {
 		global $wpdb;
@@ -79,19 +80,23 @@ trait Img_Optm_Manage {
 			$q = "SELECT MIN(post_id) FROM `$this->_table_img_optming`";
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 			$min_pid = $wpdb->get_var( $q );
-			if ( null !== $min_pid && false !== $min_pid && is_numeric( $min_pid ) && $this->_summary['next_post_id'] > (int) $min_pid - 1 ) {
-				$min_pid                        = (int) $min_pid - 1;
-				$this->_summary['next_post_id'] = $min_pid;
+			// An empty table returns NULL, which must not rewind the cursor.
+			if ( null !== $min_pid && $this->_summary['next_post_id'] > $min_pid - 1 ) {
+				$this->_summary['next_post_id'] = $min_pid - 1;
 				self::save_summary();
 			}
 
 			$q = "DELETE FROM `$this->_table_img_optming`";
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-			$wpdb->query( $q );
+			if ( false === $wpdb->query( $q ) ) {
+				Admin_Display::error( __( 'Could not delete unfinished image data.', 'litespeed-cache' ) );
+				return false;
+			}
 		}
 
 		$msg = __( 'Cleaned up unfinished data successfully.', 'litespeed-cache' );
 		Admin_Display::success( $msg );
+		return true;
 	}
 
 	/**
@@ -105,7 +110,9 @@ trait Img_Optm_Manage {
 		$this->_summary['next_post_id'] = 0;
 		self::save_summary();
 
-		$this->clean();
+		if ( ! $this->clean() ) {
+			return;
+		}
 
 		$msg = __( 'Reset image optimization counter successfully.', 'litespeed-cache' );
 		Admin_Display::success( $msg );
@@ -147,6 +154,8 @@ trait Img_Optm_Manage {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 		$list = $wpdb->get_results( $q );
 		$i    = 0;
+		// Failures are counted across redirects so the final run knows whether the global cleanup is safe.
+		$failed = $offset ? (int) self::get_summary( self::SUMMARY_DESTROY_FAILED ) : 0;
 		foreach ( $list as $v ) {
 			if ( ! $v->post_id ) {
 				continue;
@@ -161,13 +170,20 @@ trait Img_Optm_Manage {
 
 			$this->tmp_pid  = $v->post_id;
 			$this->tmp_path = pathinfo( $meta_value['file'], PATHINFO_DIRNAME ) . '/';
-			$this->_destroy_optm_file( $meta_value, true );
-			if ( ! empty( $meta_value['sizes'] ) ) {
-				array_map( [ $this, '_destroy_optm_file' ], $meta_value['sizes'] );
+			if ( ! $this->_apply_image_files( $meta_value, '_destroy_optm_file' ) ) {
+				// Keep the failed attachment's metadata, backups and queue rows so a rerun can retry it.
+				self::debug( 'destroy failed, skipped [pid] ' . $v->post_id );
+				++$failed;
+				continue;
+			}
+			// Retire the restored attachment now; leftover queue rows would let pull republish revoked files.
+			if ( ! $this->_retire_row( $v->post_id ) ) {
+				++$failed;
 			}
 		}
 
-		self::debug( 'batch switched images total: ' . $i );
+		self::debug( 'batch destroyed images total: ' . $i . ' [failed so far] ' . $failed );
+		self::save_summary( [ self::SUMMARY_DESTROY_FAILED => $failed ] );
 
 		++$offset;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
@@ -180,6 +196,14 @@ trait Img_Optm_Manage {
 				return Router::self_redirect( Router::ACTION_IMG_OPTM, self::TYPE_DESTROY );
 			}
 			self::debug( '🎊 Finished destroying' );
+		}
+
+		// The global cleanup would wipe the failed attachments' state, so it only runs after a fully successful pass.
+		if ( $failed ) {
+			self::save_summary( [ self::SUMMARY_DESTROY_FAILED => 0 ] );
+			/* translators: %d: number of images that could not be restored. */
+			Admin_Display::error( sprintf( __( '%d images could not be fully restored, so their optimization data was kept; see the debug log and run Destroy again.', 'litespeed-cache' ), $failed ) );
+			return;
 		}
 
 		// Delete postmeta info
@@ -231,10 +255,13 @@ trait Img_Optm_Manage {
 		// del optimized ori
 		if ( $this->__media->info( $bk_file, $this->tmp_pid ) ) {
 			self::debug( 'deleting optim ori' );
-			$this->__media->del( $short_file_path, $this->tmp_pid );
-			$this->__media->rename( $bk_file, $short_file_path, $this->tmp_pid );
+			// Replace fires the delete + rename hooks for offload integrations, only after the local move succeeded.
+			if ( ! $this->__media->replace( $bk_file, $short_file_path, $this->tmp_pid ) ) {
+				return false;
+			}
 		}
 		$this->__media->info( $bk_optm_file, $this->tmp_pid ) && $this->__media->del( $bk_optm_file, $this->tmp_pid );
+		return true;
 	}
 
 	/**
@@ -643,20 +670,33 @@ trait Img_Optm_Manage {
 	 * @param string $type The switch type (batch_switch_ori or batch_switch_optm).
 	 */
 	public function batch_switch( $type ) {
+		$failed = 0;
 		if ( defined( 'LITESPEED_CLI' ) || wp_doing_cron() ) {
 			$offset = 0;
 			while ( 'done' !== $offset ) {
 				Admin_Display::info( "Starting switch to $type [offset] $offset" );
-				$offset = $this->_batch_switch( $type, $offset );
+				$offset = $this->_batch_switch( $type, $offset, $failed );
 			}
 		} else {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$offset = ! empty( $_GET['litespeed_i'] ) ? absint( wp_unslash( $_GET['litespeed_i'] ) ) : 0;
+			// Failures are counted across redirects; a fresh run (offset 0) starts from zero.
+			$failed = $offset ? (int) self::get_summary( self::SUMMARY_SWITCH_FAILED ) : 0;
 
-			$new_offset = $this->_batch_switch( $type, $offset );
+			$new_offset = $this->_batch_switch( $type, $offset, $failed );
 			if ( 'done' !== $new_offset ) {
+				self::save_summary( [ self::SUMMARY_SWITCH_FAILED => $failed ] );
 				return Router::self_redirect( Router::ACTION_IMG_OPTM, $type );
 			}
+			if ( $offset ) {
+				self::save_summary( [ self::SUMMARY_SWITCH_FAILED => 0 ] );
+			}
+		}
+
+		if ( $failed ) {
+			/* translators: %d: number of images that could not be switched. */
+			Admin_Display::error( sprintf( __( '%d images could not be switched; see debug log.', 'litespeed-cache' ), $failed ) );
+			return;
 		}
 
 		$msg = __( 'Switched images successfully.', 'litespeed-cache' );
@@ -670,9 +710,10 @@ trait Img_Optm_Manage {
 	 * @access private
 	 * @param string $type   The switch type.
 	 * @param int    $offset The current offset.
+	 * @param int    $failed Running count of attachments that could not be switched; failed attachments are skipped.
 	 * @return int|string Next offset or 'done'.
 	 */
-	private function _batch_switch( $type, $offset ) {
+	private function _batch_switch( $type, $offset, &$failed ) {
 		global $wpdb;
 		$limit          = 500;
 		$this->tmp_type = $type;
@@ -706,9 +747,10 @@ trait Img_Optm_Manage {
 
 			$this->tmp_pid  = $v->post_id;
 			$this->tmp_path = pathinfo( $meta_value['file'], PATHINFO_DIRNAME ) . '/';
-			$this->_switch_bk_file( $meta_value, true );
-			if ( ! empty( $meta_value['sizes'] ) ) {
-				array_map( [ $this, '_switch_bk_file' ], $meta_value['sizes'] );
+			if ( ! $this->_apply_image_files( $meta_value, '_switch_bk_file' ) ) {
+				self::debug( 'switch failed, skipped [pid] ' . $v->post_id );
+				++$failed;
+				continue;
 			}
 		}
 
@@ -742,24 +784,41 @@ trait Img_Optm_Manage {
 		$bk_file        = $local_filename . '.bk.' . $extension;
 		$bk_optm_file   = $local_filename . '.bk.optm.' . $extension;
 
-		// self::debug('_switch_bk_file ' . $bk_file . ' [type] ' . $this->tmp_type);
-		// switch to ori
 		if ( self::TYPE_BATCH_SWITCH_ORI === $this->tmp_type || 'orig' === $this->tmp_type ) {
-			// self::debug('switch to orig ' . $bk_file);
-			if ( ! $this->__media->info( $bk_file, $this->tmp_pid ) ) {
-				return;
-			}
-			$this->__media->rename( $local_filename . '.' . $extension, $bk_optm_file, $this->tmp_pid );
-			$this->__media->rename( $bk_file, $local_filename . '.' . $extension, $this->tmp_pid );
+			$source = $bk_file;
+			$backup = $bk_optm_file;
 		} elseif ( self::TYPE_BATCH_SWITCH_OPTM === $this->tmp_type || 'optm' === $this->tmp_type ) {
-			// switch to optm
-			// self::debug('switch to optm ' . $bk_file);
-			if ( ! $this->__media->info( $bk_optm_file, $this->tmp_pid ) ) {
-				return;
-			}
-			$this->__media->rename( $local_filename . '.' . $extension, $bk_file, $this->tmp_pid );
-			$this->__media->rename( $bk_optm_file, $local_filename . '.' . $extension, $this->tmp_pid );
+			$source = $bk_optm_file;
+			$backup = $bk_file;
+		} else {
+			return;
 		}
+		if ( ! $this->__media->info( $source, $this->tmp_pid ) ) {
+			return;
+		}
+		if ( ! $this->__media->rename( $short_file_path, $backup, $this->tmp_pid ) ) {
+			return false;
+		}
+		if ( ! $this->__media->rename( $source, $short_file_path, $this->tmp_pid ) ) {
+			// Restore the served file if publishing its replacement fails.
+			$this->__media->rename( $backup, $short_file_path, $this->tmp_pid );
+			return false;
+		}
+	}
+
+	/**
+	 * Apply an internal file operation to the main image, then all thumbnails.
+	 *
+	 * @param array  $meta_value Attachment metadata.
+	 * @param string $method     Internal operation name.
+	 * @return bool False on any failure; a failed main image skips the thumbnails.
+	 */
+	private function _apply_image_files( $meta_value, $method ) {
+		if ( false === $this->$method( $meta_value, true ) ) {
+			return false;
+		}
+		// Attempt every thumbnail even if an earlier thumbnail failed.
+		return empty( $meta_value['sizes'] ) || ! in_array( false, array_map( [ $this, $method ], $meta_value['sizes'] ), true );
 	}
 
 	/**
@@ -809,9 +868,8 @@ trait Img_Optm_Manage {
 				return;
 			}
 
-			$this->_switch_bk_file( $meta_value, true );
-			if ( ! empty( $meta_value['sizes'] ) ) {
-				array_map( [ $this, '_switch_bk_file' ], $meta_value['sizes'] );
+			if ( ! $this->_apply_image_files( $meta_value, '_switch_bk_file' ) ) {
+				return;
 			}
 		} else {
 			// webp/avif: detect direction from the main file's sidecar. Served = <file>.<fmt>, parked/disabled = <file>.optm.<fmt>
@@ -828,9 +886,8 @@ trait Img_Optm_Manage {
 				return;
 			}
 
-			$this->_switch_format_file( $meta_value, true );
-			if ( ! empty( $meta_value['sizes'] ) ) {
-				array_map( [ $this, '_switch_format_file' ], $meta_value['sizes'] );
+			if ( ! $this->_apply_image_files( $meta_value, '_switch_format_file' ) ) {
+				return;
 			}
 		}
 
@@ -857,11 +914,11 @@ trait Img_Optm_Manage {
 		if ( 'optm' === $this->tmp_type ) {
 			// enable: parked -> served
 			if ( $this->__media->info( $parked_file, $this->tmp_pid ) ) {
-				$this->__media->rename( $parked_file, $served_file, $this->tmp_pid );
+				return $this->__media->rename( $parked_file, $served_file, $this->tmp_pid );
 			}
 		} elseif ( $this->__media->info( $served_file, $this->tmp_pid ) ) {
 			// disable: served -> parked
-			$this->__media->rename( $served_file, $parked_file, $this->tmp_pid );
+			return $this->__media->rename( $served_file, $parked_file, $this->tmp_pid );
 		}
 	}
 
@@ -895,24 +952,47 @@ trait Img_Optm_Manage {
 		if ( $meta_value ) {
 			$this->tmp_pid  = $v->post_id;
 			$this->tmp_path = pathinfo( $meta_value['file'], PATHINFO_DIRNAME ) . '/';
-			$this->_destroy_optm_file( $meta_value, true );
-			if ( ! empty( $meta_value['sizes'] ) ) {
-				array_map( [ $this, '_destroy_optm_file' ], $meta_value['sizes'] );
+			if ( ! $this->_apply_image_files( $meta_value, '_destroy_optm_file' ) ) {
+				return;
 			}
 		}
 
-		delete_post_meta( $post_id, self::DB_SIZE );
-		delete_post_meta( $post_id, self::DB_SET );
-
-		// Delete records from img_optming table
-		if ( $this->__data->tb_exist( 'img_optming' ) ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$wpdb->query( $wpdb->prepare( "DELETE FROM `$this->_table_img_optming` WHERE post_id = %d", $post_id ) );
+		if ( ! $this->_retire_row( $post_id ) ) {
+			if ( ! $silent ) {
+				Admin_Display::error( __( 'Failed to remove the image optimization queue records; see the debug log and try again.', 'litespeed-cache' ) );
+			}
+			return;
 		}
 
 		if ( ! $silent ) {
 			$msg = __( 'Reset the optimized data successfully.', 'litespeed-cache' );
 			Admin_Display::success( $msg );
 		}
+	}
+
+	/**
+	 * Remove one attachment's optimization metadata and queue rows after its files were restored.
+	 *
+	 * @since 7.9.2
+	 * @access private
+	 * @param int $post_id The attachment post ID.
+	 * @return bool False when the queue rows could not be deleted; the metadata is then kept so a rerun retries.
+	 */
+	private function _retire_row( $post_id ) {
+		global $wpdb;
+
+		// Queue rows go first: a NOTIFIED row left behind would let pull republish the revoked optimization.
+		if ( $this->__data->tb_exist( 'img_optming' ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			if ( false === $wpdb->query( $wpdb->prepare( "DELETE FROM `$this->_table_img_optming` WHERE post_id = %d", $post_id ) ) ) {
+				self::debug( 'failed to delete img_optming rows, metadata kept [pid] ' . $post_id . ' [error] ' . $wpdb->last_error );
+				return false;
+			}
+		}
+
+		delete_post_meta( $post_id, self::DB_SIZE );
+		delete_post_meta( $post_id, self::DB_SET );
+
+		return true;
 	}
 }

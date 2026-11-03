@@ -21,9 +21,11 @@ class ESI extends Root {
 	private static $has_esi        = false;
 	private static $_combine_ids   = array();
 	private static $_clean_counter = 0;
+	private static $_clean_token   = null;
 	private $esi_args              = null;
 	private $_esi_preserve_list  = array();
 	private $_nonce_actions      = array( -1 => '' ); // val is cache control
+	private $_esi_invalid        = false; // True when this ESI request failed signature validation.
 
 	const QS_ACTION = 'lsesi';
 	const QS_PARAMS = 'esi';
@@ -260,6 +262,13 @@ class ESI extends Root {
 	 * @access   private
 	 */
 	private function _register_esi_actions() {
+		if ( ! $this->is_valid_request() ) {
+			Control::set_nocache_hard( 'invalid ESI signature' );
+			// Serve an empty, comment-free ESI response instead of the theme page; never publish the unverified block ID.
+			$this->_esi_invalid = true;
+			! defined( 'LSCACHE_ESI_SILENCE' ) && define( 'LSCACHE_ESI_SILENCE', true );
+			return;
+		}
 		/**
 		 * This hook is in `init`
 		 * For any plugin need to check if page is ESI, use `LSCACHE_IS_ESI` check after `init` hook
@@ -323,8 +332,8 @@ class ESI extends Root {
 	 * @return string The new template path.
 	 */
 	public function esi_template( $template ) {
-		// Check if is an ESI request
-		if (defined('LSCACHE_IS_ESI')) {
+		// Check if is an ESI request; an unsigned one gets the same template, which then renders nothing.
+		if ( $this->_esi_invalid || defined( 'LSCACHE_IS_ESI' ) ) {
 			self::debug('calling ESI template');
 
 			return LSCWP_DIR . 'tpl/esi.tpl.php';
@@ -568,7 +577,7 @@ class ESI extends Root {
 	}
 
 	/**
-	 * Generate ESI hash md5
+	 * Generate the ESI request MAC.
 	 *
 	 * @since  2.9.6
 	 * @access private
@@ -587,11 +596,12 @@ class ESI extends Root {
 				return false;
 			}
 
-			$str .= $params[$v];
+			$str .= strlen( $v ) . ':' . $v . ':' . strlen( $params[$v] ) . ':' . $params[$v] . ';';
 		}
 		self::debug2('md5_string=' . $str);
 
-		return md5($this->conf(Base::HASH) . $str);
+		$key = hash_hmac( 'sha256', 'lscwp:esi-request:v1', (string) $this->conf( Base::HASH ), true );
+		return hash_hmac( 'sha256', $str, $key );
 	}
 
 	/**
@@ -629,6 +639,11 @@ class ESI extends Root {
 	 * @access public
 	 */
 	public function load_esi_block() {
+		// An invalid signature was already rejected: do not parse params or dispatch any block.
+		if ( $this->_esi_invalid ) {
+			return;
+		}
+
 		$params = $this->_parse_esi_param();
 
 		/**
@@ -696,6 +711,19 @@ class ESI extends Root {
 		}
 
 		do_action('litespeed_esi_load-' . LSCACHE_IS_ESI, $params);
+	}
+
+	/**
+	 * Verify request identity before trusting ESI-only controls or publishing its block ID.
+	 *
+	 * @return bool Whether the GET fields carry a valid site MAC.
+	 */
+	public function is_valid_request() {
+		if ( empty( $_GET[ self::QS_ACTION ] ) || ! is_string( $_GET[ self::QS_ACTION ] ) || empty( $_GET['_hash'] ) || ! is_string( $_GET['_hash'] ) ) {
+			return false;
+		}
+		$hash = $this->_gen_esi_md5( $_GET );
+		return $hash && hash_equals( $hash, $_GET['_hash'] );
 	}
 
 	// The *_sub_* functions are helpers for the sub_* functions.
@@ -964,21 +992,37 @@ class ESI extends Root {
 			unset($params['ttl']);
 		}
 
-		// Replace to original shortcode
-		$shortcode = $params[0];
-		$atts_ori  = array();
+		global $shortcode_tags;
+		$shortcode = isset( $params[0] ) && is_string( $params[0] ) ? $params[0] : '';
+		if ( ! isset( $shortcode_tags[ $shortcode ] ) || ! is_callable( $shortcode_tags[ $shortcode ] ) ) {
+			return;
+		}
+		$atts_ori  = [];
+		$attr_text = [];
 		foreach ($params as $k => $v) {
 			if ($k === 0) {
 				continue;
 			}
 
-			$atts_ori[] = is_string($k) ? "$k='" . addslashes($v) . "'" : $v;
+			if ( is_string( $k ) ) {
+				$atts_ori[ $k ] = $v;
+			} else {
+				$atts_ori[] = $v;
+			}
+			$attr_text[] = is_string( $k ) ? $k . "='" . addslashes( (string) $v ) . "'" : (string) $v;
 		}
 
 		Tag::add(Tag::TYPE_ESI . "esi.$shortcode");
 
-		// Output original shortcode final content
-		echo do_shortcode("[$shortcode " . implode(' ', $atts_ori) . ' ]');
+		// Preserve parsed values; the reconstructed shortcode text is filter metadata only.
+		$attr_text = ' ' . implode( ' ', $attr_text ) . ' ';
+		$matches   = [ '[' . $shortcode . $attr_text . ']', '', $shortcode, $attr_text, '', '', '' ];
+		$output    = apply_filters( 'pre_do_shortcode_tag', false, $shortcode, $atts_ori, $matches );
+		if ( false === $output ) {
+			$output = call_user_func( $shortcode_tags[ $shortcode ], $atts_ori, null, $shortcode );
+			$output = apply_filters( 'do_shortcode_tag', $output, $shortcode, $atts_ori, $matches );
+		}
+		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Registered shortcode callbacks and filters own their output.
 	}
 
 	/**
@@ -1072,12 +1116,15 @@ class ESI extends Root {
 	 * @return string Wrapper begin HTML comment.
 	 */
 	public static function clean_wrapper_begin( $counter = false ) {
+		if ( null === self::$_clean_token ) {
+			self::$_clean_token = bin2hex( random_bytes( 8 ) );
+		}
 		if (false === $counter) {
 			++self::$_clean_counter;
 			$counter = self::$_clean_counter;
 			self::debug('clean wrapper ' . $counter . ' begin');
 		}
-		return '<!-- LiteSpeed To Be Removed begin ' . $counter . ' -->';
+		return '<!-- LiteSpeed To Be Removed begin ' . self::$_clean_token . '-' . $counter . ' -->';
 	}
 
 	/**
@@ -1091,11 +1138,14 @@ class ESI extends Root {
 	 * @return string Wrapper end HTML comment.
 	 */
 	public static function clean_wrapper_end( $counter = false ) {
+		if ( null === self::$_clean_token ) {
+			self::$_clean_token = bin2hex( random_bytes( 8 ) );
+		}
 		if (false === $counter) {
 			$counter = self::$_clean_counter;
 			self::debug('clean wrapper ' . $counter . ' end');
 		}
-		return '<!-- LiteSpeed To Be Removed end ' . $counter . ' -->';
+		return '<!-- LiteSpeed To Be Removed end ' . self::$_clean_token . '-' . $counter . ' -->';
 	}
 
 	/**
@@ -1128,9 +1178,9 @@ class ESI extends Root {
 
 			// If miss end.
 			$end_wrapper = self::clean_wrapper_end($i);
-			$end         = strpos($buffer, $end_wrapper);
+			$end         = strpos($buffer, $end_wrapper, $start);
 			if (false === $end) {
-				$buffer = str_replace(self::clean_wrapper_begin($i), '', $buffer);
+				$buffer = str_replace( [ self::clean_wrapper_begin($i), $end_wrapper ], '', $buffer );
 				self::debug2("lost ending wrapper $i");
 				continue;
 			}

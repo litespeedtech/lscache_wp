@@ -18,8 +18,10 @@ $lang_disabled = '<span class="litespeed-warning">' . esc_html__( 'Disabled', 'l
 $mem_enabled   = class_exists( 'Memcached' ) ? $lang_enabled : $lang_disabled;
 $redis_enabled = class_exists( 'Redis' ) ? $lang_enabled : $lang_disabled;
 
-$mem_conn = $this->cls( 'Object_Cache' )->test_connection();
-if ( null === $mem_conn ) {
+$mem_conn = $this->conf( Base::O_OBJECT ) ? $this->cls( 'Object_Cache' )->test_connection() : null;
+if ( ! $this->conf( Base::O_OBJECT ) ) {
+	$mem_conn_desc = $lang_disabled;
+} elseif ( null === $mem_conn ) {
 	$mem_conn_desc = '<span class="litespeed-desc">' . esc_html__( 'Not Available', 'litespeed-cache' ) . '</span>';
 } elseif ( $mem_conn ) {
 	$mem_conn_desc = '<span class="litespeed-success">' . esc_html__( 'Passed', 'litespeed-cache' ) . '</span>';
@@ -149,19 +151,6 @@ if ( null === $mem_conn ) {
 						'<code>0</code>'
 					);
 					?>
-				</div>
-			</td>
-		</tr>
-
-		<tr>
-			<th scope="row">
-				<?php $option_id = Base::O_OBJECT_LIFE; ?>
-				<?php $this->title( $option_id ); ?>
-			</th>
-			<td>
-				<?php $this->build_input( $option_id, 'litespeed-input-short2' ); ?> <?php esc_html_e( 'seconds', 'litespeed-cache' ); ?>
-				<div class="litespeed-desc">
-					<?php esc_html_e( 'Default TTL for cached objects.', 'litespeed-cache' ); ?>
 				</div>
 			</td>
 		</tr>

@@ -42,7 +42,7 @@ abstract class Root {
 	 * @access protected
 	 */
 	protected function _separate_mobile() {
-		return (wp_is_mobile() || apply_filters('litespeed_is_mobile', false)) && $this->conf(Base::O_CACHE_MOBILE);
+		return (Control::is_mobile() || apply_filters('litespeed_is_mobile', false)) && $this->conf(Base::O_CACHE_MOBILE);
 	}
 
 	/**
@@ -249,10 +249,15 @@ abstract class Root {
 	 */
 	public static function read_conf_file( $dir ) {
 		foreach ([ self::CONF_FILE => false, self::CONF_FILE_LEGACY => true ] as $name => $legacy) {
-			$data = is_file($dir . '/' . $name) ? self::parse_conf_file(file_get_contents($dir . '/' . $name), $legacy) : false;
+			if (!is_file($dir . '/' . $name)) {
+				continue;
+			}
+			$data = self::parse_conf_file(file_get_contents($dir . '/' . $name), $legacy);
 			if (false !== $data) {
 				return $data;
 			}
+			// An existing but unreadable file usually means a root-owned 0600 copy (e.g. written by `wp --allow-root`); no-op unless debug logging is active.
+			self::debug('[Conf] Failed to read runtime configuration file: ' . $name);
 		}
 		return [];
 	}
@@ -396,7 +401,8 @@ abstract class Root {
 			return null;
 		}
 
-		$val_setting = $this->conf($id, true);
+		// Missing-size rendering uses this legacy filter only as an enabled gate, with true as its input.
+		$val_setting = Base::O_MEDIA_ADD_MISSING_SIZES === $id ? true : $this->conf($id, true);
 		// if setting not found
 		if( null === $val_setting ){
 			$val_setting = '';

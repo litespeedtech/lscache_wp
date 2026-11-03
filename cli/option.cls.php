@@ -73,7 +73,7 @@ class Option extends Base {
 
 		// Contains child set
 		if ( false !== strpos( $key, '[' ) ) {
-			parse_str( $key . '=' . $val, $key2 );
+			parse_str( $key . '=' . rawurlencode( $val ), $key2 );
 			$raw_data = array_merge( $raw_data, $key2 );
 		} else {
 			$raw_data[ $key ] = $val;
@@ -386,14 +386,14 @@ class Option extends Base {
 	 * @param array $args Positional arguments (url).
 	 */
 	public function import_remote( $args ) {
-		$file  = $args[0];
-		$valid = wp_http_validate_url( $file );
-		if ( ! $valid || 'https' !== strtolower( (string) wp_parse_url( $valid, PHP_URL_SCHEME ) ) ) {
+		$file = $args[0];
+		// download_url() fetches through wp_safe_remote_get(), which validates the URL.
+		if ( 'https' !== strtolower( (string) wp_parse_url( $file, PHP_URL_SCHEME ) ) ) {
 			WP_CLI::error( 'Remote option imports require a valid HTTPS URL.' );
 			return;
 		}
 
-		$tmp_file = download_url( $valid );
+		$tmp_file = download_url( $file );
 
 		if ( is_wp_error( $tmp_file ) ) {
 			WP_CLI::error( 'Failed to download file.' );

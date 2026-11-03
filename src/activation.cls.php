@@ -29,6 +29,9 @@ class Activation extends Base {
 
 	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count';
 
+	// The wp-config.php opening tag, optionally after leading whitespace, in any case.
+	const WP_CONFIG_OPEN_TAG = '/\A(\s*)<\?php(?=\s)/i';
+
 	// Flag file under LITESPEED_STATIC_DIR; once present, the deactivation survey modal is suppressed on future deactivations.
 	const SURVEY_DONE_FLAG = '.survey_done';
 
@@ -58,8 +61,9 @@ class Activation extends Base {
 	 *
 	 * @since 1.0.0
 	 * @access public
+	 * @param bool $network_wide Whether WordPress is activating the plugin for the whole network.
 	 */
-	public static function register_activation() {
+	public static function register_activation( $network_wide = false ) {
 		$count = 0;
 		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Activate_' . get_current_blog_id() );
 
@@ -81,6 +85,10 @@ class Activation extends Base {
 					}
 				}
 			}
+		}
+		// WordPress marks the plugin network-active only after this hook returns.
+		if ( $network_wide && is_multisite() ) {
+			Conf::$_network_activating = true;
 		}
 		self::cls()->update_files();
 
@@ -106,7 +114,7 @@ class Activation extends Base {
 			$current_blog = get_current_blog_id();
 
 			// get all sites
-			$sub_sites = get_sites();
+			$sub_sites = get_sites( [ 'number' => 0 ] );
 
 			// clear foreach site
 			foreach ( $sub_sites as $sub_site ) {
@@ -136,6 +144,15 @@ class Activation extends Base {
 
 		if ( file_exists( LITESPEED_STATIC_DIR ) ) {
 			File::rrmdir( LITESPEED_STATIC_DIR );
+		}
+		if ( is_dir( Preset::BACKUP_DIR ) ) {
+			File::rrmdir( Preset::BACKUP_DIR );
+		}
+		if ( is_multisite() ) {
+			global $wpdb;
+			// Network settings share sitemeta; uninstall removes the plugin from the installation.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->query( $wpdb->prepare( "DELETE FROM `$wpdb->sitemeta` WHERE meta_key LIKE %s", $wpdb->esc_like( 'litespeed.' ) . '%' ) );
 		}
 
 		self::del_conf_data_file();
@@ -167,6 +184,7 @@ class Activation extends Base {
 	 * @return array The array of blog ids.
 	 */
 	public static function get_network_ids( $args = [] ) {
+		$args          += [ 'number' => 0 ];
 		$args['fields'] = 'ids';
 		$blogs          = get_sites( $args );
 
@@ -325,6 +343,7 @@ class Activation extends Base {
 
 		// Update cache setting `_CACHE`
 		$this->cls( 'Conf' )->define_cache();
+		$this->cls( 'Conf' )->load_shared_options();
 
 		// Site options applied already
 		$options = $this->get_options();
@@ -351,6 +370,7 @@ class Activation extends Base {
 		/* 4) .htaccess; */
 
 		try {
+			Core::load_thirdparty();
 			$this->cls( 'Htaccess' )->update( $options );
 		} catch ( \Exception $ex ) {
 			Admin_Display::error( wp_kses_post( $ex->getMessage() ) );
@@ -360,31 +380,10 @@ class Activation extends Base {
 
 		if ( ( $options[ self::O_GUEST ] || $options[ self::O_OBJECT ] ) && ( ! $options[ self::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
 			$this->update_conf_data_file( $options );
-		} elseif ( ! is_multisite() ) {
+		} elseif ( ! is_multisite() || Conf::shares_network_settings() ) {
+			// Network-shared Guest and object-cache values mean no other site still needs the file; per-site multisite installs keep it for the other sites.
 			self::del_conf_data_file();
-		} else {
-			$this->migrate_conf_data_file();
 		}
-	}
-
-	/**
-	 * Multisite: a site that needs no runtime configuration must not delete the shared file, but the plaintext copy still has to go.
-	 *
-	 * @since 7.9.2
-	 */
-	private function migrate_conf_data_file() {
-		$legacy = LSCWP_CONTENT_DIR . '/' . self::CONF_FILE_LEGACY;
-		if ( ! file_exists( $legacy ) ) {
-			return;
-		}
-		$data = self::parse_conf_file( File::read( $legacy ), true );
-		if ( false !== $data && false === self::parse_conf_file( File::read( self::$data_file ) ) ) {
-			$content = self::encode_conf_file( $data );
-			if ( false === $content || ! self::_write_conf_file( $content ) ) {
-				return;
-			}
-		}
-		$this->_retire_legacy_conf_file();
 	}
 
 	/**
@@ -395,14 +394,39 @@ class Activation extends Base {
 	 * @return bool
 	 */
 	private static function _write_conf_file( $content ) {
-		$temp = self::$data_file . '.' . bin2hex( random_bytes( 6 ) ) . '.php';
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents, WordPress.WP.AlternativeFunctions.rename_rename
-		if ( strlen( $content ) === file_put_contents( $temp, $content, LOCK_EX ) && rename( $temp, self::$data_file ) ) {
+		$temp     = self::$data_file . '.' . bin2hex( random_bytes( 6 ) ) . '.php';
+		$previous = file_exists( self::$data_file ) ? self::$data_file : LSCWP_CONTENT_DIR . '/' . self::CONF_FILE_LEGACY;
+		// Preserve a restricted mode when replacing either configuration format.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fileperms
+		$mode = file_exists( $previous ) ? fileperms( $previous ) : false;
+		$mode = false === $mode ? 0600 : $mode & 0777;
+		// Add owner-write only while publishing, then restore the inherited mode before the file becomes visible.
+		$write_mode = $mode | 0200;
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents, WordPress.WP.AlternativeFunctions.file_system_operations_chmod, WordPress.WP.AlternativeFunctions.rename_rename
+		if ( 0 === file_put_contents( $temp, '', LOCK_EX ) && chmod( $temp, $write_mode ) && strlen( $content ) === file_put_contents( $temp, $content, LOCK_EX ) && chmod( $temp, $mode ) && self::_adopt_conf_owner( $temp, file_exists( $previous ) ? $previous : LSCWP_CONTENT_DIR ) && rename( $temp, self::$data_file ) ) {
 			return true;
 		}
 		wp_delete_file( $temp );
 		Admin_Display::error( __( 'LiteSpeed Cache could not write its runtime configuration file in wp-content. Please check the directory permissions.', 'litespeed-cache' ) );
 		return false;
+	}
+
+	/**
+	 * When running as root, give the file the owner/group of $source so the web process can read it.
+	 *
+	 * @since 7.9.2
+	 * @param string $temp   Temporary file about to be published.
+	 * @param string $source File or directory whose ownership is adopted.
+	 * @return bool
+	 */
+	private static function _adopt_conf_owner( $temp, $source ) {
+		if ( ! function_exists( 'posix_geteuid' ) || 0 !== posix_geteuid() ) {
+			return true;
+		}
+		$uid = fileowner( $source );
+		$gid = filegroup( $source );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chown, WordPress.WP.AlternativeFunctions.file_system_operations_chgrp
+		return false !== $uid && false !== $gid && chown( $temp, $uid ) && chgrp( $temp, $gid );
 	}
 
 	/**
@@ -488,8 +512,18 @@ class Activation extends Base {
 		foreach ( $ids as $v ) {
 			$data[ $v ] = $options[ $v ];
 		}
+		// The file is installation-wide, so network-shared installs take the object cache debug flag from the primary network rather than the last writer's network.
+		if ( Conf::shares_network_settings() && array_key_exists( self::O_DEBUG, $data ) ) {
+			$data[ self::O_DEBUG ] = $this->cls( 'Conf' )->owner_network_conf( self::O_DEBUG );
+		}
+		if ( $options[ self::O_GUEST ] ) {
+			$data[ self::HASH ]       = Vary::cls()->vary_hash();
+			$data['guest_cookie']     = Vary::cookie_scope();
+			$data['logged_in_cookie'] = defined( 'LOGGED_IN_COOKIE' ) ? LOGGED_IN_COOKIE : '';
+		}
 		$content = self::encode_conf_file( $data );
 		if ( false === $content ) {
+			Admin_Display::error( __( 'LiteSpeed Cache could not encode its runtime configuration. Please check the settings for invalid text.', 'litespeed-cache' ) );
 			return;
 		}
 
@@ -541,17 +575,22 @@ class Activation extends Base {
 		if ( ! $content ) {
 			throw new \Exception( 'wp-config file content is empty: ' . wp_kses_post( $conf_file ) );
 		}
-
 		// Remove the line `define('WP_CACHE', true/false);` first
-		if ( defined( 'WP_CACHE' ) ) {
-			$content = preg_replace( '/define\(\s*([\'"])WP_CACHE\1\s*,\s*\w+\s*\)\s*;/sU', '', $content );
+		$content = preg_replace( '/define\(\s*([\'"])WP_CACHE\1\s*,\s*\w+\s*\)\s*;/sU', '', $content );
+		// A PCRE failure returns null, which must never be written over wp-config.php.
+		if ( null === $content ) {
+			throw new \Exception( 'wp-config.php could not be parsed to change the `WP_CACHE` const.' );
 		}
 
-		// Insert const
+		// Insert const right after the real opening tag, which may follow leading whitespace and use any case.
 		if ( $enable ) {
-			$content = preg_replace( '/^<\?php/', "<?php\ndefine( 'WP_CACHE', true );", $content );
+			if ( 1 !== preg_match( self::WP_CONFIG_OPEN_TAG, $content ) ) {
+				throw new \Exception( 'wp-config.php does not start with the required PHP opening tag.' );
+			}
+			$content = preg_replace( self::WP_CONFIG_OPEN_TAG, "\$1<?php\ndefine( 'WP_CACHE', true );", $content, 1 );
 		}
 
+		// Write in place so permissions, ownership, symlinks and read-only protection of wp-config.php are respected.
 		$res = File::save( $conf_file, $content, false, false, false );
 
 		if ( true !== $res ) {
@@ -609,6 +648,11 @@ class Activation extends Base {
 	 * @access public
 	 */
 	public function upgrade() {
+		if ( ! current_user_can( 'update_plugins' ) ) {
+			Admin_Display::error( __( 'Sorry, you are not allowed to update plugins for this site.', 'litespeed-cache' ) );
+			return;
+		}
+
 		$plugin = Core::PLUGIN_FILE;
 
 		/**
@@ -705,6 +749,11 @@ class Activation extends Base {
 	 * @access public
 	 */
 	public function dash_notifier_install_3rd() {
+		if ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) ) {
+			Admin_Display::error( __( 'Sorry, you are not allowed to install plugins on this site.', 'litespeed-cache' ) );
+			return;
+		}
+
 		! defined( 'SILENCE_INSTALL' ) && define( 'SILENCE_INSTALL', true );
 
 		// phpcs:ignore
@@ -779,7 +828,7 @@ class Activation extends Base {
 				if ( ! empty( $summary['news.zip'] ) ) {
 					Cloud::save_summary( [ 'news.new' => 0 ] );
 
-					$this->cls( 'Debug2' )->beta_test( $summary['zip'] );
+					$this->cls( 'Debug2' )->beta_test( $summary['news.zip'] );
 				}
 				break;
 

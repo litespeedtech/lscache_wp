@@ -18,6 +18,32 @@ class Import extends Base {
 	const TYPE_RESET  = 'reset';
 
 	/**
+	 * Decode exported settings shared by manual imports and presets.
+	 *
+	 * @param string $data Export contents, without a backup's PHP guard.
+	 * @return array|false Settings, or false for an invalid record.
+	 */
+	public static function parse_settings( $data ) {
+		if ( 0 !== strpos( $data, '["_version",' ) ) {
+			$settings = json_decode( base64_decode( $data ), true );
+			return is_array( $settings ) ? $settings : false;
+		}
+		$settings = [];
+		foreach ( explode( "\n", $data ) as $line ) {
+			$line = trim( $line );
+			if ( ! $line ) {
+				continue;
+			}
+			$entry = json_decode( $line, true );
+			if ( ! is_array( $entry ) || array_keys( $entry ) !== [ 0, 1 ] || ! is_string( $entry[0] ) ) {
+				return false;
+			}
+			$settings[ $entry[0] ] = $entry[1];
+		}
+		return $settings;
+	}
+
+	/**
 	 * Init
 	 *
 	 * @since  1.8.2
@@ -98,35 +124,23 @@ class Import extends Base {
 		$this->_summary['import_time'] = time();
 		self::save_summary();
 
-		$ori_data = array();
-		try {
-			// Check if the data is v4+ or not
-			if (strpos($data, '["_version",') === 0) {
-				Debug2::debug('[Import] Data version: v4+');
-				$data = explode("\n", $data);
-				foreach ($data as $v) {
-					$v = trim($v);
-					if (!$v) {
-						continue;
-					}
-					list($k, $v)  = \json_decode($v, true);
-					$ori_data[$k] = $v;
-				}
-			} else {
-				$ori_data = \json_decode(base64_decode($data), true);
-			}
-		} catch (\Exception $ex) {
-			Debug2::debug('[Import] ❌ Failed to parse serialized data');
-			return false;
-		}
+		$ori_data = self::parse_settings( $data );
 
-		if (!$ori_data) {
+		if ( ! is_array( $ori_data ) || ! $ori_data ) {
 			Debug2::debug('[Import] ❌ Failed to import, no data');
 			return false;
 		} else {
-			Debug2::debug('[Import] Importing data', $ori_data);
+			Debug2::debug('[Import] Importing settings');
 		}
 
+		// Imports are portable performance profiles, not a channel for debug trust or object-cache credentials/endpoints; Conf::update() already refuses HASH and _VER.
+		foreach ( array_keys( $ori_data ) as $id ) {
+			if ( in_array( $id, [ Base::O_DEBUG_IPS, Base::O_SERVER_IP ], true ) || 0 === strpos( $id, 'object-' ) ) {
+				unset( $ori_data[ $id ] );
+			}
+		}
+
+		$ori_data = $this->_strip_unwritable_shared( $ori_data );
 		$this->cls('Conf')->update_confs($ori_data);
 
 		if (!$file) {
@@ -149,6 +163,7 @@ class Import extends Base {
 	 */
 	public function reset() {
 		$options = $this->cls('Conf')->load_default_vals();
+		$options = $this->_strip_unwritable_shared( $options );
 
 		$this->cls('Conf')->update_confs($options);
 
@@ -156,6 +171,32 @@ class Import extends Base {
 
 		$msg = __('Reset successfully.', 'litespeed-cache');
 		Admin_Display::success($msg);
+	}
+
+	/**
+	 * Remove network-managed shared settings this site cannot write and report them once, instead of Conf::update() emitting a per-option error.
+	 *
+	 * @since 7.9.2
+	 * @param array<string,mixed> $matrix Option-value map.
+	 * @return array<string,mixed>
+	 */
+	protected function _strip_unwritable_shared( array $matrix ) {
+		$conf    = $this->cls( 'Conf' );
+		$skipped = [];
+		foreach ( $matrix as $id => $val ) {
+			if ( $conf->can_update_shared( $id ) ) {
+				continue;
+			}
+			if ( $conf->type_casting( $val, $id ) !== $conf->conf( $id ) ) {
+				$skipped[] = $id;
+			}
+			unset( $matrix[ $id ] );
+		}
+		if ( $skipped ) {
+			Debug2::debug( '[Import] Skipped network-managed shared settings: ' . implode( ', ', $skipped ) );
+			Admin_Display::info( __( 'Network-managed shared settings (object cache, Guest Mode, login cookie, HTTPS vary) were left unchanged; a network administrator can change them in the primary site or network settings.', 'litespeed-cache' ) );
+		}
+		return $matrix;
 	}
 
 	/**

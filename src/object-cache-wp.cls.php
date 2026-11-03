@@ -157,7 +157,7 @@ class WP_Object_Cache {
 		 */
 		if ( ! defined( 'LSOC_PREFIX' ) ) {
 			global $table_prefix;
-			$identity = ( defined( 'WP_CACHE_KEY_SALT' ) ? WP_CACHE_KEY_SALT : '' ) . "\0" . ( defined( 'DB_NAME' ) ? DB_NAME : '' ) . "\0" . (string) $table_prefix;
+			$identity = ( defined( 'WP_CACHE_KEY_SALT' ) ? WP_CACHE_KEY_SALT : '' ) . "\0" . ( defined( 'DB_NAME' ) ? DB_NAME : ABSPATH ) . "\0" . (string) $table_prefix;
 			define( 'LSOC_PREFIX', hash( 'sha256', $identity ) );
 		}
 	}
@@ -321,22 +321,7 @@ class WP_Object_Cache {
 		if ( wp_suspend_cache_addition() ) {
 			return false;
 		}
-
-		if ( ! $this->is_valid_key( $key ) ) {
-			return false;
-		}
-
-		if ( empty( $group ) ) {
-			$group = 'default';
-		}
-
-		$id = $this->_key( $key, $group );
-
-		if ( array_key_exists( $id, $this->_cache ) ) {
-			return false;
-		}
-
-		return $this->set( $key, $data, $group, (int) $expire );
+		return $this->_store( $key, $data, $group, (int) $expire, 'add' );
 	}
 
 	/**
@@ -377,21 +362,7 @@ class WP_Object_Cache {
 	 * @return bool True if contents were replaced, false if original value does not exist.
 	 */
 	public function replace( $key, $data, $group = 'default', $expire = 0 ) {
-		if ( ! $this->is_valid_key( $key ) ) {
-			return false;
-		}
-
-		if ( empty( $group ) ) {
-			$group = 'default';
-		}
-
-		$id = $this->_key( $key, $group );
-
-		if ( ! array_key_exists( $id, $this->_cache ) ) {
-			return false;
-		}
-
-		return $this->set( $key, $data, $group, (int) $expire );
+		return $this->_store( $key, $data, $group, (int) $expire, 'replace' );
 	}
 
 	/**
@@ -418,6 +389,20 @@ class WP_Object_Cache {
 	 * @return bool True if contents were set, false if key is invalid.
 	 */
 	public function set( $key, $data, $group = 'default', $expire = 0 ) {
+		return $this->_store( $key, $data, $group, (int) $expire, 'set' );
+	}
+
+	/**
+	 * Store an unchanged wire envelope, retaining a refused cache-aside refill only when no shared value is readable.
+	 *
+	 * @param int|string $key    Cache key.
+	 * @param mixed      $data   Value to store.
+	 * @param string     $group  Cache group.
+	 * @param int        $expire TTL seconds.
+	 * @param string     $method Internal set, add or replace operation.
+	 * @return bool
+	 */
+	private function _store( $key, $data, $group, $expire, $method ) {
 		if ( ! $this->is_valid_key( $key ) ) {
 			return false;
 		}
@@ -426,10 +411,33 @@ class WP_Object_Cache {
 			$group = 'default';
 		}
 
-		$id = $this->_key( $key, $group );
+		$id         = $this->_key( $key, $group );
+		$persistent = ! $this->_object_cache->is_non_persistent( $group );
+		// Conditional writes are atomic on a connected backend; otherwise they test the request cache.
+		$backend = $persistent && 'set' !== $method && $this->_object_cache->usable();
+		if ( ! $backend && ( ( 'add' === $method && array_key_exists( $id, $this->_cache ) ) || ( 'replace' === $method && ! array_key_exists( $id, $this->_cache ) ) ) ) {
+			return false;
+		}
 
 		if ( is_object( $data ) ) {
 			$data = clone $data;
+		}
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- Preserve the existing drop-in payload format.
+		if ( $backend && ! $this->_object_cache->$method( $id, serialize( [ 'data' => $data ] ), $expire ) ) {
+			// A refused refill may be an oversized value or a competing add. Never overwrite an existing runtime value.
+			if ( 'add' === $method && array_key_exists( $id, $this->_cache_404 ) && ! array_key_exists( $id, $this->_cache ) ) {
+				if ( ! $this->_object_cache->can_read( $group ) ) {
+					$this->_cache[ $id ] = $data;
+				} else {
+					// Bypass the earlier miss to retain any concurrent winner; only a confirmed miss permits local refill.
+					$this->get( $key, $group, true, $found );
+					if ( ! $found && $this->_object_cache->last_get_missed() ) {
+						$this->_cache[ $id ] = $data;
+					}
+				}
+			}
+			unset( $this->_cache_404[ $id ] );
+			return false;
 		}
 
 		$this->_cache[ $id ] = $data;
@@ -438,9 +446,11 @@ class WP_Object_Cache {
 			unset( $this->_cache_404[ $id ] );
 		}
 
-		if ( ! $this->_object_cache->is_non_persistent( $group ) ) {
-			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
-			$this->_object_cache->set( $id, serialize( [ 'data' => $data ] ), (int) $expire );
+		if ( $persistent ) {
+			if ( ! $backend ) {
+				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+				$this->_object_cache->set( $id, serialize( [ 'data' => $data ] ), $expire );
+			}
 			++$this->count_set;
 		}
 
@@ -483,8 +493,7 @@ class WP_Object_Cache {
 	 *
 	 * @param int|string $key   The key under which the cache contents are stored.
 	 * @param string     $group Optional. Where the cache contents are grouped. Default 'default'.
-	 * @param bool       $force Optional. Unused. Whether to force an update of the local cache
-	 *                          from the persistent cache. Default false.
+	 * @param bool       $force Optional. Force a backend lookup, including cached misses, for persistent groups.
 	 * @param bool       $found Optional. Whether the key was found in the cache (passed by reference).
 	 *                          Disambiguates a return of false, a storable value. Default null.
 	 * @return mixed|false The cache contents on success, false on failure to retrieve contents.
@@ -498,17 +507,29 @@ class WP_Object_Cache {
 			$group = 'default';
 		}
 
-		$id = $this->_key( $key, $group );
+		$id         = $this->_key( $key, $group );
+		$persistent = ! $this->_object_cache->is_non_persistent( $group );
 
 		$found       = false;
 		$found_in_oc = false;
 		$cache_val   = false;
 
-		if ( array_key_exists( $id, $this->_cache ) && ! $force ) {
+		// Force bypasses the runtime copy only when the backend can actually answer for this group.
+		$readable      = null;
+		$force_backend = false;
+		if ( $force && $persistent ) {
+			$readable      = $this->_backend_readable( $group );
+			$force_backend = $readable;
+		}
+
+		if ( array_key_exists( $id, $this->_cache ) && ! $force_backend ) {
 			$found     = true;
 			$cache_val = $this->_cache[ $id ];
 			++$this->count_hit_incall;
-		} elseif ( ! array_key_exists( $id, $this->_cache_404 ) && ! $this->_object_cache->is_non_persistent( $group ) ) {
+		} elseif ( $persistent && ( $force_backend || ! array_key_exists( $id, $this->_cache_404 ) ) ) {
+			if ( null === $readable ) {
+				$readable = $this->_backend_readable( $group );
+			}
 			$v = $this->_object_cache->get( $id, $group );
 
 			if ( false !== $v ) {
@@ -521,9 +542,22 @@ class WP_Object_Cache {
 				$found       = true;
 				$found_in_oc = true;
 				$cache_val   = $v['data'];
-			} else {
-				// Can't find key, cache it to 404.
+			} elseif ( ! $readable ) {
+				// Local miss (read bypass or backend unavailable): the runtime is empty here; record 404 as the cache-aside refill marker.
 				$this->_cache_404[ $id ] = 1;
+				++$this->count_miss;
+			} elseif ( false !== $v || $this->_object_cache->last_get_missed() ) {
+				// Confirmed miss (or an unreadable payload): drop the stale runtime copy and cache the 404.
+				unset( $this->_cache[ $id ] );
+				$this->_cache_404[ $id ] = 1;
+				++$this->count_miss;
+			} elseif ( array_key_exists( $id, $this->_cache ) ) {
+				// Read error on a forced lookup: keep the runtime copy and never cache a 404 for a failed read.
+				$found     = true;
+				$cache_val = $this->_cache[ $id ];
+				++$this->count_hit_incall;
+			} else {
+				// Read error without a runtime copy: report a miss without caching a 404.
 				++$this->count_miss;
 			}
 		} else {
@@ -536,11 +570,22 @@ class WP_Object_Cache {
 
 		if ( $found_in_oc ) {
 			$this->_cache[ $id ] = $cache_val;
+			unset( $this->_cache_404[ $id ] );
 		}
 
 		++$this->cache_total;
 
 		return $cache_val;
+	}
+
+	/**
+	 * Whether a backend read of this group may happen and the backend is currently usable.
+	 *
+	 * @param string $group Cache group name.
+	 * @return bool
+	 */
+	private function _backend_readable( $group ) {
+		return $this->_object_cache->can_read( $group ) && $this->_object_cache->usable();
 	}
 
 	/**
@@ -707,14 +752,17 @@ class WP_Object_Cache {
 	 * @since 1.8
 	 * @access public
 	 *
-	 * @return true Always returns true.
+	 * @return bool True when no backend is configured; otherwise whether the persistent cache was flushed.
 	 */
 	public function flush() {
 		$this->flush_runtime();
 
-		$this->_object_cache->flush();
+		// Without a configured backend the runtime cache is the whole cache; a configured backend that fails still reports false.
+		if ( ! $this->_object_cache->configured() ) {
+			return true;
+		}
 
-		return true;
+		return $this->_object_cache->flush();
 	}
 
 	/**

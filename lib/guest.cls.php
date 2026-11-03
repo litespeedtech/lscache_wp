@@ -92,7 +92,8 @@ class Guest {
 		}
 		$file = $dir . '/' . self::CONF_FILE_LEGACY;
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- No WP available
-		return is_file( $file ) ? json_decode( file_get_contents( $file ), true ) : false;
+		$data = is_file( $file ) ? json_decode( file_get_contents( $file ), true ) : false;
+		return is_array( $data ) ? $data : false;
 	}
 
 	/**
@@ -108,6 +109,14 @@ class Guest {
 		header( 'X-LiteSpeed-Cache-Control: no-cache' );
 		header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
 		header( 'Pragma: no-cache' );
+
+		// This endpoint does not bootstrap WordPress; a login-cookie hint must never receive anonymous vary.
+		foreach ( array_keys( $_COOKIE ) as $cookie_name ) {
+			if ( 0 === strpos( $cookie_name, 'wordpress_logged_in_' ) || ( ! empty( $this->_conf['logged_in_cookie'] ) && $cookie_name === $this->_conf['logged_in_cookie'] ) ) {
+				echo '[]';
+				exit;
+			}
+		}
 
 		if ( $this->always_guest() ) {
 			echo '[]';
@@ -129,7 +138,8 @@ class Guest {
 
 		$expire = time() + 2 * 86400;
 		$is_ssl = ! empty( $this->_conf[ self::O_UTIL_NO_HTTPS_VARY ] ) ? false : $this->is_ssl();
-		setcookie( self::$_vary_name, $vary, $expire, '/', false, $is_ssl, true );
+		$scope  = isset( $this->_conf['guest_cookie'] ) ? $this->_conf['guest_cookie'] : [ 'path' => '/', 'domain' => '' ];
+		setcookie( self::$_vary_name, $vary, $expire, $scope['path'], $scope['domain'], $is_ssl, true );
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode -- No WP available
 		echo json_encode( [ 'reload' => 'yes' ] );
@@ -321,7 +331,7 @@ class Guest {
 
 		$mask_bin = str_repeat( "\xff", $full_bytes );
 		if ( $rem_bits > 0 ) {
-			$mask_bin .= chr( 0xff << ( 8 - $rem_bits ) );
+			$mask_bin .= chr( ( 0xff << ( 8 - $rem_bits ) ) & 0xff );
 		}
 		$mask_bin = str_pad( $mask_bin, $byte_len, "\x00" );
 

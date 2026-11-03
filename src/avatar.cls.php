@@ -93,10 +93,14 @@ class Avatar extends Base {
 			return;
 		}
 
-		if ( strlen( $md5 ) !== 32 ) {
-			self::debug( '[Avatar] wrong md5 ' . $md5 );
+		if ( ! preg_match( '/\A(?:[1-9][0-9]*\/)?([a-f0-9]{32})(?:\.jpg)?\z/', $md5, $matches ) ) {
+			self::debug( '[Avatar] Invalid avatar hash path' );
 			return;
 		}
+		if ( false !== strpos( $md5, '/' ) && 0 !== strpos( $md5, get_current_blog_id() . '/' ) ) {
+			return;
+		}
+		$md5 = $matches[1];
 
 		$url = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
@@ -147,8 +151,8 @@ class Avatar extends Base {
 			return $this->_rewrite( $url, $mtime );
 		}
 
-		// Only handle gravatar or known remote avatar providers; keep generic check for "gravatar.com".
-		if ( strpos( $url, 'gravatar.com' ) === false ) {
+		$host = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
+		if ( 'gravatar.com' !== $host && '.gravatar.com' !== substr( $host, -13 ) ) {
 			return $url;
 		}
 
@@ -301,7 +305,7 @@ class Avatar extends Base {
 			]
 		);
 
-		$temp = File::download( $url, $file, 180 );
+		$temp = File::download( $url, $file, 10 );
 		self::debug( '[Avatar] _generate [url] ' . $url );
 		if ( is_wp_error( $temp ) ) {
 			self::debug( '[Avatar] failed to get: ' . $temp->get_error_code() );

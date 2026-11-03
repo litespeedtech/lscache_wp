@@ -74,16 +74,12 @@ class Database {
 		$this->current_blog = get_current_blog_id();
 		$blogid             = $args[1];
 		if ( !is_numeric( $blogid ) ) {
-			$error = WP_CLI::colorize( '%RError: invalid blog id entered.%n' );
-			WP_CLI::line( $error );
-			$this->network_list( $args );
+			WP_CLI::error( 'Invalid blog id entered.' );
 			return;
 		}
 		$site = get_blog_details( $blogid );
 		if ( false === $site ) {
-			$error = WP_CLI::colorize( '%RError: invalid blog id entered.%n' );
-			WP_CLI::line( $error );
-			$this->network_list( $args );
+			WP_CLI::error( 'Invalid blog id entered.' );
 			return;
 		}
 		switch_to_blog( $blogid );

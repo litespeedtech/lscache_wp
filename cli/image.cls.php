@@ -171,7 +171,9 @@ class Image {
 	 *     $ wp litespeed-image clean
 	 */
 	public function clean() {
-		$this->img_optm->clean();
+		if ( ! $this->img_optm->clean() ) {
+			WP_CLI::error( 'Could not clean unfinished image optimization data.' );
+		}
 
 		WP_CLI::line( WP_CLI::colorize( '%CLatest status:%n' ) );
 

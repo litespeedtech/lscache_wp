@@ -365,11 +365,19 @@ trait Cloud_Auth {
 	 * @return string
 	 */
 	public function qc_link() {
-		$data = [
-			'site_url' => site_url(),
-			'ver' => LSCWP_V,
-			'ref' => $this->_get_ref_url(),
+		$site_url = site_url();
+		$data     = [ 'wp_ts' => time() ];
+		// Bind the proof to this site and action; link signatures must not authorize manage.
+		$data['wp_signature_b64'] = $this->_sign_b64( "manage\n" . $site_url . "\n" . $data['wp_ts'] );
+		if ( false === $data['wp_signature_b64'] ) {
+			return $this->_cloud_server_dash;
+		}
+		$param = [
+			'site_url' => $site_url,
+			'ver'      => Core::VER,
+			'data'     => $data,
+			'ref'      => $this->_get_ref_url(),
 		];
-		return $this->_cloud_server_dash . '/u/wp3/manage?data=' . rawurlencode( Utility::arr2str( $data ) ); // . (!empty($this->_summary['is_linked']) ? '?wplogin=1' : '');
+		return $this->_cloud_server_dash . '/u/wp3/manage?data=' . rawurlencode( Utility::arr2str( $param ) );
 	}
 }

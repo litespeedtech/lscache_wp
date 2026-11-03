@@ -81,6 +81,10 @@ class Lang extends Base {
 			}
 			$tpl = $map[ $replacements[0] ];
 			unset( $replacements[0] );
+			// Both alias messages require the alias and primary domain.
+			if ( count( $replacements ) < 2 ) {
+				return $raw_string;
+			}
 			return vsprintf( $tpl, array_values( $replacements ) );
 		}
 

@@ -12,3 +12,7 @@ _stq
 # Cloudflare turnstile - Tobolo
 turnstile
 challenges.cloudflare.com
+
+# WordPress core hooks/i18n: inline `wp-i18n-js-after` and `*-js-translations` blocks call wp.i18n.setLocaleData() synchronously on every localized site - Tobolo
+wp-includes/js/dist/hooks
+wp-includes/js/dist/i18n

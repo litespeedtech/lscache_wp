@@ -22,12 +22,44 @@ class Conf extends Base {
 
 	const TYPE_SET = 'set';
 
+	/** Settings feeding the installation's shared object-cache and Guest files. */
+	private const SHARED_OPTIONS = [
+		self::O_OBJECT,
+		self::O_OBJECT_KIND,
+		self::O_OBJECT_HOST,
+		self::O_OBJECT_PORT,
+		self::O_OBJECT_USER,
+		self::O_OBJECT_PSWD,
+		self::O_OBJECT_DB_ID,
+		self::O_OBJECT_PERSISTENT,
+		self::O_OBJECT_ADMIN,
+		self::O_OBJECT_GLOBAL_GROUPS,
+		self::O_OBJECT_NON_PERSISTENT_GROUPS,
+		self::O_GUEST,
+		self::O_CACHE_LOGIN_COOKIE,
+		self::O_UTIL_NO_HTTPS_VARY,
+	];
+
+	/**
+	 * Set while a network-wide activation runs, since WordPress records the plugin as network-active only after the hook.
+	 *
+	 * @var bool
+	 */
+	public static $_network_activating = false;
+
 	/**
 	 * IDs that were updated during a save cycle.
 	 *
 	 * @var array<string|int,mixed>
 	 */
 	private $_updated_ids = [];
+
+	/**
+	 * Request-local forced values, retained across configuration reloads.
+	 *
+	 * @var array
+	 */
+	private $_forced_options = [];
 
 	/**
 	 * Whether current blog is the network primary site.
@@ -104,8 +136,15 @@ class Conf extends Base {
 			if ( Core::VER !== $ver ) {
 				// Plugin version will be set inside
 				// Site plugin upgrade & version change will do in load_site_conf
-				$ver_check_tag     = Data::cls()->conf_upgrade( $ver );
-				$upgrade_completed = 'upgrade' === $ver_check_tag;
+				if ( did_action( 'wp_loaded' ) ) {
+					$ver_check_tag     = Data::cls()->conf_upgrade( $ver );
+					$upgrade_completed = 'upgrade' === $ver_check_tag;
+				} else {
+					// Third-party vary hooks must exist before upgrading shared rewrite rules.
+					add_action( 'wp_loaded', function () {
+						$this->_conf_db_init();
+					}, 3 );
+				}
 			}
 		}
 
@@ -144,6 +183,7 @@ class Conf extends Base {
 		 * Override conf if is network subsites and chose `Use Primary Config`
 		 */
 		$this->_try_load_site_options();
+		$this->load_shared_options();
 
 		// Check if debug is on
 		// Init debug as early as possible
@@ -158,7 +198,12 @@ class Conf extends Base {
 
 		if ( ! $ver || ( Core::VER !== $ver && $upgrade_completed ) ) {
 			// Only trigger once in upgrade progress, don't run always
-			$this->update_confs(); // Files only get corrected in activation or saving settings actions.
+			if ( ! did_action( 'wp_loaded' ) ) {
+				// New installations must finish WordPress initialization before detecting integrations and writing files.
+				add_action( 'wp_loaded', [ $this, 'update_confs' ], 3, 0 );
+			} else {
+				$this->update_confs();
+			}
 		}
 	}
 
@@ -198,6 +243,9 @@ class Conf extends Base {
 			$this->set_primary_conf( $options );
 		} else {
 			$this->set_conf( $options );
+			foreach ( $this->_forced_options as $key => $value ) {
+				$this->set_conf( $key, $value );
+			}
 		}
 
 		// Append const options
@@ -209,6 +257,122 @@ class Conf extends Base {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Whether shared runtime settings follow the primary network, which applies only while the plugin is (being) network-activated.
+	 *
+	 * A per-site or MU-plugin install keeps the v7.9.1 per-site behaviour. Not cached because it changes inside the activation request.
+	 *
+	 * @since 7.9.2
+	 * @return bool
+	 */
+	public static function shares_network_settings() {
+		if ( ! is_multisite() ) {
+			return false;
+		}
+		if ( self::$_network_activating ) {
+			return true;
+		}
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once ABSPATH . '/wp-admin/includes/plugin.php';
+		}
+		return is_plugin_active_for_network( Core::PLUGIN_FILE );
+	}
+
+	/**
+	 * Check authority to change settings that feed shared runtime files and cookies.
+	 *
+	 * @param string $id      Option ID.
+	 * @param bool   $network Whether the caller is saving network settings.
+	 * @return bool
+	 */
+	public function can_update_shared( $id, $network = false ) {
+		if ( ! self::shares_network_settings() || ! in_array( $id, self::SHARED_OPTIONS, true ) ) {
+			return true;
+		}
+		$owner = get_main_network_id();
+		if ( $network ) {
+			$owns_settings = get_current_network_id() === $owner;
+		} else {
+			// Existing network settings remain authoritative; their site-level copies must not pretend to save.
+			$owns_settings = get_current_blog_id() === get_main_site_id( $owner ) && null === get_network_option( $owner, self::name( $id ), null );
+		}
+		return $owns_settings && ( defined( 'LITESPEED_CLI' ) || current_user_can( 'manage_network_options' ) );
+	}
+
+	/**
+	 * Refresh the installation-primary settings without overriding site-specific hashes.
+	 *
+	 * @return void
+	 */
+	public function load_shared_options() {
+		if ( ! self::shares_network_settings() ) {
+			return;
+		}
+		$owner    = get_main_network_id();
+		$primary  = get_main_site_id( $owner );
+		$switched = get_current_blog_id() !== $primary;
+		if ( $switched ) {
+			switch_to_blog( $primary );
+		}
+		try {
+			$values = [];
+			foreach ( self::SHARED_OPTIONS as $id ) {
+				$value = \get_option( self::name( $id ), self::$_default_options[ $id ] );
+				$value = get_network_option( $owner, self::name( $id ), $value );
+				if ( is_array( self::$_default_options[ $id ] ) ) {
+					$value = self::_maybe_decode( $value );
+				}
+				$values[ $id ] = $this->type_casting( $value, $id );
+			}
+		} finally {
+			if ( $switched ) {
+				restore_current_blog();
+			}
+		}
+		foreach ( $values as $id => $value ) {
+			// Retain Root's existing primary-override precedence; a different per-site force cannot change shared files.
+			$this->set_primary_conf( $id, $value );
+			$this->set_network_conf( $id, $value );
+		}
+	}
+
+	/**
+	 * Read a network setting from the primary network, for installation-wide files written while network settings are shared.
+	 *
+	 * @since 7.9.2
+	 * @param string $id Network option ID.
+	 * @return mixed
+	 */
+	public function owner_network_conf( $id ) {
+		$value = get_network_option( get_main_network_id(), self::name( $id ), self::$_default_site_options[ $id ] );
+		return $this->type_casting( $value, $id, true );
+	}
+
+	/**
+	 * Read the primary blog's HASH on multisite, adding it only when absent.
+	 *
+	 * @param int $blog_id Owning blog ID.
+	 * @return string Empty when the stored value is empty or invalid.
+	 */
+	public static function ensure_blog_hash( $blog_id ) {
+		$switched = get_current_blog_id() !== (int) $blog_id;
+		if ( $switched ) {
+			switch_to_blog( $blog_id );
+		}
+		try {
+			$hash = self::get_option( self::HASH, false );
+			if ( false === $hash ) {
+				self::add_option( self::HASH, Str::rrand( 32 ) );
+				$hash = self::get_option( self::HASH, '' );
+			}
+		} finally {
+			if ( $switched ) {
+				restore_current_blog();
+			}
+		}
+		return is_string( $hash ) ? $hash : '';
 	}
 
 	/**
@@ -278,20 +442,8 @@ class Conf extends Base {
 			return false;
 		}
 
-		// Check if needs to use site_options or not
-		// todo: check if site settings are separate bcos it will affect .htaccess
-
-		/**
-		 * In case this is called outside the admin page
-		 *
-		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
-		 * @since  2.0
-		 */
-		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once ABSPATH . '/wp-admin/includes/plugin.php';
-		}
 		// If is not activated on network, it will not have site options
-		if ( ! is_plugin_active_for_network( Core::PLUGIN_FILE ) ) {
+		if ( ! self::shares_network_settings() ) {
 			if ( self::VAL_ON2 === (int) $this->conf( self::O_CACHE ) ) {
 				// Default to cache on
 				$this->set_conf( self::_CACHE, true );
@@ -331,7 +483,14 @@ class Conf extends Base {
 		$upgrade_completed = false;
 		if ( $ver && Core::VER !== $ver ) {
 			// Site plugin version will change inside
-			$upgrade_completed = Data::cls()->conf_site_upgrade( $ver );
+			if ( did_action( 'wp_loaded' ) ) {
+				$upgrade_completed = Data::cls()->conf_site_upgrade( $ver );
+			} else {
+				add_action( 'wp_loaded', function () {
+					$this->_try_load_site_options();
+					$this->load_shared_options();
+				}, 3 );
+			}
 		}
 
 		/**
@@ -407,6 +566,8 @@ class Conf extends Base {
 		}
 
 		$v = $this->type_casting( $v, $k );
+
+		$this->_forced_options[ $k ] = $v;
 
 		if ( $this->conf( $k ) === $v ) {
 			return;
@@ -503,6 +664,11 @@ class Conf extends Base {
 					$this->cls( 'Crawler' )->clear_disabled_list();
 				}
 			}
+
+			// CCSS queue keys depend on these options, old entries can not be used anymore and would still spend quota
+			if ( array_intersect( [ self::O_OPTM_CCSS_PER_URL, self::O_OPTM_CCSS_SEP_POSTTYPE, self::O_OPTM_CCSS_SEP_URI ], $this->_updated_ids ) ) {
+				$this->cls( 'CSS' )->clear_q( 'ccss', true );
+			}
 		}
 
 		do_action( 'litespeed_update_confs', $the_matrix );
@@ -540,12 +706,19 @@ class Conf extends Base {
 	 * @return void
 	 */
 	public function update( $id, $val ) {
+		if ( ! $this->can_update_shared( $id ) ) {
+			if ( $this->type_casting( $val, $id ) === $this->conf( $id ) ) {
+				return;
+			}
+			Admin_Display::error( __( 'Shared settings must be changed by a network administrator in the primary site or network settings.', 'litespeed-cache' ) );
+			return;
+		}
 		// Bypassed this bcos $this->_options could be changed by force_option()
 		// if ( $this->_options[ $id ] === $val ) {
 		// return;
 		// }
 
-		if ( self::_VER === $id ) {
+		if ( in_array( $id, [ self::HASH, self::_VER ], true ) ) {
 			return;
 		}
 
@@ -581,9 +754,33 @@ class Conf extends Base {
 
 		// Validate type
 		$val = $this->type_casting( $val, $id );
+		if ( self::O_CDN_MAPPING === $id ) {
+			if ( is_multisite() && ! defined( 'LITESPEED_CLI' ) && $val !== $this->type_casting( $this->conf( $id ), $id ) && ! current_user_can( 'unfiltered_html' ) && ! current_user_can( 'manage_network_options' ) ) {
+				Admin_Display::error( __( 'Changing CDN mappings requires permission to manage network options or unfiltered HTML.', 'litespeed-cache' ) );
+				return;
+			}
+			foreach ( $val as $row ) {
+				if ( ! is_array( $row ) || ( ! empty( $row[ self::CDN_MAPPING_URL ] ) && ! CDN::valid_mapping_url( $row[ self::CDN_MAPPING_URL ] ) ) ) {
+					Admin_Display::error( __( 'Invalid CDN URL. CDN mappings were not saved.', 'litespeed-cache' ) );
+					return;
+				}
+			}
+		}
+		if ( self::O_CRAWLER_ROLES === $id ) {
+			foreach ( $val as $k => $user_id ) {
+				if ( user_can( $user_id, 'edit_posts' ) ) {
+					Admin_Display::error( __( 'Crawler role simulation cannot use a user who can edit posts.', 'litespeed-cache' ) );
+					unset( $val[ $k ] );
+				}
+			}
+			$val = array_values( $val );
+		}
 
 		// Save data
-		self::update_option( $id, $val );
+		if ( ! self::update_option( $id, $val ) ) {
+			Admin_Display::error( __( 'Could not save the setting. The previous value remains in use.', 'litespeed-cache' ) );
+			return;
+		}
 
 		// Handle purge if setting changed
 		if ( $this->conf( $id ) !== $val ) {
@@ -618,6 +815,13 @@ class Conf extends Base {
 	 * @return void
 	 */
 	public function network_update( $id, $val ) {
+		if ( ! $this->can_update_shared( $id, true ) ) {
+			if ( $this->type_casting( $val, $id ) === $this->network_conf( $id ) ) {
+				return;
+			}
+			Admin_Display::error( __( 'Shared settings must be changed by an administrator of the primary network.', 'litespeed-cache' ) );
+			return;
+		}
 		if ( ! array_key_exists( $id, self::$_default_site_options ) ) {
 			if ( defined( 'LSCWP_LOG' ) ) {
 				Debug2::debug( '[Conf] Invalid network option ID ' . $id );
@@ -650,7 +854,10 @@ class Conf extends Base {
 		}
 
 		// Save data
-		self::update_site_option( $id, $val );
+		if ( ! self::update_site_option( $id, $val ) ) {
+			Admin_Display::error( __( 'Could not save the network setting. The previous value remains in use.', 'litespeed-cache' ) );
+			return;
+		}
 
 		// Handle purge if setting changed
 		if ( $this->network_conf( $id ) !== $val ) {
@@ -710,7 +917,7 @@ class Conf extends Base {
 		 *      3. If replace the array setting with multi lines value, use 2 then 1.
 		 */
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput
-		$raw = !empty( $_GET[ self::TYPE_SET ] ) ? $_GET[ self::TYPE_SET ] : false;
+		$raw = !empty( $_GET[ self::TYPE_SET ] ) ? wp_unslash( $_GET[ self::TYPE_SET ] ) : false;
 		if ( !$raw || ! is_array( $raw ) ) {
 			return;
 		}
@@ -726,11 +933,9 @@ class Conf extends Base {
 			if ( is_array( $v ) && is_array( $this->conf( $id ) ) ) {
 				$v = array_merge( $this->conf( $id ), $v );
 
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
-				Debug2::debug( '[Conf] Appended to settings [' . $id . ']: ' . var_export( $v, true ) );
+				Debug2::debug( '[Conf] Appended to setting [' . $id . ']' );
 			} else {
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
-				Debug2::debug( '[Conf] Set setting [' . $id . ']: ' . var_export( $v, true ) );
+				Debug2::debug( '[Conf] Set setting [' . $id . ']' );
 			}
 
 			$the_matrix[ $id ] = $v;

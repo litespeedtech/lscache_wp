@@ -39,8 +39,9 @@ defined( 'WPINC' ) || exit;
 		if ( $this->conf( Base::O_CACHE_MOBILE ) ) {
 			if ( defined( 'LITESPEED_ON' ) ) {
 				try {
-					$mobile_agents = Htaccess::cls()->current_mobile_agents();
-					if ( Utility::arr2regex( $this->conf( $cid ), true ) !== $mobile_agents ) {
+					$expected_agents = Utility::arr2regex( Htaccess::cls()->filter_list( $this->conf( $cid ), Htaccess::PATTERN_REGEX_LITERAL, $cid, false ), true );
+					$mobile_agents   = Htaccess::cls()->current_mobile_agents( '' === $expected_agents );
+					if ( $expected_agents !== $mobile_agents ) {
 						?>
 						<div class="litespeed-callout notice notice-error inline">
 							<p>

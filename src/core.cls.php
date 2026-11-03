@@ -56,6 +56,13 @@ class Core extends Root {
 	private $footer_comment = '';
 
 	/**
+	 * Whether the registry has been loaded and its integrations detected in this request.
+	 *
+	 * @var bool
+	 */
+	private static $_thirdparty_loaded = false;
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -66,10 +73,6 @@ class Core extends Root {
 	 */
 	public function __construct() {
 		! defined( 'LSCWP_TS_0' ) && define( 'LSCWP_TS_0', microtime( true ) );
-		// Purge before configuration or cloud summaries can be loaded from the previous environment's OC.
-		if ( defined( 'LSCWP_OBJECT_CACHE' ) && LSCWP_OBJECT_CACHE ) {
-			$this->cls( 'Object_Cache' )->purge_on_environment_change();
-		}
 		$this->cls( 'Conf' )->init();
 
 		/**
@@ -90,15 +93,17 @@ class Core extends Root {
 		}
 
 		/**
-		 * Register plugin activate/deactivate/uninstall hooks
+		 * Register plugin activate/deactivate hooks
 		 * NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed
+		 *
+		 * Uninstall runs from uninstall.php: register_uninstall_hook() reads the non-autoloaded
+		 * `uninstall_plugins` option on every call, which cost one query per page view here.
 		 *
 		 * @since 2.7.1 Disabled admin&CLI check to make frontend able to enable cache too
 		 */
 		$plugin_file = LSCWP_DIR . 'litespeed-cache.php';
 		register_activation_hook( $plugin_file, [ __NAMESPACE__ . '\Activation', 'register_activation' ] );
 		register_deactivation_hook( $plugin_file, [ __NAMESPACE__ . '\Activation', 'register_deactivation' ] );
-		register_uninstall_hook( $plugin_file, __NAMESPACE__ . '\Activation::uninstall_litespeed_cache' );
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// Register purge_all actions
@@ -149,7 +154,7 @@ class Core extends Root {
 				$this->http_header( $purge_queue );
 				Debug2::debug( '[Core] Purge2 Queue found&sent: ' . $purge_queue );
 			}
-			// An upgrade queues this during Conf::init(); keep it for a later request in case this response aborts.
+			// When Conf::init() upgrades synchronously (Core built after wp_loaded, e.g. activation), keep the queued row for a later request.
 			if ( '-1' !== $purge_queue && ! ( defined( 'LSCWP_UPGRADE_PURGE_QUEUED' ) && Purge::UPGRADE_PURGE_HEADER === $purge_queue ) ) {
 				Purge::update_option( Purge::DB_QUEUE2, '-1' );
 			}
@@ -211,6 +216,7 @@ class Core extends Root {
 		do_action( 'litespeed_initing' );
 
 		ob_start( [ $this, 'send_headers_force' ] );
+		add_filter( 'litespeed_buffer_after', [ $this, 'drop_query_strings' ], 99 );
 		add_action( 'shutdown', [ $this, 'send_headers' ], 0 );
 		add_action( 'wp_footer', [ $this, 'footer_hook' ] );
 
@@ -241,7 +247,9 @@ class Core extends Root {
 		add_action( 'init', [ $this, 'after_user_init' ], 5 );
 
 		// Load 3rd party hooks
-		add_action( 'wp_loaded', [ $this, 'load_thirdparty' ], 2 );
+		if ( defined( 'LITESPEED_ON' ) ) {
+			add_action( 'wp_loaded', [ $this, 'load_thirdparty' ], 2 );
+		}
 	}
 
 	/**
@@ -251,6 +259,8 @@ class Core extends Root {
 	 */
 	public function after_user_init() {
 		$this->cls( 'Router' )->is_role_simulation();
+		// Excluded roles bypass Optimize::init(), but still need a separate page-cache identity.
+		add_filter( 'litespeed_vary', [ $this, 'vary_add_role_exclude' ] );
 
 		// Detect if is Guest mode or not
 		$this->cls( 'Vary' )->after_user_init();
@@ -309,6 +319,19 @@ class Core extends Root {
 	}
 
 	/**
+	 * Partition optimized and role-excluded page responses even when optimization is bypassed.
+	 *
+	 * @param array $vary Current vary components.
+	 * @return array
+	 */
+	public function vary_add_role_exclude( $vary ) {
+		if ( $this->cls( 'Conf' )->in_optm_exc_roles() ) {
+			$vary['role_exclude_optm'] = 1;
+		}
+		return $vary;
+	}
+
+	/**
 	 * Run frontend actions
 	 *
 	 * @since 1.1.0
@@ -351,7 +374,7 @@ class Core extends Root {
 				$msg = $this->cls( 'Router' )->handler( $action );
 				break;
 		}
-		if ( $msg && ! Router::is_ajax() ) {
+		if ( $msg && ! Router::is_ajax() && ! defined( 'LITESPEED_CLI' ) ) {
 			Admin_Display::add_notice( Admin_Display::NOTICE_GREEN, $msg );
 			Admin::redirect();
 			return;
@@ -369,8 +392,14 @@ class Core extends Root {
 	 *
 	 * @since 1.0.5
 	 */
-	public function load_thirdparty() {
+	public static function load_thirdparty() {
+		if ( self::$_thirdparty_loaded ) {
+			return;
+		}
+		// Activation or OFF-to-ON saves can run after wp_loaded without the normal cache-enabled bootstrap.
+		include_once LSCWP_DIR . 'thirdparty/entry.inc.php';
 		do_action( 'litespeed_load_thirdparty' );
+		self::$_thirdparty_loaded = true;
 	}
 
 	/**
@@ -428,6 +457,8 @@ class Core extends Root {
 		$buffer = trim( $buffer );
 
 		$buffer = File::remove_zero_space( $buffer );
+		// Ignore only document-leading format characters; preserve them in CSS, JS and body content.
+		$buffer = preg_replace( '/\A(?:\s|\xE2\x80[\x8B-\x8D])+/', '', $buffer );
 
 		$is_html = 0 === stripos( $buffer, '<html' ) || 0 === stripos( $buffer, '<!DOCTYPE' );
 
@@ -469,8 +500,8 @@ class Core extends Root {
 		 * CDN
 		 */
 		if ( ! defined( 'LITESPEED_NO_OPTM' ) || ! LITESPEED_NO_OPTM ) {
-			// Optimax: first priority check — skip all hooks if ox HTML is cached
-			$ox_html = $this->cls( 'Optimax' )->serve();
+			// Optimax: first priority check — skip all hooks if ox HTML is cached. Checked here: building Optimax reads its summary option.
+			$ox_html = $this->conf( Base::O_OPTIMAX ) ? $this->cls( 'Optimax' )->serve() : false;
 			if ( false !== $ox_html ) {
 				Debug2::debug( '[Core] Optimax served, skip litespeed_buffer_finalize' );
 				define( 'LITESPEED_OX_SERVED', true );
@@ -549,6 +580,69 @@ class Core extends Root {
 		Debug2::ended();
 
 		return $buffer;
+	}
+
+	/**
+	 * Remove ignored query arguments from quoted current-page URLs in cacheable output.
+	 * Request input and other URLs are preserved.
+	 *
+	 * @since 7.9.2
+	 * @param string $buffer Final response body.
+	 * @return string
+	 */
+	public function drop_query_strings( $buffer ) {
+		if ( ! defined( 'LITESPEED_ON' ) || ! Control::is_cacheable() || empty( $_SERVER['REQUEST_URI'] ) ||
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Existing public hook.
+			( defined( 'DONOTCACHEPAGE' ) && apply_filters( 'litespeed_const_DONOTCACHEPAGE', DONOTCACHEPAGE ) ) ) {
+			return $buffer;
+		}
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Raw URL comparison; only removes arguments.
+		$request_uri = wp_unslash( $_SERVER['REQUEST_URI'] );
+		$uri         = explode( '?', $request_uri, 2 );
+		if ( ! isset( $uri[1] ) || '' === $uri[1] ) {
+			return $buffer;
+		}
+		// Use the same option values as the cache-key rules.
+		$options  = $this->get_options();
+		$patterns = [];
+		foreach ( (array) $options[ Base::O_CACHE_DROP_QS ] as $rule ) {
+			if ( ! is_string( $rule ) ) {
+				continue;
+			}
+			$rule = trim( $rule );
+			if ( '' === $rule ) {
+				continue;
+			}
+			// CacheKeyModify uses case-sensitive names and a trailing '*' prefix.
+			$prefix     = '*' === substr( $rule, -1 );
+			$patterns[] = preg_quote( $prefix ? substr( $rule, 0, -1 ) : $rule, '/' ) . ( $prefix ? '' : '(?:=|&|\z)' );
+		}
+		if ( ! $patterns ) {
+			return $buffer;
+		}
+		$pattern = '/\A(?:' . implode( '|', $patterns ) . ')/';
+		$parts   = preg_split( '/(?<=&)/', $uri[1], -1, PREG_SPLIT_NO_EMPTY );
+		$kept    = [];
+		foreach ( $parts as $part ) {
+			if ( ! preg_match( $pattern, $part ) ) {
+				$kept[] = $part;
+			}
+		}
+		$query = implode( '', $kept );
+		if ( $query === $uri[1] ) {
+			return $buffer;
+		}
+		$query = '&' === substr( $query, -1 ) ? substr( $query, 0, -1 ) : $query;
+		$map   = [];
+		foreach ( [ get_self_link(), $request_uri ] as $source ) {
+			$target = explode( '?', $source, 2 )[0] . ( '' !== $query ? '?' . $query : '' );
+			foreach ( [ [ $source, $target ], [ esc_url( $source ), esc_url( $target ) ], [ esc_attr( $source ), esc_attr( $target ) ] ] as $urls ) {
+				foreach ( [ '"', "'" ] as $quote ) {
+					$map[ $quote . $urls[0] . $quote ] = $quote . $urls[1] . $quote;
+				}
+			}
+		}
+		return strtr( $buffer, $map );
 	}
 
 	/**
@@ -646,7 +740,7 @@ class Core extends Root {
 		if ( defined( 'LITESPEED_ON' ) && defined( 'LSCWP_LOG' ) ) {
 			$vary = $this->cls( 'Vary' )->finalize_full_varies();
 			if ( $vary ) {
-				self::debug( 'Full varies digest: ' . md5( $vary ) );
+				$this->comment( 'Full varies: ' . $vary );
 			}
 		}
 
@@ -692,24 +786,30 @@ class Core extends Root {
 
 		// If CLI and contains Purge Header, issue an HTTP request to Purge
 		if ( defined( 'LITESPEED_CLI' ) ) {
-			$purge_queue = Purge::get_option( Purge::DB_QUEUE );
-			if ( ! $purge_queue || '-1' === $purge_queue ) {
-				$purge_queue = Purge::get_option( Purge::DB_QUEUE2 );
-			}
-			if ( $purge_queue && '-1' !== $purge_queue ) {
-				self::debug( '[Core] Purge Queue found, issue an HTTP request to purge: ' . $purge_queue );
-				// Kick off HTTP request
-				$url  = admin_url( 'admin-ajax.php' );
-				$resp = wp_safe_remote_get( $url );
-				if ( is_wp_error( $resp ) ) {
-					$error_message = $resp->get_error_message();
-					self::debug( '[URL]' . $url );
-					self::debug( 'failed to request: ' . $error_message );
-				} else {
-					self::debug( 'HTTP request response: ' . $resp['body'] );
-				}
-			}
+			self::kick_purge_queue();
 		}
+	}
+
+	/**
+	 * Trigger the current blog's stored purge headers before a CLI caller leaves that blog.
+	 *
+	 * @return bool Whether the HTTP kick succeeded or there was no pending queue.
+	 */
+	public static function kick_purge_queue() {
+		$purge_queue = Purge::get_option( Purge::DB_QUEUE );
+		if ( ! $purge_queue || '-1' === $purge_queue ) {
+			$purge_queue = Purge::get_option( Purge::DB_QUEUE2 );
+		}
+		if ( ! $purge_queue || '-1' === $purge_queue ) {
+			return true;
+		}
+		// A WP_Error yields code 0.
+		$code = (int) wp_remote_retrieve_response_code( wp_safe_remote_get( admin_url( 'admin-ajax.php' ) ) );
+		if ( ! $code || $code >= 500 ) {
+			self::debug( 'Failed to kick the current blog purge queue.' );
+			return false;
+		}
+		return true;
 	}
 
 	/**

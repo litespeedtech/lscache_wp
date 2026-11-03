@@ -25,6 +25,9 @@ try {
 
 $htaccess_path = Htaccess::get_frontend_htaccess();
 
+// Blocks left by v7.9.1 in an ancestor .htaccess are outside the managed roots; point them out on every view.
+Htaccess::cls()->notice_orphan_rules( true );
+
 // Check for `ExpiresDefault` in .htaccess when LiteSpeed is enabled
 if ( defined( 'LITESPEED_ON' ) && $content && stripos( $content, "\nExpiresDefault" ) !== false ) {
 	$is_dismissed = GUI::get_option( self::DB_DISMISS_MSG );

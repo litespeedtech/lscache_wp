@@ -91,6 +91,7 @@ class Cloudflare extends Base {
 
 		// update status
 		self::update_option(self::ITEM_STATUS, $curr_status);
+		return true;
 	}
 
 	/**
@@ -201,7 +202,10 @@ class Cloudflare extends Base {
 
 		// Try exact match first
 		if ($kw && false !== strpos($kw, '.')) {
-			$zones = $this->cloudflare_call($url . '&name=' . $kw, 'GET', false, false);
+			$zones = $this->cloudflare_call($url . '&name=' . rawurlencode( $kw ), 'GET', false, false);
+			if ( false === $zones ) {
+				return false;
+			}
 			if ($zones) {
 				Debug2::debug('[Cloudflare] fetch_zone exact matched');
 				return $zones[0];

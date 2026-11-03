@@ -14,6 +14,9 @@ defined('WPINC') || exit();
 
 class Optimizer extends Root {
 
+	// Remote asset HTTP statuses treated as permanent: the asset is skipped instead of failing the whole combine.
+	const PERMANENT_FAIL_STATUSES = [ 404, 410 ];
+
 	private $_conf_css_font_display;
 
 	/**
@@ -78,7 +81,7 @@ class Optimizer extends Root {
 	 * @since  1.9
 	 * @access public
 	 */
-	public function serve( $request_url, $file_type, $minify, $src_list ) {
+	public function serve( $request_url, $file_type, $minify, $src_list, $is_delayed = false ) {
 		// Try Unique CSS
 		if ($file_type == 'css') {
 			$content = false;
@@ -143,13 +146,17 @@ class Optimizer extends Root {
 				// Load file
 				$content = $this->load_file($src_info['src'], $file_type);
 
-				if (!$content) {
+				if ( false === $content ) {
+					wp_delete_file( $tmp_static_file );
+					return false;
+				}
+				if ( '' === $content ) {
 					continue;
 				}
 
 				$is_min = $this->is_min($src_info['src']);
 			}
-			$content = $this->optm_snippet($content, $file_type, $minify && !$is_min, $src_info['src'], !empty($src_info['media']) ? $src_info['media'] : false);
+			$content = $this->optm_snippet($content, $file_type, $minify && !$is_min, $src_info['src'], !empty($src_info['media']) ? $src_info['media'] : false, $is_delayed);
 			// Write to file. Bail out on write failure (disk full / permission / etc.) so a partial tmp does not get hashed and persisted.
 			if (File::save($tmp_static_file, $content, true, true) === false) {
 				Debug2::debug('[Optmer] File::save append failed, aborting: ' . $tmp_static_file);
@@ -240,7 +247,7 @@ class Optimizer extends Root {
 	 *
 	 * @since  4.0
 	 */
-	public function optm_snippet( $content, $file_type, $minify, $src, $media = false ) {
+	public function optm_snippet( $content, $file_type, $minify, $src, $media = false, $is_delayed = false ) {
 		// CSS related features
 		if ($file_type == 'css') {
 			// Font optimize
@@ -269,6 +276,9 @@ class Optimizer extends Root {
 			}
 
 			$content .= "\n;";
+			if ( $is_delayed ) {
+				$content = str_replace( 'DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $content );
+			}
 		}
 
 		// Add filter
@@ -291,14 +301,21 @@ class Optimizer extends Root {
 			File::rrmdir($to_be_deleted_folder);
 		}
 
-		$today_file = $folder_name . date('Ymd') . '/' . md5($url);
+		$today_file = $folder_name . date('Ymd') . '/' . md5($url) . '.' . ( 'js' === $file_type ? 'js' : 'css' );
 		if (file_exists($today_file)) {
 			return File::read($today_file);
 		}
 
 		$temp = File::download($url, $today_file);
 		if (is_wp_error($temp)) {
-			Debug2::debug2('[Optimizer] ❌ Load Remote error [code] ' . $temp->get_error_code());
+			$err_code = $temp->get_error_code();
+			$err_data = $temp->get_error_data();
+			// Only definite permanent failures (404/410 or an empty body) are skipped; transient, network, disk and oversize failures keep the whole group on its original resources.
+			if ( ( File::E_HTTP === $err_code && in_array( (int) $err_data, self::PERMANENT_FAIL_STATUSES, true ) ) || ( File::E_DATA === $err_code && 'empty' === $err_data ) ) {
+				Debug2::debug('[Optimizer] skip permanently failing asset [status] ' . ( File::E_HTTP === $err_code ? (int) $err_data : 'empty' ) . ' [url] ' . $url);
+				return '';
+			}
+			Debug2::debug2('[Optimizer] ❌ Load Remote error [code] ' . $err_code);
 			return false;
 		}
 
@@ -326,7 +343,7 @@ class Optimizer extends Root {
 			$this_url = substr($src, 0, 2) == '//' ? set_url_scheme($src) : $src;
 			$con      = $this->load_cached_file($this_url, $file_type);
 
-			if ($file_type == 'css') {
+			if ( false !== $con && $file_type == 'css' ) {
 				$dirname = dirname($this_url) . '/';
 
 				$con = Lib\UriRewriter::prepend($con, $dirname);
@@ -335,7 +352,7 @@ class Optimizer extends Root {
 			Debug2::debug2('[CSS] Load local [' . $file_type . '] ' . $real_file[0]);
 			$con = File::read($real_file[0]);
 
-			if ($file_type == 'css') {
+			if ( false !== $con && $file_type == 'css' ) {
 				$dirname = dirname($real_file[0]);
 
 				$con = Lib\UriRewriter::rewrite($con, $dirname);
@@ -353,7 +370,12 @@ class Optimizer extends Root {
 	 */
 	public static function minify_css( $data ) {
 		try {
-			$obj = new Lib\CSS_JS_MIN\Minify\CSS();
+			// The caller supplies content, never a path for the minifier to open.
+			$obj = new class() extends Lib\CSS_JS_MIN\Minify\CSS {
+				protected function canImportFile( $path ) {
+					return false;
+				}
+			};
 			$obj->add($data);
 
 			return $obj->minify();
@@ -383,7 +405,12 @@ class Optimizer extends Root {
 		}
 
 		try {
-			$obj = new Lib\CSS_JS_MIN\Minify\JS();
+			// The caller supplies content, never a path for the minifier to open.
+			$obj = new class() extends Lib\CSS_JS_MIN\Minify\JS {
+				protected function canImportFile( $path ) {
+					return false;
+				}
+			};
 			$obj->add($data);
 
 			return $obj->minify();

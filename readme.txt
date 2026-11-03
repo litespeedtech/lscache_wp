@@ -4,7 +4,7 @@ Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cac
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 7.9.1
+Stable tag: 7.9.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -265,30 +265,43 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
-= 7.9.2 - Coming soon 2026 =
-* **Object Cache** Namespaced cache keys by installation identity to reduce collisions on shared cache backends.
-* **Image Optimize** Kept the scan cursor unchanged when cleanup finds no unfinished images.
-* **Database Optimize** Limited table optimization and its count to the current site's tables, and safely quoted table names for InnoDB conversion.
-* **Task** Kept asynchronous request tokens out of debug logs and compared them with constant-time checks.
-* **Debug** Removed the default trusted loopback IP for new installations.
-* **CLI** Required HTTPS for remote option imports and removed their temporary files after use.
-* **Purge** Queued page-cache invalidation before marking a plugin upgrade complete and preserved it for the next request.
-* **CDN** Kept the saved Cloudflare zone when an API lookup fails and cleared it when a successful lookup returns no active zones. (nathaningram)
-* **Cache** Added a rewrite guard for REST requests with HTTP credentials and made authenticated REST responses hard no-cache, including under Force Public. (Ionut Platon #419630)
-* **3rd** Checked product editing permissions and request data before WooCommerce Advanced Bulk Edit cache purges.
-* **3rd** Bypassed page cache for WooCommerce Store API requests and purged each edited product once per Advanced Bulk Edit request.
-* **3rd** Required site settings permission before saving WCML crawler options.
-* **LQIP** Validated image paths and used hashed paths for images outside the upload directory when storing placeholders.
-* **Media** Limited missing image dimension checks to local files by default, with remote checks available through a filter.
-* **VPI** Validated attribute names and escaped attribute values when rebuilding image markup.
-* **Debug** Restricted beta update packages to trusted sources and kept temporary update entries out of the shared update cache.
-* **Conf** Moved runtime configuration to a PHP-protected file and updated Guest Mode and Object Cache to read it.
-* **Object Cache** Automatically purged object cache when switching between QUIC.cloud development and live environments.
-* **Conf** Validated settings written to .htaccess to prevent directive injection.
-* **Presets** Prevented path traversal, isolated automatic backups by site in guarded PHP files, excluded sensitive settings from new backups, and added a reminder to manually remove the legacy backup directory.
-* **Cache** Prevented authenticated responses from being cached under an incorrect visitor context.
-* **Crawler** Hardened the role simulation hash check and removed the unused flash hash path. (#866256)
-* **Debug** Kept cache vary values and URL tags hashed when debug logging is enabled, and removed cookie values from page comments.
+= 7.9.3 - Coming soon 2026 =
+* **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)
+* **Core** Moved uninstall handling to uninstall.php to avoid unnecessary option reads on normal requests. (Contributolo PR#1078)
+* **Purge** Added the litespeed_purged action for public purge tag additions. (Contributolo PR#1072)
+* **Page Optimize** Prioritized the front page in CCSS, UCSS, VPI and OptiMax queues and corrected queue capacity handling. (Faisal Ahammad PR#1064)
+* **Guest Mode** Fixed PHP 8.5 deprecation warnings in CIDR checks. (deltafactory PR#1080)
+* **Conf** Fixed WooCommerce option warnings with shared multisite settings. (lhero-org #1077, dassels43)
+* **Page Optimize** Kept CSS/JS optimization on pages with a very large inline style or script block that previously exceeded the PCRE limit and skipped optimization. (ventio, PR#1081)
+* **Crawler** Limited automatic HTTP fallback to connection failures during the Server IP HTTPS test. (unsetfocus #1074)
+* **Core** Fixed constant rewrites of the shared static folder .htaccess on subdirectory multisite. (#869638)
+* **Purge** Fixed excessive cache purges from non-public custom post types. (markhysted #1044, models118)
+* **Purge** Updating a post or product no longer purges every other post of the same type when Purge Post Type Archive is enabled. (John-belt #310, models118)
+
+= 7.9.2 - Oct 20 2026 =
+* **Image Optimize** Fixed thumbnails skipped for images in the uploads root. (AsFLY-902 PR#1059)
+* **Cloud** Retry credit sync after one hour when credit is exhausted.
+* **Cache** URI rules like `Do Not Cache URIs` now ignore a leading or trailing `*`, so `/wp-json/mcp/*` matches the same as `/wp-json/mcp/`. (#1040)
+* **Page Optimize** Protected HTML boundaries during resource rewriting, insertion and minification. Hardened delayed-script globals, preserved pages on parsing errors, and corrected Deferred ordering. Removed JS Delayed Includes and its public filter; global Delayed mode remains available. Improved Instant Click CDN compatibility.
+* **Media** Corrected next-gen image variants, lazy-load priorities and VPI markup, and protected quoted content, raw text and noscript fallbacks. Validated LQIP and avatar paths, and made remote dimension checks opt-in.
+* **Cache** Hardened visitor isolation, vary cookies, Guest Mode and cache-control permissions, including Force Public safeguards for private and authenticated responses. Corrected ignored query strings, exclusions and purge scheduling, and restricted shared-cache management to network administrators. (Ionut Platon #419630)
+* **Image Optimize** Corrected callback accounting, duplicate detection, scan cursors and metadata handling. Preserved offload hooks and reported failed clean/reset writes.
+* **Conf** Protected site identity and shared multisite settings, moved runtime configuration to a PHP-protected file, and improved import validation and .htaccess updates. Synchronized shared Guest settings and preserved runtime overrides during upgrades. Shared multisite settings now require network activation.
+* **Presets** Prevented path traversal, isolated backups by site in protected PHP files, excluded secrets from new backups, and added a legacy-backup cleanup reminder.
+* **Object Cache** Corrected Add/Replace conditions, forced reads, Redis/Memcached connections, timeouts, TTLs and flush results. Improved drop-in cleanup and disabled status, preserved runtime fallback, and removed the unused lifetime field. Isolated cache keys per installation.
+* **ESI** Hardened request signatures and cleanup markers, made WooCommerce nonce fragments private by default, and preserved shortcode attributes. Clarified private-content requirements.
+* **Cloud** Restricted service nodes to trusted QUIC.cloud origins and preserved replay protection. Corrected nonce parsing, site throttling and dashboard data, escaped free-text notices, and restricted news/dashboard markup.
+* **CDN** Prevented HTML injection during inline CSS URL rewriting, validated mapping URLs, and preserved Cloudflare zones after failed lookups. (nathaningram)
+* **Crawler** Restricted sitemap origins and role simulation, hardened hash checks, and corrected mobile/Guest variants and request isolation. Preserved successful child sitemaps and the previous map on total failure. (#866256)
+* **CLI** Corrected local and multisite URL purges, required HTTPS imports, validated blog IDs, preserved nested option values, and limited sync output to usage data.
+* **Database Optimize** Scoped table operations to the site's table prefix and safely quoted identifiers. Preserved recent auto drafts, bounded cleanup, invalidated caches, added confirmations, and reported cleanup and conversion failures. Restricted multisite management to network administrators.
+* **Debug** Restricted beta packages to trusted sources, protected logs, and redacted credentials from logs, reports and page comments while preserving useful diagnostics. Removed the default trusted loopback IP.
+* **Task** Isolated asynchronous tokens by job type, used constant-time validation, and excluded tokens from logs.
+* **Purge** Corrected unpublished-post and empty-archive purges, preserved encoded paths, and prevented site cron from flushing shared backends.
+* **3rd** Corrected WooCommerce and NextGEN purges, protected unvaried cart responses, and validated bulk-edit and WCML settings permissions.
+* **3rd** WCML: guests in the shop currency now use the default cache, and the crawler warms it. (#1057)
+* **Core** Hardened file writes, admin output and static asset headers, replaced React and Babel with plain jQuery/JavaScript forms, and improved installation, upgrade and uninstall handling.
+* **Localization** Validated resource patterns while preserving comments, limited remote JavaScript downloads to 10 seconds, cleaned failed downloads, and restored HTTPS fallback redirects.
 
 = 7.9.1 - Sep 1 2026 =
 * **Core** Aligned the runtime PHP and WordPress guards with the published minimum requirements.

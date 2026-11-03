@@ -51,9 +51,9 @@ trait Cloud_Misc {
 
 		// Try to update dash content
 		$data = self::post( self::SVC_D_DASH, [ 'action2' => ( 'cdn_dash_mini' === $type ? 'cdn_dash' : $type ) ] );
-		if ( ! empty( $data['qc_activated'] ) ) {
+		if ( ! empty( $data['qc_activated'] ) && in_array( $data['qc_activated'], [ 'anonymous', 'linked', 'cdn', 'deleted' ], true ) ) {
 			// Sync conf as changed
-			if ( empty( $this->_summary['qc_activated'] ) || $this->_summary['qc_activated'] !== $data['qc_activated'] ) {
+			if ( 'cdn' === $data['qc_activated'] && ( empty( $this->_summary['qc_activated'] ) || $this->_summary['qc_activated'] !== $data['qc_activated'] ) ) {
 				$msg = sprintf( __( 'Congratulations, %s successfully set this domain up for the online services with CDN service.', 'litespeed-cache' ), 'QUIC.cloud' );
 				Admin_Display::success( '🎊 ' . $msg );
 				$this->_clear_reset_qc_reg_msg();
@@ -62,8 +62,12 @@ trait Cloud_Misc {
 				$this->cls( 'CDN\Quic' )->try_sync_conf( true );
 			}
 
-			$this->_summary['qc_activated'] = $data['qc_activated'];
-			$this->save_summary();
+			if ( 'deleted' === $data['qc_activated'] ) {
+				$this->_reset_qc_reg();
+			} else {
+				$this->_summary['qc_activated'] = $data['qc_activated'];
+				$this->save_summary();
+			}
 		}
 
 		// Show the info
@@ -81,6 +85,11 @@ trait Cloud_Misc {
 	 */
 	public function check_dev_version() {
 		if ( ! preg_match( '/[^\d\.]/', Core::VER ) ) {
+			return;
+		}
+
+		// The banner's upgrade button runs a network-only action, so subsite administrators cannot use it.
+		if ( is_multisite() && ! current_user_can( 'manage_network_options' ) ) {
 			return;
 		}
 
@@ -221,11 +230,30 @@ trait Cloud_Misc {
 	 * @return int
 	 */
 	public function allowance( $service, &$err = false ) {
-		// Only auto sync usage at most one time per day
-		if ( empty( $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] ) || time() - (int) $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] > 86400 ) {
+		$allowance    = $this->_cached_allowance( $service, $err );
+		$last_request = (int) ( $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] ?? 0 );
+		$interval     = DAY_IN_SECONDS;
+		if ( ! $allowance ) {
+			// Recheck exhausted credit on demand; a failed usage request also starts the hourly interval.
+			$interval     = HOUR_IN_SECONDS;
+			$last_request = max( $last_request, (int) ( $this->_summary[ 'curr_request.' . self::SVC_D_USAGE ] ?? 0 ) );
+		}
+		if ( ! $last_request || time() - $last_request >= $interval ) {
 			$this->sync_usage();
+			$allowance = $this->_cached_allowance( $service, $err );
 		}
 
+		return $allowance;
+	}
+
+	/**
+	 * Calculate allowance from cached usage without issuing a cloud request.
+	 *
+	 * @param string      $service Service.
+	 * @param string|bool $err     Error code by ref.
+	 * @return int
+	 */
+	private function _cached_allowance( $service, &$err ) {
 		if ( in_array( $service, [ self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI ], true ) ) {
 			// @since 4.2
 			$service = self::SVC_PAGE_OPTM;
@@ -282,7 +310,7 @@ trait Cloud_Misc {
 	 */
 	public function sync_usage() {
 		$usage = $this->_post( self::SVC_D_USAGE );
-		if ( ! $usage ) {
+		if ( ! is_array( $usage ) || ! $usage ) {
 			return;
 		}
 
@@ -399,7 +427,7 @@ trait Cloud_Misc {
 	 * @access private
 	 */
 	private function _clear_promo() {
-		if ( count( $this->_summary['promo'] ) > 1 ) {
+		if ( isset( $this->_summary['promo'] ) && is_array( $this->_summary['promo'] ) && count( $this->_summary['promo'] ) > 1 ) {
 			array_shift( $this->_summary['promo'] );
 		} else {
 			$this->_summary['promo'] = [];

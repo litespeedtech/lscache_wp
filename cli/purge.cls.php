@@ -10,7 +10,6 @@ namespace LiteSpeed\CLI;
 defined( 'WPINC' ) || exit();
 
 use LiteSpeed\Core;
-use LiteSpeed\Router;
 use LiteSpeed\Admin_Display;
 use WP_CLI;
 
@@ -46,27 +45,18 @@ class Purge {
 	}
 
 	/**
-	 * Sends an AJAX request to the site.
+	 * Dispatch a purge through the loaded plugin instance.
 	 *
 	 * @param string $action The action to perform.
 	 * @param array  $extra  Additional data to include in the request.
-	 * @return object The HTTP response.
+	 * @return void
 	 * @since 1.0.14
 	 */
-	private function send_request( $action, $extra = array() ) {
-		$data = array(
-			Router::ACTION => $action,
-			Router::NONCE => wp_create_nonce( $action ),
-		);
-		if ( ! empty( $extra ) ) {
-			$data = array_merge( $data, $extra );
-		}
-
-		$url = admin_url( 'admin-ajax.php' );
-		WP_CLI::debug( 'URL is ' . $url );
-
-		$out = WP_CLI\Utils\http_request( 'GET', $url, $data );
-		return $out;
+	private function dispatch( $action, $extra = [] ) {
+		// WP-CLI invokes this method directly; no browser request or nonce is involved.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$_REQUEST = array_merge( $_REQUEST, $extra );
+		Core::cls()->proceed_action( $action );
 	}
 
 	/**
@@ -80,12 +70,19 @@ class Purge {
 	public function all() {
 		$action = is_multisite() ? Core::ACTION_QS_PURGE_EMPTYCACHE : Core::ACTION_QS_PURGE_ALL;
 
-		$purge_ret = $this->send_request( $action );
+		$this->dispatch( $action );
+		$this->kick_or_fail();
+		WP_CLI::success( __( 'Purge all sent to the web server.', 'litespeed-cache' ) );
+	}
 
-		if ( $purge_ret->success ) {
-			WP_CLI::success( __( 'Purged All!', 'litespeed-cache' ) );
-		} else {
-			WP_CLI::error( 'Something went wrong! Got ' . $purge_ret->status_code );
+	/**
+	 * Deliver the queued purge to the web server now; a failed delivery keeps the queue and exits with an error.
+	 *
+	 * @since 7.9.2
+	 */
+	private function kick_or_fail() {
+		if ( ! Core::kick_purge_queue() ) {
+			WP_CLI::error( 'Could not notify the web server to purge.' );
 		}
 	}
 
@@ -128,12 +125,14 @@ class Purge {
 
 		switch_to_blog( $blogid );
 
-		$purge_ret = $this->send_request( Core::ACTION_QS_PURGE_ALL );
-		if ( $purge_ret->success ) {
-			WP_CLI::success( __( 'Purged the blog!', 'litespeed-cache' ) );
-		} else {
-			WP_CLI::error( 'Something went wrong! Got ' . $purge_ret->status_code );
+		try {
+			$this->dispatch( Core::ACTION_QS_PURGE_ALL );
+			// Kick on the target blog so its own queue and endpoint are used before restoring.
+			$this->kick_or_fail();
+		} finally {
+			restore_current_blog();
 		}
+		WP_CLI::success( __( 'Blog purge sent to the web server.', 'litespeed-cache' ) );
 	}
 
 	/**
@@ -152,20 +151,23 @@ class Purge {
 	 * @param array $args Positional arguments (URL).
 	 */
 	public function url( $args ) {
-		$data          = array(
-			Router::ACTION => Core::ACTION_QS_PURGE,
-		);
 		$url           = $args[0];
 		$deconstructed = wp_parse_url( $url );
-		if ( empty( $deconstructed ) ) {
+		if ( empty( $deconstructed['host'] ) ) {
 			WP_CLI::error( 'URL passed in is invalid.' );
 			return;
 		}
 
+		$switched = false;
 		if ( is_multisite() ) {
-			if ( 0 === get_blog_id_from_url( $deconstructed['host'], '/' ) ) {
+			$site = get_site_by_path( $deconstructed['host'], isset( $deconstructed['path'] ) ? $deconstructed['path'] : '/' );
+			if ( ! $site ) {
 				WP_CLI::error( 'Multisite URL passed in is invalid.' );
 				return;
+			}
+			if ( get_current_blog_id() !== (int) $site->blog_id ) {
+				switch_to_blog( $site->blog_id );
+				$switched = true;
 			}
 		} else {
 			$deconstructed_site = wp_parse_url( get_home_url() );
@@ -177,12 +179,17 @@ class Purge {
 
 		WP_CLI::debug( 'URL is ' . $url );
 
-		$purge_ret = WP_CLI\Utils\http_request( 'GET', $url, $data );
-		if ( $purge_ret->success ) {
-			WP_CLI::success( __( 'Purged the URL!', 'litespeed-cache' ) );
-		} else {
-			WP_CLI::error( 'Something went wrong! Got ' . $purge_ret->status_code );
+		try {
+			if ( ! \LiteSpeed\Purge::cls()->purge_url( $url ) || ! Core::kick_purge_queue() ) {
+				WP_CLI::error( 'Could not purge the URL.' );
+				return;
+			}
+		} finally {
+			if ( $switched ) {
+				restore_current_blog();
+			}
 		}
+		WP_CLI::success( __( 'Purged the URL!', 'litespeed-cache' ) );
 	}
 
 	/**
@@ -202,7 +209,7 @@ class Purge {
 			$term = $callback( $val );
 			if ( ! empty( $term ) ) {
 				WP_CLI::line( $term->name );
-				$filtered[] = in_array( $callback, array( 'get_tag', 'get_category' ), true ) ? $term->name : $val;
+				$filtered[] = in_array( $callback, [ 'get_tag', 'get_category' ], true ) ? $term->slug : $val;
 			} else {
 				WP_CLI::debug( '[LSCACHE] Skip val, not a valid term. ' . $val );
 			}
@@ -229,12 +236,9 @@ class Purge {
 			Admin_Display::PURGEBYOPT_LIST   => $str,
 		);
 
-		$purge_ret = $this->send_request( Core::ACTION_PURGE_BY, $data );
-		if ( $purge_ret->success ) {
-			WP_CLI::success( __( 'Purged!', 'litespeed-cache' ) );
-		} else {
-			WP_CLI::error( 'Something went wrong! Got ' . $purge_ret->status_code );
-		}
+		$this->dispatch( Core::ACTION_PURGE_BY, $data );
+		$this->kick_or_fail();
+		WP_CLI::success( __( 'Purge sent to the web server.', 'litespeed-cache' ) );
 	}
 
 	/**

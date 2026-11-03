@@ -41,33 +41,33 @@ $guest_update_url = wp_parse_url( LSWCP_PLUGIN_URL . GUI::PHP_GUEST, PHP_URL_PAT
 				<script>
 					(function ($) {
 						jQuery(document).ready(function () {
-							$.post( '<?php echo esc_js( $guest_update_url ); ?>', function(data){
+							$.post( <?php echo wp_json_encode( $guest_update_url, Str::JSON_HTML_FLAGS ); ?>, function(data){
 								if ( data === '[]' || data === '{"reload":"yes"}' ) {
-									$('#litespeed_gm_status').html('<font class="litespeed-success"><?php esc_html_e( 'Guest Mode passed testing.', 'litespeed-cache' ); ?></font>');
+									$('#litespeed_gm_status').html('<font class="litespeed-success"><?php echo esc_js( __( 'Guest Mode passed testing.', 'litespeed-cache' ) ); ?></font>');
 								}
 								else {
-									$('#litespeed_gm_status').html('<font class="litespeed-danger"><?php esc_html_e( 'Guest Mode failed to test.', 'litespeed-cache' ); ?></font>');
+									$('#litespeed_gm_status').html('<font class="litespeed-danger"><?php echo esc_js( __( 'Guest Mode failed to test.', 'litespeed-cache' ) ); ?></font>');
 								}
 							}).fail( function(){
-								$('#litespeed_gm_status').html('<font class="litespeed-danger"><?php esc_html_e( 'Guest Mode failed to test.', 'litespeed-cache' ); ?></font>');
+								$('#litespeed_gm_status').html('<font class="litespeed-danger"><?php echo esc_js( __( 'Guest Mode failed to test.', 'litespeed-cache' ) ); ?></font>');
 							});
 
 							// Sync Guest Mode IP/UA lists
 							$.ajax({
-								url: '<?php echo esc_url( rest_url( 'litespeed/v1/guest/sync' ) ); ?>',
+								url: <?php echo wp_json_encode( rest_url( 'litespeed/v1/guest/sync' ), Str::JSON_HTML_FLAGS ); ?>,
 								dataType: 'json',
 								beforeSend: function(xhr) {
 									xhr.setRequestHeader('X-WP-Nonce', '<?php echo esc_js( wp_create_nonce( 'wp_rest' ) ); ?>');
 								},
 								success: function(data) {
 									if (data && data.success) {
-										$('#litespeed_gm_sync_status').html('<font class="litespeed-success"><?php esc_html_e( 'Synced successfully.', 'litespeed-cache' ); ?></font>');
+										$('#litespeed_gm_sync_status').html('<font class="litespeed-success"><?php echo esc_js( __( 'Synced successfully.', 'litespeed-cache' ) ); ?></font>');
 									} else {
-										$('#litespeed_gm_sync_status').html('<font class="litespeed-warning"><?php esc_html_e( 'Sync failed.', 'litespeed-cache' ); ?></font>');
+										$('#litespeed_gm_sync_status').html('<font class="litespeed-warning"><?php echo esc_js( __( 'Sync failed.', 'litespeed-cache' ) ); ?></font>');
 									}
 								},
 								error: function() {
-									$('#litespeed_gm_sync_status').html('<font class="litespeed-warning"><?php esc_html_e( 'Sync failed.', 'litespeed-cache' ); ?></font>');
+									$('#litespeed_gm_sync_status').html('<font class="litespeed-warning"><?php echo esc_js( __( 'Sync failed.', 'litespeed-cache' ) ); ?></font>');
 								}
 							});
 						});

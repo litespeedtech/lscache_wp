@@ -29,7 +29,7 @@ class NextGenGallery {
 	public static function preload() {
 		add_action('ngg_added_new_image', __CLASS__ . '::add_image');
 		add_action('ngg_ajax_image_save', __CLASS__ . '::update_image');
-		add_action('ngg_delete_picture', __CLASS__ . '::delete_image');
+		add_action('ngg_delete_picture', __CLASS__ . '::delete_image', 10, 2);
 		add_action('ngg_moved_images', __CLASS__ . '::move_image', 10, 3);
 		add_action('ngg_copied_images', __CLASS__ . '::copy_image', 10, 3);
 		add_action('ngg_generated_image', __CLASS__ . '::gen_image');
@@ -52,12 +52,11 @@ class NextGenGallery {
 	 * @return void
 	 */
 	public static function add_image( $image ) {
-		if (!$image || !method_exists($image, 'get_gallery')) {
+		if ( ! is_object( $image ) ) {
 			return;
 		}
-		$gallery = $image->get_gallery();
-		if ($gallery && $gallery->pageid) {
-			do_action('litespeed_purge', self::CACHETAG_GALLERIES . $gallery->pageid);
+		if ( ! empty( $image->galleryid ) ) {
+			do_action('litespeed_purge', self::CACHETAG_GALLERIES . $image->galleryid);
 		}
 	}
 
@@ -113,13 +112,16 @@ class NextGenGallery {
 	 * Purge cache when an image is deleted.
 	 *
 	 * @since 1.0.5
+	 * @param int         $image_id Deleted image ID.
+	 * @param object|null $image    Image supplied by the deletion hook, when available.
 	 * @return void
 	 */
-	public static function delete_image() {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( isset( $_GET['gid'] ) ) {
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . sanitize_key( wp_unslash( $_GET['gid'] ) ) );
+	public static function delete_image( $image_id, $image = null ) {
+		if ( $image && ! empty( $image->galleryid ) ) {
+			do_action( 'litespeed_purge', self::CACHETAG_GALLERIES . $image->galleryid );
+		} else {
+			// XML-RPC passes only the ID after the image row is deleted, so its gallery is unknown.
+			do_action( 'litespeed_purge_all' );
 		}
 	}
 

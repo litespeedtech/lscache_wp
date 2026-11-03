@@ -131,12 +131,9 @@ class Admin_Settings extends Base {
 							}
 
 							if ( self::CDN_MAPPING_URL === $child ) {
-								// If not a valid URL, turn off CDN.
-								if ( 0 !== strpos( $v, 'https://' ) ) {
-									self::debug( '❌ CDN mapping set to OFF due to invalid URL' );
-									$the_matrix[ self::O_CDN ] = false;
+								if ( '' !== $v ) {
+									$v = trailingslashit( $v );
 								}
-								$v = trailingslashit( $v );
 							}
 
 							if ( in_array( $child, [ self::CDN_MAPPING_INC_IMG, self::CDN_MAPPING_INC_CSS, self::CDN_MAPPING_INC_JS ], true ) ) {
@@ -215,7 +212,7 @@ class Admin_Settings extends Base {
 					}
 					$data = $data2;
 					break;
-					
+
 				case self::O_IMG_OPTM_SIZES_SKIPPED: // Skip image sizes
 					$image_sizes = Utility::prepare_image_sizes_array();
 					$saved_sizes = isset( $raw_data[$id] ) ? $raw_data[$id] : [];

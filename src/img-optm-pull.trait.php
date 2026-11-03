@@ -86,13 +86,36 @@ trait Img_Optm_Pull {
 			return false;
 		}
 
-		$src = ltrim( wp_normalize_path( $row->src ), '/' );
+		// Legacy rows of uploads-root thumbnails carry a leading `./`; only whole leading `./` segments are dropped, so the strict check below still rejects `../`, `./../` and inner dot segments.
+		$src = ltrim( self::normalize_src( $row->src ), '/' );
 		if ( '' === $src || preg_match( '#(^|/)\.{1,2}(/|$)#', $src ) ) {
 			return false;
 		}
 
 		$file = trailingslashit( $this->wp_upload_dir['basedir'] ) . $src;
 		return Img::local_file( apply_filters( 'litespeed_realpath', $file ) );
+	}
+
+	/**
+	 * Normalize an uploads-relative image src: normalize separators, then strip whole leading `./` segments.
+	 *
+	 * `../` and inner dot segments are left untouched so the caller's path checks still reject them.
+	 *
+	 * @since 7.9.2
+	 *
+	 * @param mixed $src Uploads-relative path.
+	 * @return string Normalized path, or an empty string for a non-string input.
+	 */
+	public static function normalize_src( $src ) {
+		if ( ! is_string( $src ) ) {
+			return '';
+		}
+
+		$src = wp_normalize_path( $src );
+		while ( 0 === strpos( $src, './' ) ) {
+			$src = substr( $src, 2 );
+		}
+		return $src;
 	}
 
 	/**
