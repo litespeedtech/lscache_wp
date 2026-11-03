@@ -4,7 +4,7 @@ Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cac
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 7.9.2
+Stable tag: 7.9.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -276,7 +276,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Crawler** Limited automatic HTTP fallback to connection failures during the Server IP HTTPS test. (unsetfocus #1074)
 * **Core** Fixed constant rewrites of the shared static folder .htaccess on subdirectory multisite. (#869638)
 * **Purge** Fixed excessive cache purges from non-public custom post types. (markhysted #1044, models118)
-* **Purge** Updating a post or product no longer purges every other post of the same type when Purge Post Type Archive is enabled. (John-belt #310, models118)
+* **Purge** Purge Post Type Archive now purges only the post type archive page (e.g. the Shop page), instead of also purging every post of that type. (John-belt #310, models118)
 * **Cloud** Signed the QUIC.cloud link request.
 * **Cloud** Cleared the stored main domain when the QUIC.cloud registration is reset, so a deactivated site no longer reports itself as an alias of an old domain.
 * **Heartbeat** Kept the configured interval on post lists and editors. (#1082)
