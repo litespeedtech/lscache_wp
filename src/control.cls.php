@@ -844,7 +844,7 @@ class Control extends Root {
 			return false;
 		}
 
-		$tokens = preg_split( '/[\s,]+/', strtolower( sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_LSCACHE_VARY_VALUE'] ) ) ), -1, PREG_SPLIT_NO_EMPTY );
+		$tokens = preg_split( '/[+\s,]+/', strtolower( sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_LSCACHE_VARY_VALUE'] ) ) ), -1, PREG_SPLIT_NO_EMPTY );
 		return in_array( 'ismobile', $tokens, true );
 	}
 
