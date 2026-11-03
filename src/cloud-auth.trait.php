@@ -337,6 +337,7 @@ trait Cloud_Auth {
 				'sk_b64'      => '',
 				'qc_activated' => '',
 				'partner'      => '',
+				'main_domain'  => '',
 			],
 			true
 		);

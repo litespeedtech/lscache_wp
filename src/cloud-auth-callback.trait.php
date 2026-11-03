@@ -607,6 +607,7 @@ trait Cloud_Auth_Callback {
 			[
 				'qc_activated' => '',
 				'partner'      => '',
+				'main_domain'  => '',
 			],
 			true
 		);

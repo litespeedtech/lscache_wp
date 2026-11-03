@@ -49,7 +49,7 @@ class Perfmatters {
 
 		$priority = has_action('shutdown', 'perfmatters_script_manager');
 
-		if ($priority !== false) {
+		if (false !== $priority) {
 			remove_action('shutdown', 'perfmatters_script_manager', $priority);
 			do_action('litespeed_debug', 'Disable Perfmatters script manager on ESI request');
 		}

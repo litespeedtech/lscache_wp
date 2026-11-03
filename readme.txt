@@ -265,7 +265,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
-= 7.9.3 - Coming soon 2026 =
+= 7.9.3 - Nov 3 2026 =
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)
 * **Core** Moved uninstall handling to uninstall.php to avoid unnecessary option reads on normal requests. (Contributolo PR#1078)
 * **Purge** Added the litespeed_purged action for public purge tag additions. (Contributolo PR#1072)
@@ -277,6 +277,11 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Core** Fixed constant rewrites of the shared static folder .htaccess on subdirectory multisite. (#869638)
 * **Purge** Fixed excessive cache purges from non-public custom post types. (markhysted #1044, models118)
 * **Purge** Updating a post or product no longer purges every other post of the same type when Purge Post Type Archive is enabled. (John-belt #310, models118)
+* **Cloud** Signed the QUIC.cloud link request.
+* **Cloud** Cleared the stored main domain when the QUIC.cloud registration is reset, so a deactivated site no longer reports itself as an alias of an old domain.
+* **Heartbeat** Kept the configured interval on post lists and editors. (#1082)
+* **3rd** Perfmatters script manager no longer disables ESI site-wide; it is now skipped only on ESI requests. (VIP PR#1055)
+* **Cache** Fixed mobile cache vary detection behind LiteSpeed ADC on Apache origins. (PR#1088)
 
 = 7.9.2 - Oct 20 2026 =
 * **Image Optimize** Fixed thumbnails skipped for images in the uploads root. (AsFLY-902 PR#1059)
