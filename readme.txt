@@ -266,6 +266,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
 = 7.9.4 - Coming soon 2026 =
+* **Object Cache** Flush Redis or Memcached once after it was unreachable, so values changed during the outage are not served stale. (PR#1069)
 * **GUI** Fixed a dark mode flash on load when light mode is chosen in the plugin but the system prefers dark. (RyansGit PR#983)
 
 = 7.9.3 - Nov 3 2026 =

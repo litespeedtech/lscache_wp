@@ -26,18 +26,17 @@ class Object_Cache extends Root {
 	/**
 	 * Local marker left by a request that could not update the backend; the next connection flushes.
 	 *
-	 * @since 7.9.2
+	 * @since 7.9.4
 	 */
 	const STALE_MARKER_FILE = '.litespeed_oc_stale';
 
 	/**
 	 * Whether this request already left the stale marker.
 	 *
-	 * @since 7.9.2
+	 * @since 7.9.4
 	 * @var bool
 	 */
 	private $_stale_marked = false;
-
 
 	/**
 	 * Debug option key.
@@ -862,8 +861,8 @@ class Object_Cache extends Root {
 		} else {
 			// Memcached treats expirations above 30 days as Unix timestamps.
 			$res = $this->_conn->$method( $key, $data, $ttl > 30 * DAY_IN_SECONDS ? time() + $ttl : $ttl );
-			// Memcached reports a dead server as false too; only a refused add/replace is a normal outcome.
-			if ( false === $res && ! in_array( $this->_conn->getResultCode(), [ \Memcached::RES_NOTSTORED, \Memcached::RES_DATA_EXISTS ], true ) ) {
+			// Only an unreachable server leaves skipped writes; a refused item (e.g. too large) must not flush the backend.
+			if ( false === $res && $this->_mem_unreachable() ) {
 				$this->_mark_stale();
 			}
 		}
@@ -928,7 +927,7 @@ class Object_Cache extends Root {
 			}
 		} else {
 			$res = $this->_conn->delete( $key );
-			if ( ! $res && \Memcached::RES_NOTFOUND !== $this->_conn->getResultCode() ) {
+			if ( ! $res && $this->_mem_unreachable() ) {
 				$this->_mark_stale();
 			}
 		}
@@ -1003,7 +1002,7 @@ class Object_Cache extends Root {
 	 * so the backend would serve the old values for good (a stale `session_tokens` logs users out).
 	 * A local file marks it; the marker cannot live in the backend that was unreachable.
 	 *
-	 * @since 7.9.2
+	 * @since 7.9.4
 	 * @access private
 	 *
 	 * @return void
@@ -1023,9 +1022,40 @@ class Object_Cache extends Root {
 	}
 
 	/**
+	 * Whether the last Memcached call failed because the server could not be reached, not because it refused the item.
+	 *
+	 * RES_CONNECTION_SOCKET_CREATE_FAILURE is left out: libmemcached aliases it to MEMCACHED_ERROR, a server `ERROR` reply.
+	 *
+	 * @since 7.9.4
+	 * @access private
+	 *
+	 * @return bool
+	 */
+	private function _mem_unreachable() {
+		return in_array(
+			$this->_conn->getResultCode(),
+			[
+				\Memcached::RES_HOST_LOOKUP_FAILURE,
+				\Memcached::RES_CONNECTION_FAILURE,
+				\Memcached::RES_CONNECTION_BIND_FAILURE,
+				\Memcached::RES_WRITE_FAILURE,
+				\Memcached::RES_READ_FAILURE,
+				\Memcached::RES_UNKNOWN_READ_FAILURE,
+				\Memcached::RES_NO_SERVERS,
+				\Memcached::RES_ERRNO,
+				\Memcached::RES_FAIL_UNIX_SOCKET,
+				\Memcached::RES_TIMEOUT,
+				\Memcached::RES_SERVER_MARKED_DEAD,
+				\Memcached::RES_SERVER_TEMPORARILY_DISABLED,
+			],
+			true
+		);
+	}
+
+	/**
 	 * Stale marker path: the plugin's data folder, or wp-content before that folder exists.
 	 *
-	 * @since 7.9.2
+	 * @since 7.9.4
 	 * @access private
 	 *
 	 * @return string
@@ -1044,7 +1074,7 @@ class Object_Cache extends Root {
 	 * (users, site options), so the whole network starts over, as with Purge All.
 	 * Removing the marker first lets concurrent requests flush only once.
 	 *
-	 * @since 7.9.2
+	 * @since 7.9.4
 	 * @access private
 	 *
 	 * @return bool False when the flush failed; the connection is then dropped for this request.
