@@ -265,6 +265,9 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
+= 7.9.4 - Coming soon 2026 =
+* **GUI** Fixed a dark mode flash on load when light mode is chosen in the plugin but the system prefers dark. (RyansGit PR#983)
+
 = 7.9.3 - Nov 3 2026 =
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)
 * **Core** Moved uninstall handling to uninstall.php to avoid unnecessary option reads on normal requests. (Contributolo PR#1078)

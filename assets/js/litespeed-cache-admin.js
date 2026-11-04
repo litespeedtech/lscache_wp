@@ -357,11 +357,10 @@ function litespeed_init_dark_mode() {
 	// Only add toggle on LiteSpeed pages
 	if (window.location.search.indexOf('page=litespeed') === -1) return;
 
-	// Mirror the saved preference into a cookie so PHP can stamp the body class
-	// on first paint (prevents the dark flash when localStorage says "light").
+	// Mirror the saved preference into an admin-path cookie so PHP can stamp the body class on first paint.
 	function litespeed_set_dark_cookie(value) {
-		var base = 'litespeed-dark-preference=' + (value || '') + '; path=/; SameSite=Lax';
-		document.cookie = base + '; max-age=' + (value ? 31536000 : 0);
+		var secure = window.location.protocol === 'https:' ? '; Secure' : '';
+		document.cookie = 'litespeed-dark-preference=' + value + '; path=' + window.location.pathname.replace(/(network\/)?[^\/]*$/, '') + '; SameSite=Lax' + secure + '; max-age=' + (value ? 31536000 : 0);
 	}
 	// Back-fill the cookie for existing users whose preference is still localStorage-only.
 	var _savedPref = localStorage.getItem('litespeed-dark-preference');
