@@ -24,6 +24,7 @@ $third_cls = array(
 	'Caldera_Forms',
 	'Divi_Theme_Builder',
 	'Facetwp',
+	'Kadence_Blocks',
 	'LiteSpeed_Check',
 	'Theme_My_Login',
 	'User_Switching',
