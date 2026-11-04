@@ -110,6 +110,13 @@ class Placeholder extends Base {
 	private $_ph_queue = [];
 
 	/**
+	 * Whether the summary has been read in this request (see _load_summary()).
+	 *
+	 * @var bool
+	 */
+	private $_summary_loaded = false;
+
+	/**
 	 * Init
 	 *
 	 * @since 3.0
@@ -124,8 +131,24 @@ class Placeholder extends Base {
 		$this->_conf_placeholder_resp_async = $this->conf( self::O_MEDIA_PLACEHOLDER_RESP_ASYNC );
 		$this->_conf_placeholder_resp_color = $this->conf( self::O_MEDIA_PLACEHOLDER_RESP_COLOR );
 		$this->_conf_ph_default             = $this->conf(self::O_MEDIA_LAZY_PLACEHOLDER) ? $this->conf(self::O_MEDIA_LAZY_PLACEHOLDER) : LITESPEED_PLACEHOLDER;
+	}
 
-		$this->_summary = self::get_summary();
+	/**
+	 * Read the summary on first use.
+	 *
+	 * Core::init() builds this class on every request, but only placeholder generation needs the summary.
+	 * Until a placeholder has been generated once, the option does not exist and is not autoloaded, so
+	 * reading it in the constructor cost one query on every uncached page view.
+	 *
+	 * @since 7.9.4
+	 * @return void
+	 */
+	private function _load_summary() {
+		if ( $this->_summary_loaded ) {
+			return;
+		}
+		$this->_summary        = self::get_summary();
+		$this->_summary_loaded = true;
 	}
 
 	/**
@@ -348,6 +371,7 @@ class Placeholder extends Base {
 
 		// Send request to generate placeholder.
 		if ( ! $this->_conf_placeholder_resp_async ) {
+			$this->_load_summary();
 			// If requested recently, bypass.
 			if ( $this->_summary && ! empty( $this->_summary['curr_request'] ) && ( time() - (int) $this->_summary['curr_request'] ) < 300 ) {
 				Debug2::debug2( '[LQIP] file bypass generating due to interval limit' );
@@ -437,6 +461,8 @@ class Placeholder extends Base {
 			return;
 		}
 
+		$_instance->_load_summary();
+
 		// For cron, need to check request interval too.
 		if ( ! $do_continue ) {
 			if ( ! empty( $_instance->_summary['curr_request'] ) && ( time() - (int) $_instance->_summary['curr_request'] ) < 300 ) {
@@ -495,6 +521,8 @@ class Placeholder extends Base {
 	 * @return string Data URL placeholder.
 	 */
 	private function _generate_placeholder( $raw_size_and_src, $from_cron = false ) {
+		$this->_load_summary();
+
 		// Parse containing size and src info.
 		$size_and_src = explode( ' ', $raw_size_and_src, 2 );
 		$size         = $size_and_src[0];
