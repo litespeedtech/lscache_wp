@@ -34,6 +34,10 @@ class Elementor {
 			return;
 		}
 
+		// Register template-save handling before inspecting the editor request. A
+		// published save returns early below, but still needs to purge the cache.
+		add_action( 'elementor/document/after_save', __CLASS__ . '::purge_saved_document' );
+
 		// If user explicitly opened the Elementor editor, disable all LSCWP features.
 		$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( 'elementor' === $action ) {
@@ -68,6 +72,37 @@ class Elementor {
 
 		// Clear LSC cache when Elementor regenerates CSS & Data.
 		add_action( 'elementor/core/files/clear_cache', __CLASS__ . '::regenerate_litespeed_cache' );
+	}
+
+	/**
+	 * Purge all caches after an Elementor library document is saved.
+	 *
+	 * Elementor templates can be rendered across many pages without WordPress
+	 * exposing a complete reverse dependency list, so a full purge guarantees
+	 * that no page keeps stale template output.
+	 *
+	 * @since 7.8.2
+	 * @param object $document Saved Elementor document.
+	 * @return void
+	 */
+	public static function purge_saved_document( $document ) {
+		if ( ! is_object( $document ) || ! method_exists( $document, 'get_post' ) ) {
+			do_action( 'litespeed_purge_all', 'Elementor template saved' );
+			return;
+		}
+
+		$post = $document->get_post();
+		if ( ! is_object( $post ) || empty( $post->post_type ) ) {
+			do_action( 'litespeed_purge_all', 'Elementor template saved' );
+			return;
+		}
+
+		// Normal Elementor pages already use WordPress's standard post purge.
+		if ( 'elementor_library' !== $post->post_type ) {
+			return;
+		}
+
+		do_action( 'litespeed_purge_all', 'Elementor template saved' );
 	}
 
 	/**
