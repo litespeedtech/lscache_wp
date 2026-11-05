@@ -1120,7 +1120,12 @@ class Htaccess extends Root {
 			// Remove our blocks with their markers, leaving the rest of the file as is.
 			$path    = $this->htaccess_path( $kind );
 			$content = File::read( $path );
-			$cleaned = preg_replace( '/^[ \t]*# BEGIN (' . self::MARKER . '|' . self::MARKER_NONLS . ')[ \t]*\r?$.*?^[ \t]*# END \1[ \t]*(?:\r?\n|\z)/ms', '', (string) $content );
+			// An unreadable file must never be saved back as empty.
+			if ( ! is_string( $content ) ) {
+				$failed[] = 'Could not read the rewrite rules.';
+				continue;
+			}
+			$cleaned = preg_replace( '/^[ \t]*# BEGIN (' . self::MARKER . '|' . self::MARKER_NONLS . ')[ \t]*\r?$.*?^[ \t]*# END \1[ \t]*(?:\r?\n|\z)/ms', '', $content );
 			if ( $cleaned === $content ) {
 				continue;
 			}
