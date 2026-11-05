@@ -75,6 +75,10 @@ class Core extends Root {
 		! defined( 'LSCWP_TS_0' ) && define( 'LSCWP_TS_0', microtime( true ) );
 		$this->cls( 'Conf' )->init();
 
+		if ( defined( 'LITESPEED_ON' ) ) {
+			$this->_drop_query_strings();
+		}
+
 		/**
 		 * Load API hooks
 		 *
@@ -216,7 +220,6 @@ class Core extends Root {
 		do_action( 'litespeed_initing' );
 
 		ob_start( [ $this, 'send_headers_force' ] );
-		add_filter( 'litespeed_buffer_after', [ $this, 'drop_query_strings' ], 99 );
 		add_action( 'shutdown', [ $this, 'send_headers' ], 0 );
 		add_action( 'wp_footer', [ $this, 'footer_hook' ] );
 
@@ -583,24 +586,22 @@ class Core extends Root {
 	}
 
 	/**
-	 * Remove ignored query arguments from quoted current-page URLs in cacheable output.
-	 * Request input and other URLs are preserved.
+	 * Remove Drop Query String arguments from the request before WordPress reads it.
 	 *
-	 * @since 7.9.2
-	 * @param string $buffer Final response body.
-	 * @return string
+	 * The server drops them from the cache key, so the page must not be generated from them either, whatever form a component reflects the URL in.
+	 *
+	 * @since 7.9.4
+	 * @return void
 	 */
-	public function drop_query_strings( $buffer ) {
-		if ( ! defined( 'LITESPEED_ON' ) || ! Control::is_cacheable() || empty( $_SERVER['REQUEST_URI'] ) ||
-			// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Existing public hook.
-			( defined( 'DONOTCACHEPAGE' ) && apply_filters( 'litespeed_const_DONOTCACHEPAGE', DONOTCACHEPAGE ) ) ) {
-			return $buffer;
+	private function _drop_query_strings() {
+		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) : '';
+		if ( is_admin() || ! in_array( $method, [ 'GET', 'HEAD' ], true ) || empty( $_SERVER['REQUEST_URI'] ) ) {
+			return;
 		}
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Raw URL comparison; only removes arguments.
-		$request_uri = wp_unslash( $_SERVER['REQUEST_URI'] );
-		$uri         = explode( '?', $request_uri, 2 );
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Raw URL kept as is; only arguments are removed.
+		$uri = explode( '?', $_SERVER['REQUEST_URI'], 2 );
 		if ( ! isset( $uri[1] ) || '' === $uri[1] ) {
-			return $buffer;
+			return;
 		}
 		// Use the same option values as the cache-key rules.
 		$options  = $this->get_options();
@@ -618,7 +619,7 @@ class Core extends Root {
 			$patterns[] = preg_quote( $prefix ? substr( $rule, 0, -1 ) : $rule, '/' ) . ( $prefix ? '' : '(?:=|&|\z)' );
 		}
 		if ( ! $patterns ) {
-			return $buffer;
+			return;
 		}
 		$pattern = '/\A(?:' . implode( '|', $patterns ) . ')/';
 		$parts   = preg_split( '/(?<=&)/', $uri[1], -1, PREG_SPLIT_NO_EMPTY );
@@ -626,23 +627,19 @@ class Core extends Root {
 		foreach ( $parts as $part ) {
 			if ( ! preg_match( $pattern, $part ) ) {
 				$kept[] = $part;
+				continue;
 			}
+			// PHP keys `utm[x]=1` as `utm` and `utm.x` as `utm_x`, so unset the name the way PHP parsed it.
+			$name = strtr( explode( '[', urldecode( explode( '=', rtrim( $part, '&' ), 2 )[0] ), 2 )[0], ' .', '__' );
+			unset( $_GET[ $name ], $_REQUEST[ $name ] );
 		}
 		$query = implode( '', $kept );
 		if ( $query === $uri[1] ) {
-			return $buffer;
+			return;
 		}
-		$query = '&' === substr( $query, -1 ) ? substr( $query, 0, -1 ) : $query;
-		$map   = [];
-		foreach ( [ get_self_link(), $request_uri ] as $source ) {
-			$target = explode( '?', $source, 2 )[0] . ( '' !== $query ? '?' . $query : '' );
-			foreach ( [ [ $source, $target ], [ esc_url( $source ), esc_url( $target ) ], [ esc_attr( $source ), esc_attr( $target ) ] ] as $urls ) {
-				foreach ( [ '"', "'" ] as $quote ) {
-					$map[ $quote . $urls[0] . $quote ] = $quote . $urls[1] . $quote;
-				}
-			}
-		}
-		return strtr( $buffer, $map );
+		$query                   = rtrim( $query, '&' );
+		$_SERVER['QUERY_STRING'] = $query;
+		$_SERVER['REQUEST_URI']  = $uri[0] . ( '' !== $query ? '?' . $query : '' );
 	}
 
 	/**
