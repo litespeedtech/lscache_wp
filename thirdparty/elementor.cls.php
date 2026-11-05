@@ -34,8 +34,7 @@ class Elementor {
 			return;
 		}
 
-		// Register template-save handling before inspecting the editor request. A
-		// published save returns early below, but still needs to purge the cache.
+		// Register before the editor check: a published save returns early below but still needs the purge.
 		add_action( 'elementor/document/after_save', __CLASS__ . '::purge_saved_document' );
 
 		// If user explicitly opened the Elementor editor, disable all LSCWP features.
@@ -75,30 +74,20 @@ class Elementor {
 	}
 
 	/**
-	 * Purge all caches after an Elementor library document is saved.
+	 * Purge all after a template is saved, as Elementor keeps no list of the pages that render it.
 	 *
-	 * Elementor templates can be rendered across many pages without WordPress
-	 * exposing a complete reverse dependency list, so a full purge guarantees
-	 * that no page keeps stale template output.
-	 *
-	 * @since 7.8.2
+	 * @since 7.9.4
 	 * @param object $document Saved Elementor document.
 	 * @return void
 	 */
 	public static function purge_saved_document( $document ) {
 		if ( ! is_object( $document ) || ! method_exists( $document, 'get_post' ) ) {
-			do_action( 'litespeed_purge_all', 'Elementor template saved' );
 			return;
 		}
 
+		// Normal Elementor pages already use the standard post purge; draft saves render nowhere and purge_all ignores LITESPEED_DISABLE_ALL.
 		$post = $document->get_post();
-		if ( ! is_object( $post ) || empty( $post->post_type ) ) {
-			do_action( 'litespeed_purge_all', 'Elementor template saved' );
-			return;
-		}
-
-		// Normal Elementor pages already use WordPress's standard post purge.
-		if ( 'elementor_library' !== $post->post_type ) {
+		if ( ! is_object( $post ) || 'elementor_library' !== $post->post_type || 'publish' !== $post->post_status ) {
 			return;
 		}
 
