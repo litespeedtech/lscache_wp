@@ -967,6 +967,9 @@ class Object_Cache extends Root {
 			}
 		} else {
 			$res = $this->_conn->flush();
+			if ( ! $res && $this->_mem_unreachable() ) {
+				$this->_mark_stale();
+			}
 			$this->_conn->resetServerList();
 			// The cleared server list cannot serve another operation until _connect() runs again.
 			$this->_conn = null;
@@ -1081,15 +1084,22 @@ class Object_Cache extends Root {
 	 */
 	private function _flush_if_stale() {
 		$marker = $this->_stale_marker();
-		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.unlink_unlink
-		if ( ! file_exists( $marker ) || ! @unlink( $marker ) ) {
+		if ( ! file_exists( $marker ) ) {
 			return true;
+		}
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.unlink_unlink
+		if ( ! @unlink( $marker ) ) {
+			// The pending invalidation still applies when filesystem permissions prevent claiming it.
+			$this->debug_oc( 'Cannot remove the stale marker ' . $marker );
+			$this->_conn        = null;
+			$this->_cfg_enabled = false;
+			return false;
 		}
 
 		$this->debug_oc( 'Flush after writes skipped while the backend was unreachable' );
 		try {
-			// Not self::flush(): that resets the Memcached server list this request still needs.
-			$ok = 'Redis' === $this->_oc_driver ? $this->_conn->flushDb() : $this->_conn->flush();
+			// Reuse the Redis flush timeout; Memcached must keep the server list this request still needs.
+			$ok = 'Redis' === $this->_oc_driver ? $this->flush() : $this->_conn->flush();
 		} catch ( \RedisException $ex ) {
 			$this->debug_oc( 'Stale flush failed: ' . $ex->getMessage() );
 			$ok = false;

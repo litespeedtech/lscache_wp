@@ -273,6 +273,8 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Htaccess** Deactivation now removes the LiteSpeed blocks with their markers. (PR#1068)
 * **Cache** Drop Query String now strips its arguments from the request too.
 * **Core** Saved two option queries per request. (Tobolo PR#1096)
+* **Htaccess** Deactivation keeps user rules after an unclosed LiteSpeed block.
+* **Object Cache** A failed Memcached flush now retries on the next request.
 
 = 7.9.3 - Nov 3 2026 =
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)

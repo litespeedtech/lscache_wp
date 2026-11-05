@@ -1125,7 +1125,8 @@ class Htaccess extends Root {
 				$failed[] = 'Could not read the rewrite rules.';
 				continue;
 			}
-			$cleaned = preg_replace( '/^[ \t]*# BEGIN (' . self::MARKER . '|' . self::MARKER_NONLS . ')[ \t]*\r?$.*?^[ \t]*# END \1[ \t]*(?:\r?\n|\z)/ms', '', $content );
+			// A later start belongs to its own block, not to an earlier orphan start.
+			$cleaned = preg_replace( '/^[ \t]*# BEGIN (' . self::MARKER . '|' . self::MARKER_NONLS . ')[ \t]*\r?\n(?:(?![ \t]*# BEGIN \1[ \t]*\r?$)[^\n]*\n)*?[ \t]*# END \1[ \t]*(?:\r?\n|\z)/m', '', $content );
 			if ( $cleaned === $content ) {
 				continue;
 			}
