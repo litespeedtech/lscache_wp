@@ -179,8 +179,7 @@ class Task extends Root {
 		}
 
 		// Health: schedule single-event cron when pending request exists.
-		// Read on every request: until a health check ran once, the summary does not exist and is not
-		// autoloaded, which cost one query each time. Store an empty summary once instead.
+		// Until a health check runs the summary does not exist and is not autoloaded, so store an empty one once instead of querying it on every request.
 		if ( false === get_option( Health::name( '_summary' ) ) ) {
 			Health::save_summary( [] );
 		}

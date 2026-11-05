@@ -148,8 +148,7 @@ trait Img_Optm_Pull {
 	public static function need_pull() {
 		$tag = self::get_option( self::DB_NEED_PULL, null );
 		if ( null === $tag ) {
-			// Task::init() asks on every request. A missing option is not autoloaded and cost one query each
-			// time, so store the default once; 0 means the same as no option here (nothing to pull).
+			// Task::init() asks on every request and a missing option is not autoloaded, so store the default once; 0 means nothing to pull.
 			self::update_option( self::DB_NEED_PULL, 0 );
 			return false;
 		}

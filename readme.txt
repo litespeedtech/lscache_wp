@@ -271,6 +271,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Optimize** The `litespeed_comment` filter now also hides the HTML Minify comment. (Tobolo #1093 PR#1094)
 * **3rd** Kadence Blocks: saving a navigation, header, form or other Kadence part purges related pages again. (Tobolo #1090 PR#1091)
 * **Htaccess** Deactivation now removes the LiteSpeed rule blocks and their markers instead of leaving them empty. (PR#1068)
+* **Core** Saved two per-request option lookups on sites that never ran Image Optimization or a health check. (Tobolo PR#1096)
 
 = 7.9.3 - Nov 3 2026 =
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)
