@@ -71,6 +71,7 @@ LiteSpeed Cache for WordPress is compatible with ClassicPress.
 * HTTP/2 support
 * [HTTP/3 & QUIC](https://www.litespeedtech.com/http3-faq) support
 * ESI (Edge Side Includes) support<sup>*</sup>
+* [Serve Stale](https://docs.litespeedtech.com/lscache/lscwp/cache/#serve-stale), similar to stale-while-revalidate: while one request regenerates the page, other visitors receive the stale copy
 * Widgets and Shortcodes as ESI blocks<sup>*</sup> (requires Classic Widgets plugin for WP 5.8+)
 
 <sup>*</sup> Feature not available in OpenLiteSpeed
