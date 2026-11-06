@@ -393,7 +393,7 @@ trait Cloud_Auth_Callback {
 			return $this->_callback_error( self::CALLBACK_ERR_ACTION, 'Callback action does not match its route.' );
 		}
 
-		$request_key = spl_object_hash( $request ) . ':' . hash( 'sha256', $action );
+		$request_key = spl_object_id( $request ) . ':' . hash( 'sha256', $action );
 		$fingerprint = hash( 'sha256', $body ) . hash( 'sha256', $content_type ) . hash( 'sha256', $content_encoding ) . hash( 'sha256', $signature_b64 );
 		if (
 			isset( $this->_validated_callback_requests[ $request_key ] ) &&
