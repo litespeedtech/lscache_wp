@@ -71,8 +71,8 @@ LiteSpeed Cache for WordPress is compatible with ClassicPress.
 * HTTP/2 support
 * [HTTP/3 & QUIC](https://www.litespeedtech.com/http3-faq) support
 * ESI (Edge Side Includes) support<sup>*</sup>
-* [Serve Stale](https://docs.litespeedtech.com/lscache/lscwp/cache/#serve-stale), similar to stale-while-revalidate: while one request regenerates the page, other visitors receive the stale copy
 * Widgets and Shortcodes as ESI blocks<sup>*</sup> (requires Classic Widgets plugin for WP 5.8+)
+* [Serve Stale](https://docs.litespeedtech.com/lscache/lscwp/cache/#serve-stale), similar to stale-while-revalidate
 
 <sup>*</sup> Feature not available in OpenLiteSpeed
 
@@ -277,6 +277,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Htaccess** Deactivation keeps user rules after an unclosed LiteSpeed block.
 * **Object Cache** A failed Memcached flush now retries on the next request.
 * **3rd** Elementor: saving a Theme Builder template purges all again. (PR#1016)
+* **Object Cache** A Redis connect error no longer leaves the error handler installed. (vbakkenes #1013 PR#1014)
 
 = 7.9.3 - Nov 3 2026 =
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)
