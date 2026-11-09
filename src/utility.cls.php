@@ -177,7 +177,8 @@ class Utility extends Root {
 	 * @return bool
 	 */
 	public static function html_self_closing( $attrs ) {
-		return 1 === preg_match( '~\A(?:[\x09\x0a\x0c\x0d /]+|[^\x09\x0a\x0c\x0d />=]+(?:[\x09\x0a\x0c\x0d ]*=[\x09\x0a\x0c\x0d ]*(?>"[^"]*"|\'[^\']*\'|(?!["\'])[^\x09\x0a\x0c\x0d >]*+))?+)*?/\z~', $attrs );
+		// Consume each attribute or separator once; reserve the final slash for the closing marker.
+		return 1 === preg_match( '~\A(?:[\x09\x0a\x0c\x0d ]++|/(?!\z)|[^\x09\x0a\x0c\x0d />=]++(?:[\x09\x0a\x0c\x0d ]*+=[\x09\x0a\x0c\x0d ]*+(?>"[^"]*"|\'[^\']*\'|(?!["\'])[^\x09\x0a\x0c\x0d >]*+))?+)*+/\z~', $attrs );
 	}
 
 	/**

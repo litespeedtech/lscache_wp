@@ -294,6 +294,7 @@ class Htaccess extends Root {
 	 * Find LiteSpeed blocks that v7.9.1 wrote into an ancestor .htaccess outside the WordPress and frontend roots.
 	 *
 	 * Read-only: repeats the v7.9.1 upward search (first existing .htaccess outside the roots, stopping at DOCUMENT_ROOT or `/`); a .htaccess inside the roots does not end it. Never writes outside the proven roots.
+	 * An ancestor .htaccess beside both wp-load.php and wp-includes belongs to another WordPress installation and ends the search without a notice.
 	 *
 	 * @since 7.9.2
 	 * @return array<int,string> Paths of ancestor .htaccess files still holding a LiteSpeed block.
@@ -306,6 +307,10 @@ class Htaccess extends Root {
 			// An owned .htaccess created later (e.g. by v7.9.2) does not end the search: v7.9.1 may have written to an ancestor before it existed. The first ancestor file outside the roots (the v7.9.1 target) does.
 			while ( $path ) {
 				if ( file_exists( $path . '/.htaccess' ) && ! File::within( $path, ABSPATH ) && ! File::within( $path, $frontend ) ) {
+					// A separate ancestor installation can own these markers; never ask this site's administrator to remove them.
+					if ( is_file( $path . '/wp-load.php' ) && is_dir( $path . '/wp-includes' ) ) {
+						break;
+					}
 					$content = File::read( $path . '/.htaccess' );
 					// Accept LF and CRLF line endings.
 					if ( is_string( $content ) && preg_match( '/^[ \t]*# BEGIN (?:' . self::MARKER . '|' . self::MARKER_NONLS . ')[ \t]*\r?$/m', $content ) ) {

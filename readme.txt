@@ -278,6 +278,10 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Object Cache** A failed Memcached flush now retries on the next request.
 * **3rd** Elementor: saving a Theme Builder template purges all again. (PR#1016)
 * **Object Cache** A Redis connect error no longer leaves the error handler installed. (vbakkenes #1013 PR#1014)
+* **Page Optimize** Fixed slow page generation with multiline SVG/MathML attributes. (#1098)
+* **Core** Prevented cloud request files from remaining after uninstall.
+* **Htaccess** Stopped orphan-rule notices for a parent WordPress installation.
+* **LQIP** Fixed request-time warnings when generating local placeholders.
 
 = 7.9.3 - Nov 3 2026 =
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)

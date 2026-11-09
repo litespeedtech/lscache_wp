@@ -122,10 +122,11 @@ trait Cloud_Misc {
 	 * @since 2.9
 	 * @access public
 	 *
-	 * @param string|false $src Source.
+	 * @param string|false $src      Source.
+	 * @param int|false    $time_out HTTP timeout in seconds, or false for the default.
 	 * @return mixed
 	 */
-	public static function version_check( $src = false ) {
+	public static function version_check( $src = false, $time_out = false ) {
 		$req_data = [
 			'v'   => defined( 'LSCWP_CUR_V' ) ? LSCWP_CUR_V : '',
 			'src' => $src,
@@ -139,7 +140,7 @@ trait Cloud_Misc {
 			$litespeed_err   = constant( 'LITESPEED_ERR' );
 			$req_data['err'] = base64_encode( ! is_string( $litespeed_err ) ? wp_json_encode( $litespeed_err ) : $litespeed_err ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 		}
-		$data = self::post( self::API_VER, $req_data );
+		$data = self::post( self::API_VER, $req_data, $time_out );
 
 		return $data;
 	}

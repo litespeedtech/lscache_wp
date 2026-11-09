@@ -108,6 +108,9 @@ class Activation extends Base {
 	 */
 	public static function uninstall_litespeed_cache() {
 		Task::destroy();
+		// Cloud requests persist bookkeeping files and options; remove them with the rest of the installation data.
+		// Limit this best-effort notification to a five-second HTTP timeout so cleanup can proceed promptly.
+		Cloud::version_check( 'uninstall', 5 );
 
 		if ( is_multisite() ) {
 			// Save main site id
@@ -156,8 +159,6 @@ class Activation extends Base {
 		}
 
 		self::del_conf_data_file();
-
-		Cloud::version_check( 'uninstall' );
 	}
 
 	/**

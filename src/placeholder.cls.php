@@ -538,7 +538,8 @@ class Placeholder extends Base {
 		$file = $this->_placeholder_realpath( $src, $size );
 
 		// Local generate SVG to serve (repeated here to clear queue if settings changed).
-		if ( ! $this->_conf_lqip || ! $this->_lqip_size_check( $size ) ) {
+		$use_lqip = $this->_conf_lqip && $this->_lqip_size_check( $size );
+		if ( ! $use_lqip ) {
 			$data = $this->_generate_placeholder_locally( $size );
 		} else {
 			$err       = false;
@@ -597,11 +598,13 @@ class Placeholder extends Base {
 		// Write to file.
 		File::save( $file, $data, true );
 
-		// Save summary data.
-		$this->_summary['last_spent']   = time() - (int) $this->_summary['curr_request'];
-		$this->_summary['last_request'] = $this->_summary['curr_request'];
-		$this->_summary['curr_request'] = 0;
-		self::save_summary();
+		// Local SVG generation has no cloud request timestamp or timing statistics to update.
+		if ( $use_lqip ) {
+			$this->_summary['last_spent']   = time() - (int) $this->_summary['curr_request'];
+			$this->_summary['last_request'] = $this->_summary['curr_request'];
+			$this->_summary['curr_request'] = 0;
+			self::save_summary();
+		}
 		$this->_popup_and_save( $raw_size_and_src );
 
 		Debug2::debug( '[LQIP] saved LQIP ' . $file );
