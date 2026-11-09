@@ -31,7 +31,7 @@ class Base extends Root {
 	const _VER           = '_version'; // Not set-able
 	const HASH           = 'hash'; // Not set-able
 	const O_AUTO_UPGRADE = 'auto_upgrade';
-	const O_API_KEY      = 'api_key'; // Deprecated since v6.4. TODO: Will drop after v8 (still need to keep for v7 upgrade conf usage as v6.5.4 has a major user base)
+	const O_API_KEY      = 'api_key'; // Deprecated since v6.4; retained until after v8 to protect stored legacy values, no longer used for cloud authentication.
 	const O_SERVER_IP    = 'server_ip';
 	const O_GUEST        = 'guest';
 	const O_GUEST_OPTM   = 'guest_optm';

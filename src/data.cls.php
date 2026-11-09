@@ -26,7 +26,6 @@ class Data extends Root {
 	 */
 	private $_db_updater = [
 		'5.3-a5'    => [ 'litespeed_update_5_3' ],
-		'7.0-b26'   => [ 'litespeed_update_7' ],
 		'7.0.1-b1'  => [ 'litespeed_update_7_0_1' ],
 		'7.7-b28'   => [ 'litespeed_update_7_7' ],
 		'7.9-b5'    => [ 'litespeed_update_7_9' ],

@@ -50,7 +50,6 @@ class Cloud extends Base {
 	const SVC_D_LINK           = 'd/link';
 	const SVC_D_API            = 'd/api';
 	const SVC_D_DASH           = 'd/dash';
-	const SVC_D_V3UPGRADE      = 'd/v3upgrade';
 	const SVC_U_LINK           = 'u/wp3/link';
 	const SVC_U_ENABLE_CDN     = 'u/wp3/enablecdn';
 	const SVC_D_STATUS_CDN_CLI = 'd/status/cdn_cli';
@@ -145,7 +144,6 @@ class Cloud extends Base {
 		self::SVC_D_SYNC_CONF,
 		self::SVC_D_USAGE,
 		self::SVC_D_API,
-		self::SVC_D_V3UPGRADE,
 		self::SVC_D_DASH,
 		self::SVC_D_STATUS_CDN_CLI,
 		// self::API_NEWS,
@@ -168,7 +166,7 @@ class Cloud extends Base {
 	 *
 	 * @var string[]
 	 */
-	private static $_pub_svc_set = [ self::API_NEWS, self::API_REPORT, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO, self::SVC_D_V3UPGRADE, self::SVC_D_DASH ];
+	private static $_pub_svc_set = [ self::API_NEWS, self::API_REPORT, self::API_VER, self::API_BETA_TEST, self::API_REST_ECHO, self::SVC_D_DASH ];
 
 	/**
 	 * Services that should go through the queue.

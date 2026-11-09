@@ -11,7 +11,6 @@
 defined( 'WPINC' ) || exit();
 
 use LiteSpeed\Debug2;
-use LiteSpeed\Cloud;
 use LiteSpeed\Conf;
 use LiteSpeed\Htaccess;
 
@@ -76,43 +75,6 @@ function litespeed_update_7_0_1() {
 		}
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->query( $wpdb->prepare( "UPDATE `{$tb_url}` SET url = %s WHERE id = %d", $new_url, $v['id'] ) );
-	}
-}
-
-/**
- * Migrate from domain key to pk/sk for QC
- *
- * @since 7.0
- */
-function litespeed_update_7() {
-	Debug2::debug('[Data] v7 upgrade started');
-
-	$__cloud = Cloud::cls();
-
-	$domain_key = $__cloud->conf('api_key');
-	if (!$domain_key) {
-		Debug2::debug('[Data] No domain key, bypassed migration');
-		return;
-	}
-
-	$new_prepared = $__cloud->init_qc_prepare();
-	if (!$new_prepared && $__cloud->activated()) {
-		Debug2::debug('[Data] QC previously activated in v7, bypassed migration');
-		return;
-	}
-	$data = array(
-		'domain_key' => $domain_key,
-	);
-	$resp = $__cloud->post(Cloud::SVC_D_V3UPGRADE, $data);
-	if ( ! empty( $resp['qc_activated'] ) ) {
-		if ( 'deleted' !== $resp['qc_activated'] ) {
-			$cloud_summary_updates = array( 'qc_activated' => $resp['qc_activated'] );
-			if (!empty($resp['main_domain'])) {
-				$cloud_summary_updates['main_domain'] = $resp['main_domain'];
-			}
-			Cloud::save_summary($cloud_summary_updates);
-			Debug2::debug('[Data] Updated QC activated status to ' . $resp['qc_activated']);
-		}
 	}
 }
 
