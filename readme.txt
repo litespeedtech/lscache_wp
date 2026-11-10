@@ -283,6 +283,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Htaccess** Stopped orphan-rule notices for a parent WordPress installation.
 * **LQIP** Fixed request-time warnings when generating local placeholders.
 * **Cloud** Legacy Domain Key sites now require manual QUIC.cloud activation.
+* **Page Optimize** Preserved JS regexes inside arrays and skipped re-minifying versioned minified assets. (#908)
 
 = 7.9.3 - Nov 3 2026 =
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)

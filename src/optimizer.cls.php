@@ -439,7 +439,8 @@ class Optimizer extends Root {
 	 * @since  1.9
 	 */
 	public function is_min( $filename ) {
-		$basename = basename($filename);
+		// Query strings and fragments do not determine whether the asset is already minified.
+		$basename = basename(substr($filename, 0, strcspn($filename, '?#')));
 		if (preg_match('/[-\.]min\.(?:[a-zA-Z]+)$/i', $basename)) {
 			return true;
 		}
