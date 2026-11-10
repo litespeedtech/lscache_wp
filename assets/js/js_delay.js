@@ -27,20 +27,63 @@ function litespeed_load_delayed_js_force() {
 }
 
 async function litespeed_load_delayed_js() {
-	let js_list = [];
-	// Prepare all JS
-	document.querySelectorAll('script[type="litespeed/javascript"]').forEach(e => {
-		js_list.push(e);
-	});
+	const pending = new EventTarget(), listeners = new Map();
+	const add = window.addEventListener, remove = window.removeEventListener;
+	const own_add = Object.prototype.hasOwnProperty.call(window, 'addEventListener');
+	const own_remove = Object.prototype.hasOwnProperty.call(window, 'removeEventListener');
+	let collecting = true, event;
+	// Keep late load listeners separate so excluded scripts are not run again.
+	const add_load = window.addEventListener = function(type, listener, options) {
+		if (collecting && this === window && type === 'load' && document.readyState === 'complete' && listener && (typeof listener === 'function' || typeof listener === 'object')) {
+			if (!listeners.has(listener)) listeners.set(listener, typeof listener === 'function' ? listener.bind(window) : listener);
+			return pending.addEventListener(type, listeners.get(listener), options);
+		}
+		return (own_add ? add : Object.getPrototypeOf(window).addEventListener).apply(this, arguments);
+	};
+	const remove_load = window.removeEventListener = function(type, listener, options) {
+		if (this === window && type === 'load' && listeners.has(listener)) pending.removeEventListener(type, listeners.get(listener), options);
+		return (own_remove ? remove : Object.getPrototypeOf(window).removeEventListener).apply(this, arguments);
+	};
+	try {
+		let js_list = [];
+		// Prepare all JS
+		document.querySelectorAll('script[type="litespeed/javascript"]').forEach(e => {
+			js_list.push(e);
+		});
 
-	// Load by sequence
-	for (let script in js_list) {
-		await new Promise(resolve => litespeed_load_one(js_list[script], resolve));
+		// Load by sequence
+		for (let script in js_list) {
+			await new Promise(resolve => litespeed_load_one(js_list[script], resolve));
+		}
+
+		// Simulate doc.loaded before replaying late window load listeners.
+		document.dispatchEvent(new Event('DOMContentLiteSpeedLoaded'));
+		window.dispatchEvent(new Event('DOMContentLiteSpeedLoaded'));
+		// Let queued ready callbacks register their window load listeners.
+		await new Promise(resolve => setTimeout(resolve));
+		collecting = false;
+		event = new Event('load');
+		// Match native window load's document target and window receiver.
+		Object.defineProperties(event, {target: {value: document}, currentTarget: {value: window, configurable: true}});
+		pending.dispatchEvent(event);
+	} finally {
+		collecting = false;
+		if (event) delete event.currentTarget;
+		// Do not shadow prototype instrumentation installed while scripts were loading.
+		if (window.addEventListener === add_load) {
+			if (own_add) window.addEventListener = add;
+			else delete window.addEventListener;
+		}
+		if (window.removeEventListener === remove_load) {
+			if (own_remove) window.removeEventListener = remove;
+			else delete window.removeEventListener;
+		}
+		listeners.forEach(listener => {
+			pending.removeEventListener('load', listener, false);
+			pending.removeEventListener('load', listener, true);
+		});
+		listeners.clear();
 	}
-
-	// Simulate doc.loaded
-	document.dispatchEvent(new Event('DOMContentLiteSpeedLoaded'));
-	window.dispatchEvent(new Event('DOMContentLiteSpeedLoaded'));
 }
 
 /**
