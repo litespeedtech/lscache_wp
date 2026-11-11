@@ -98,8 +98,8 @@ if (! empty( $_POST['kw'] ) && ! empty( $_POST['_wpnonce'] )) {
 <?php echo wp_kses_post( $pagination ); ?>
 
 <p id="crawler-map-legend">
-	<i class="litespeed-dot litespeed-bg-success"></i> = <?php esc_html_e( 'Cache Hit', 'litespeed-cache' ); ?><br>
-	<i class="litespeed-dot litespeed-bg-primary"></i> = <?php esc_html_e( 'Cache Miss', 'litespeed-cache' ); ?><br>
-	<i class="litespeed-dot litespeed-bg-warning"></i> = <?php esc_html_e( 'Blocklisted due to not cacheable', 'litespeed-cache' ); ?><br>
-	<i class="litespeed-dot litespeed-bg-danger"></i> = <?php esc_html_e( 'Blocklisted', 'litespeed-cache' ); ?><br>
+	<i class="litespeed-dot litespeed-bg-success"></i> = <?php esc_html_e( 'Cache Hit', 'litespeed-cache' ); ?>
+	<i class="litespeed-dot litespeed-left20 litespeed-bg-primary"></i> = <?php esc_html_e( 'Cache Miss', 'litespeed-cache' ); ?>
+	<i class="litespeed-dot litespeed-left20 litespeed-bg-warning"></i> = <?php esc_html_e( 'Blocklisted due to not cacheable', 'litespeed-cache' ); ?>
+	<i class="litespeed-dot litespeed-left20 litespeed-bg-danger"></i> = <?php esc_html_e( 'Blocklisted', 'litespeed-cache' ); ?>
 </p>

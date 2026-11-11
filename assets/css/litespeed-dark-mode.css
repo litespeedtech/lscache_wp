@@ -487,6 +487,15 @@ body.litespeed-darkmode .wp-list-table td {
 }
 
 @media (prefers-color-scheme: dark) {
+	body[class*="litespeed-cache_page_litespeed"]:not(.litespeed-lightmode) .wp-list-table tbody tr:last-child td {
+		border-bottom: none;
+	}
+}
+body.litespeed-darkmode .wp-list-table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+@media (prefers-color-scheme: dark) {
 	body[class*="litespeed-cache_page_litespeed"]:not(.litespeed-lightmode) .striped > tbody > :nth-child(odd) {
 		background-color: #2d2d30;
 	}
