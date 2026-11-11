@@ -31,6 +31,7 @@ class Data extends Root {
 		'7.9-b5'    => [ 'litespeed_update_7_9' ],
 		'7.9.2-b60' => [ 'litespeed_update_7_9_2' ],
 		'7.9.4-b15' => [ 'litespeed_update_7_9_4' ],
+		'7.9.4'     => [ 'litespeed_update_7_9_4_ox' ],
 	];
 
 	/**
@@ -53,6 +54,7 @@ class Data extends Root {
 		'ccss'    => 3,
 		'ucss'    => 4,
 		'optimax' => 5,
+		'optimax_src' => 6,
 	];
 
 	/** Table: image optimization working queue. */
@@ -543,8 +545,15 @@ class Data extends Root {
 			$expired = time() + ( 86400 * apply_filters( 'litespeed_url_file_expired_days', 20 ) );
 			$wpdb->query( $wpdb->prepare( $q, [ $expired, (int) $file_row['id'] ] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
 
+			// OptimaX cleans its own rows: a manifest lists each build's assets.
+			if ( 0 === strpos( $file_type, 'optimax' ) ) {
+				Optimax_Pages::cls()->clean_expired( $url_id );
+				return;
+			}
+			$ox_types = (int) $this->_url_file_types['optimax'] . ',' . (int) $this->_url_file_types['optimax_src'];
+
 			// Delete already-expired files for this URL.
-			$q    = "SELECT * FROM `$tb_url_file` WHERE url_id = %d AND expired BETWEEN 1 AND %d";
+			$q    = "SELECT * FROM `$tb_url_file` WHERE url_id = %d AND type NOT IN ($ox_types) AND expired BETWEEN 1 AND %d";
 			$q    = $wpdb->prepare( $q, [ $url_id, time() ] ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$list = $wpdb->get_results( $q, ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
 			if ( $list ) {
@@ -556,7 +565,7 @@ class Data extends Root {
 						wp_delete_file( $file_to_del );
 					}
 				}
-				$q = "DELETE FROM `$tb_url_file` WHERE url_id = %d AND expired BETWEEN 1 AND %d";
+				$q = "DELETE FROM `$tb_url_file` WHERE url_id = %d AND type NOT IN ($ox_types) AND expired BETWEEN 1 AND %d";
 				$wpdb->query( $wpdb->prepare( $q, [ $url_id, time() ] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
 			}
 		}

@@ -25,12 +25,22 @@ abstract class Cloud_Queue_Svc extends Base {
 	const TYPE_GEN     = 'gen';
 	const TYPE_CLEAR_Q = 'clear_q';
 
+	// Seconds to wait before sending again when QUIC.cloud is temporarily unavailable.
+	const RETRY_LATER_TTL = 300;
+
 	/**
 	 * In-memory working queue.
 	 *
 	 * @var array
 	 */
 	protected $_queue;
+
+	/**
+	 * Whether this cron run already got a try_later (a run that goes on past it).
+	 *
+	 * @var bool
+	 */
+	protected $_waited = false;
 
 	/**
 	 * Svc id slug.
@@ -86,6 +96,92 @@ abstract class Cloud_Queue_Svc extends Base {
 	 */
 	protected function _php_time_limit() {
 		return 120;
+	}
+
+	/**
+	 * Handle an item whose request failed. Dropped by default.
+	 *
+	 * @since 8.0
+	 *
+	 * @param string $queue_k Queue key.
+	 * @return void
+	 */
+	protected function _on_failed( $queue_k ) {
+		// Settled decision: a failed result drops. See AGENTS.md "Settled decisions".
+		$this->_change_queue(
+			function ( &$queue ) use ( $queue_k ) {
+				unset( $queue[ $queue_k ] );
+			}
+		);
+	}
+
+	/**
+	 * Result of a success response with no status. An error by default.
+	 *
+	 * @since 8.0
+	 *
+	 * @param string $queue_k Queue key.
+	 * @return bool True when the item was handled and the run goes on as after a stored result.
+	 */
+	protected function _no_status( $queue_k ) {
+		self::debug( '❌ No status in response' );
+		return false;
+	}
+
+	/**
+	 * Change this service's queue file: reload it, apply the change, save it.
+	 *
+	 * Reloading first keeps the change from clobbering other rows. Leaves the result in $this->_queue.
+	 *
+	 * @since 8.0
+	 *
+	 * @param callable $change Gets the queue by reference; returning false leaves the file as it is.
+	 * @return void
+	 */
+	protected function _change_queue( $change ) {
+		$type         = $this->_svc_id();
+		$this->_queue = $this->load_queue( $type );
+		if ( false !== $change( $this->_queue ) ) {
+			$this->save_queue( $type, $this->_queue );
+		}
+	}
+
+	/**
+	 * Whether this run passes over an item without sending it. None by default.
+	 *
+	 * @since 8.0
+	 *
+	 * @param array $v Queue item.
+	 * @return bool
+	 */
+	protected function _skip_item( $v ) {
+		return false;
+	}
+
+	/**
+	 * Whether the run goes on after the service asked to wait for `$v`. By default it
+	 * stops: the wait covers the whole queue.
+	 *
+	 * @since 8.0
+	 *
+	 * @param array  $v      The queue item.
+	 * @param string $status 'queued' when the service just accepted it, '' when it was already building.
+	 * @return bool
+	 */
+	protected function _send_more_after( $v, $status ) {
+		return false;
+	}
+
+	/**
+	 * Whether a run that is not keep_going goes on to the next item after storing a
+	 * result. By default it stops: one item per run.
+	 *
+	 * @since 8.0
+	 *
+	 * @return bool
+	 */
+	protected function _more_after_stored() {
+		return false;
 	}
 
 	/**
@@ -243,12 +339,19 @@ abstract class Cloud_Queue_Svc extends Base {
 			}
 		}
 
+		$this->_waited = false;
 		foreach ( $this->_queue as $k => $v ) {
 			if ( ! $this->_valid_queue_item( $k, $v ) ) {
 				self::debug( 'invalid queue item, dropping [tag] ' . $k );
-				$this->_queue = $this->load_queue( $type );
-				unset( $this->_queue[ $k ] );
-				$this->save_queue( $type, $this->_queue );
+				$this->_change_queue(
+					function ( &$queue ) use ( $k ) {
+						unset( $queue[ $k ] );
+					}
+				);
+				continue;
+			}
+
+			if ( $this->_skip_item( $v ) ) {
 				continue;
 			}
 
@@ -256,12 +359,16 @@ abstract class Cloud_Queue_Svc extends Base {
 
 			$res = $this->_send_req( $k, $v );
 
+			if ( ! $res && Cloud::$retry_later ) {
+				// QUIC.cloud is temporarily unavailable: keep the item and wait.
+				$this->_summary[ $next_run_key ] = time() + self::RETRY_LATER_TTL;
+				self::save_summary();
+				self::debug( 'QUIC.cloud unavailable: kept [k] ' . $k . ', retry in ' . self::RETRY_LATER_TTL . 's' );
+				return;
+			}
+
 			if ( ! $res ) {
-				// Reload to avoid clobbering concurrent writes, then drop the item.
-				// Settled decision: a failed result drops. See AGENTS.md "Settled decisions".
-				$this->_queue = $this->load_queue( $type );
-				unset( $this->_queue[ $k ] );
-				$this->save_queue( $type, $this->_queue );
+				$this->_on_failed( $k );
 
 				if ( ! $keep_going ) {
 					return;
@@ -276,13 +383,19 @@ abstract class Cloud_Queue_Svc extends Base {
 			if ( is_array( $res ) && ! empty( $res['try_later'] ) ) {
 				$ttl                             = (int) $res['try_later'];
 				$next_run_time                   = time() + $ttl;
+				$next_run_time                   = $this->_waited ? min( $next_run_time, $this->_summary[ $next_run_key ] ) : $next_run_time; // A run that goes on past a wait keeps the earliest deadline.
+				$this->_waited                   = true;
 				$this->_summary[ $next_run_key ] = $next_run_time;
 				self::save_summary();
 				self::debug( 'Set next ' . $type . ' cron run after ' . $ttl . ' seconds (at ' . gmdate( 'Y-m-d H:i:s', $next_run_time ) . ')' );
+				if ( $this->_send_more_after( $v, $res['status'] ) ) {
+					continue;
+				}
 				return;
 			}
 
-			if ( ! $keep_going ) {
+			// A result was stored, or _no_status() handled the item.
+			if ( ! $keep_going && ! $this->_more_after_stored() ) {
 				return;
 			}
 		}
@@ -323,12 +436,30 @@ abstract class Cloud_Queue_Svc extends Base {
 			$ttl = (int) $json['try_later'];
 			self::debug( 'Server requested try later: ' . $ttl . ' seconds' );
 			self::save_summary( [ $curr_key => 0 ], true );
-			return [ 'try_later' => $ttl ];
+
+			// 'queued': just accepted; no status: already in flight.
+			$status = isset( $json['status'] ) ? $json['status'] : '';
+			if ( 'queued' === $status ) {
+				// Mark the row as building, for the queue list.
+				$this->_change_queue(
+					function ( &$queue ) use ( $queue_k ) {
+						if ( ! isset( $queue[ $queue_k ] ) ) {
+							return false;
+						}
+						$queue[ $queue_k ]['_status'] = 'queued';
+						unset( $queue[ $queue_k ]['_err_at'] );
+					}
+				);
+			}
+
+			return [
+				'try_later' => $ttl,
+				'status'    => $status,
+			];
 		}
 
 		if ( empty( $json['status'] ) ) {
-			self::debug( '❌ No status in response' );
-			return false;
+			return $this->_no_status( $queue_k );
 		}
 
 		$data_key = $this->_data_key();
@@ -346,11 +477,11 @@ abstract class Cloud_Queue_Svc extends Base {
 			return false;
 		}
 
-		// Reload to avoid clobbering concurrent writes, then drop the item.
-		$type         = $this->_svc_id();
-		$this->_queue = $this->load_queue( $type );
-		unset( $this->_queue[ $queue_k ] );
-		$this->save_queue( $type, $this->_queue );
+		$this->_change_queue(
+			function ( &$queue ) use ( $queue_k ) {
+				unset( $queue[ $queue_k ] );
+			}
+		);
 		self::debug( 'Removed from queue [q_k] ' . $queue_k );
 
 		$curr_time                                    = (int) $this->_summary[ $curr_key ];

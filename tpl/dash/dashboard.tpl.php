@@ -282,7 +282,7 @@ $can_page_load_time      = defined( 'LITESPEED_SERVER_TYPE' ) && 'NONE' !== LITE
 									foreach ( $usage['sub_svc'] as $sub_svc => $sub_usage ) :
 										?>
 										<span class="<?php echo $i++ > 0 ? 'litespeed-left10' : ''; ?>">
-											<?php echo esc_html( strtoupper( $sub_svc ) ); ?>: <strong><?php echo (int) $sub_usage; ?></strong>
+											<?php echo esc_html( Cloud::SVC_OPTIMAX === $sub_svc ? 'OX' : strtoupper( $sub_svc ) ); ?>: <strong><?php echo (int) $sub_usage; ?></strong>
 										</span>
 									<?php endforeach; ?>
 								</p>
@@ -793,6 +793,8 @@ $can_page_load_time      = defined( 'LITESPEED_SERVER_TYPE' ) && 'NONE' !== LITE
 							</div>
 						<?php endif; ?>
 					</div>
+
+					<?php require LSCWP_DIR . 'tpl/optimax/dashboard-box.tpl.php'; ?>
 
 					<div class="postbox litespeed-postbox litespeed-postbox-crawler">
 						<div class="inside">

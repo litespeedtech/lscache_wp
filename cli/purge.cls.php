@@ -87,6 +87,23 @@ class Purge {
 	}
 
 	/**
+	 * Clears all OptimaX data: optimized pages, JS bundles, URL mappings and the queue.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Clear everything OptimaX has stored.
+	 *     $ wp litespeed-purge optimax
+	 *
+	 * @since 8.0
+	 */
+	public function optimax() {
+		// Fully qualified: inside this namespace a bare Purge is this CLI class.
+		\LiteSpeed\Purge::purge_all_optimax();
+
+		WP_CLI::success( __( 'Cleared all OptimaX data.', 'litespeed-cache' ) );
+	}
+
+	/**
 	 * Purges all cache entries for the blog.
 	 *
 	 * ## OPTIONS

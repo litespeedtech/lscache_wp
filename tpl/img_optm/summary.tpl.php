@@ -297,6 +297,9 @@ $imgoptm_service_hot = $this->cls( 'Cloud' )->service_hot( Cloud::SVC_IMG_OPTM .
 							<?php esc_html_e( 'Current image post id position', 'litespeed-cache' ); ?>: <?php echo ! empty( $optm_summary['next_post_id'] ) ? esc_html( $optm_summary['next_post_id'] ) : '-'; ?><br>
 							<?php esc_html_e( 'Maximum image post id', 'litespeed-cache' ); ?>: <?php echo esc_html( $img_count['max_id'] ); ?>
 						</p>
+						<p>
+							<?php esc_html_e( 'Images optimized by OptimaX', 'litespeed-cache' ); ?>: <code><?php echo esc_html( (int) Img_Optm::get_summary( Optimax::SUMMARY_OX_IMGS ) ); ?></code>
+						</p>
 					</div>
 				</div>
 			</div>
