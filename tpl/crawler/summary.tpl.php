@@ -253,10 +253,10 @@ if ( $crawler_run_interval > 0 ) :
 	</div>
 
 	<p>
-		<i class="litespeed-badge litespeed-bg-default"></i> = <?php esc_html_e( 'Waiting to be Crawled', 'litespeed-cache' ); ?><br>
-		<i class="litespeed-badge litespeed-bg-success"></i> = <?php esc_html_e( 'Already Cached', 'litespeed-cache' ); ?><br>
-		<i class="litespeed-badge litespeed-bg-primary"></i> = <?php esc_html_e( 'Successfully Crawled', 'litespeed-cache' ); ?><br>
-		<i class="litespeed-badge litespeed-bg-danger"></i> = <?php esc_html_e( 'Blocklisted', 'litespeed-cache' ); ?><br>
+		<i class="litespeed-badge litespeed-bg-default"></i> = <?php esc_html_e( 'Waiting to be Crawled', 'litespeed-cache' ); ?>
+		<i class="litespeed-badge litespeed-bg-success litespeed-left20"></i> = <?php esc_html_e( 'Already Cached', 'litespeed-cache' ); ?>
+		<i class="litespeed-badge litespeed-bg-primary litespeed-left20"></i> = <?php esc_html_e( 'Successfully Crawled', 'litespeed-cache' ); ?>
+		<i class="litespeed-badge litespeed-bg-danger litespeed-left20"></i> = <?php esc_html_e( 'Blocklisted', 'litespeed-cache' ); ?>
 	</p>
 
 	<div class="litespeed-desc">
