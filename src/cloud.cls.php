@@ -173,7 +173,7 @@ class Cloud extends Base {
 	 *
 	 * @var string[]
 	 */
-	private static $_queue_svc_set = [ self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI ];
+	private static $_queue_svc_set = [ self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI, self::SVC_OPTIMAX ];
 
 	/**
 	 * Services that need load check.

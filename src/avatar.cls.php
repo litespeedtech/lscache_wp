@@ -148,7 +148,9 @@ class Avatar extends Base {
 
 		if ( $mtime && time() - (int) $mtime <= $this->_conf_cache_ttl ) {
 			self::debug2( '[Avatar] cache file exists [url] ' . $url );
-			return $this->_rewrite( $url, $mtime );
+			// Versioned by content, not mtime: a refresh that downloads the same image keeps the URL.
+			$ver = md5_file( $realpath );
+			return $this->_rewrite( $url, $ver ? substr( $ver, 0, 10 ) : $mtime );
 		}
 
 		$host = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
