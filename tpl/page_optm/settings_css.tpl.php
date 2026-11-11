@@ -317,19 +317,6 @@ $ccss_service_hot = $this->cls( 'Cloud' )->service_hot( Cloud::SVC_CCSS );
 		</tr>
 
 		<tr>
-			<th class="litespeed-padding-left">
-				<?php $option_id = Base::O_OPTM_CSS_ASYNC_INLINE; ?>
-				<?php $this->title( $option_id ); ?>
-			</th>
-			<td>
-				<?php $this->build_switch( $option_id ); ?>
-				<div class="litespeed-desc">
-					<?php esc_html_e( 'This will inline the asynchronous CSS library to avoid render blocking.', 'litespeed-cache' ); ?>
-				</div>
-			</td>
-		</tr>
-
-		<tr>
 			<th>
 				<?php $option_id = Base::O_OPTM_CSS_FONT_DISPLAY; ?>
 				<?php $this->title( $option_id ); ?>

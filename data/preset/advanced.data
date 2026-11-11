@@ -56,8 +56,6 @@
 
 ["optm-ccss_per_url",false]
 
-["optm-css_async_inline",false]
-
 ["optm-css_font_display",true]
 
 ["optm-js_defer",1]

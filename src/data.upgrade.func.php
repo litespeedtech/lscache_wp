@@ -178,3 +178,14 @@ function litespeed_update_7_9_2() {
 	// v7.9.2 no longer writes outside the WordPress/frontend roots; point the administrator to any block left there.
 	Htaccess::cls()->notice_orphan_rules();
 }
+
+/**
+ * Drop the removed Inline CSS Async Lib option. [2026-11-11]
+ *
+ * @since 7.9.4
+ * @return void
+ */
+function litespeed_update_7_9_4() {
+	Conf::delete_option( 'optm-css_async_inline' );
+	Conf::delete_site_option( 'optm-css_async_inline' );
+}

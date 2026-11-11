@@ -14,7 +14,6 @@ defined('WPINC') || exit();
 class Optimize extends Base {
 	const LOG_TAG           = '🎢';
 
-	const LIB_FILE_CSS_ASYNC     = 'assets/js/css_async.min.js';
 	const LIB_FILE_WEBFONTLOADER = 'assets/js/webfontloader.min.js';
 	const LIB_FILE_JS_DELAY      = 'assets/js/js_delay.min.js';
 
@@ -401,17 +400,6 @@ class Optimize extends Base {
 		if ($this->_var_preserve_js) {
 			$this->html_head .= '<script>var ' . implode(',', $this->_var_preserve_js) . ';</script>';
 			self::debug2('Inline JS defer vars', $this->_var_preserve_js);
-		}
-
-		// Append async compatibility lib to head
-		if ($this->cfg_css_async) {
-			// Inline css async lib
-			if ($this->conf(self::O_OPTM_CSS_ASYNC_INLINE)) {
-				$this->html_head .= $this->_build_js_inline(File::read(LSCWP_DIR . self::LIB_FILE_CSS_ASYNC), true);
-			} else {
-				$css_async_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_CSS_ASYNC;
-				$this->html_head  .= $this->_build_js_tag($css_async_lib_url); // Don't exclude it from defer for now
-			}
 		}
 
 		/**

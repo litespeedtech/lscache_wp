@@ -172,7 +172,6 @@ class Lang extends Base {
 			self::O_OPTM_HTML_SKIP_COMMENTS => __( 'HTML Keep Comments', 'litespeed-cache' ),
 			self::O_OPTM_CSS_ASYNC      => __( 'Load CSS Asynchronously', 'litespeed-cache' ),
 			self::O_OPTM_CCSS_PER_URL   => __( 'CCSS Per URL', 'litespeed-cache' ),
-			self::O_OPTM_CSS_ASYNC_INLINE => __( 'Inline CSS Async Lib', 'litespeed-cache' ),
 			self::O_OPTM_CSS_FONT_DISPLAY => __( 'Font Display Optimization', 'litespeed-cache' ),
 			self::O_OPTM_JS_DEFER       => __( 'Load JS Deferred', 'litespeed-cache' ),
 			self::O_OPTM_LOCALIZE       => __( 'Localize Resources', 'litespeed-cache' ),
