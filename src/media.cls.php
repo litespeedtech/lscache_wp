@@ -702,6 +702,12 @@ class Media extends Root {
 				esc_html__( 'Restore from backup', 'litespeed-cache' )
 			);
 			echo '</div>';
+		} elseif ( in_array( get_post_mime_type( $post_id ), [ 'image/jpeg', 'image/png', 'image/gif' ], true ) ) {
+			printf(
+				'<div class="row-actions"><span><a href="%1$s">%2$s</a></span></div>',
+				esc_url( Utility::build_url( Router::ACTION_IMG_OPTM, Img_Optm::TYPE_NEW_REQ_ROW, false, null, [ 'id' => $post_id ] ) ),
+				esc_html__( 'Optimize', 'litespeed-cache' )
+			);
 		}
 	}
 

@@ -117,8 +117,9 @@ trait Img_Optm_Send {
 	 *
 	 * @since 1.6
 	 * @access public
+	 * @param int $post_id Optional attachment ID to optimize only that image; 0 scans from the batch cursor.
 	 */
-	public function new_req() {
+	public function new_req( $post_id = 0 ) {
 		global $wpdb;
 
 		if ( ! $this->_format && ! $this->conf( self::O_IMG_OPTM_ORI ) ) {
@@ -201,7 +202,7 @@ trait Img_Optm_Send {
 
 		// May need to get more images
 		$list = [];
-		$more = $allowance - $total_new;
+		$more = $post_id ? 1 : $allowance - $total_new;
 		if ( $more > 0 ) {
 			$previous_post_id = $this->_summary['next_post_id'];
 			$q                = "SELECT b.post_id, b.meta_value
@@ -210,13 +211,13 @@ trait Img_Optm_Send {
 				WHERE b.meta_key = '_wp_attachment_metadata'
 					AND a.post_type = 'attachment'
 					AND a.post_status = 'inherit'
-					AND a.ID>%d
+					AND a.ID" . ( $post_id ? '=' : '>' ) . "%d
 					AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
 				ORDER BY a.ID
 				LIMIT %d
 				";
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-			$q = $wpdb->prepare( $q, [ $this->_summary['next_post_id'], $more ] );
+			$q = $wpdb->prepare( $q, [ $post_id ? $post_id : $this->_summary['next_post_id'], $more ] );
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 			$list = $wpdb->get_results( $q );
 			foreach ( $list as $v ) {
@@ -224,7 +225,9 @@ trait Img_Optm_Send {
 					continue;
 				}
 
-				$this->_summary['next_post_id'] = $v->post_id;
+				if ( ! $post_id ) {
+					$this->_summary['next_post_id'] = $v->post_id;
+				}
 
 				$meta_value = $this->_parse_wp_meta_value( $v );
 				if ( ! $meta_value ) {
@@ -270,7 +273,7 @@ trait Img_Optm_Send {
 		}
 
 		// Push to Cloud server
-		$accepted_imgs = $this->_send_request( $allowance );
+		$accepted_imgs = $this->_send_request( $allowance, $post_id );
 
 		$this->_finished_running();
 		if ( ! $accepted_imgs ) {
@@ -551,17 +554,21 @@ trait Img_Optm_Send {
 	 * @since 1.6.7
 	 * @access private
 	 * @param int $allowance The allowance limit.
+	 * @param int $post_id   Optional attachment ID to send only its rows.
 	 * @return array|void Array with pushed and accepted counts.
 	 */
-	private function _send_request( $allowance ) {
+	private function _send_request( $allowance, $post_id = 0 ) {
 		global $wpdb;
 
-		$q = "SELECT id, src, post_id FROM `$this->_table_img_optming` WHERE optm_status=%d LIMIT %d";
+		$q = "SELECT id, src, post_id FROM `$this->_table_img_optming` WHERE optm_status=%d" . ( $post_id ? ' AND post_id=%d' : '' ) . ' LIMIT %d';
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-		$q = $wpdb->prepare( $q, [ self::STATUS_RAW, $allowance ] );
+		$q = $wpdb->prepare( $q, $post_id ? [ self::STATUS_RAW, $post_id, $allowance ] : [ self::STATUS_RAW, $allowance ] );
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 		$_img_in_queue = $wpdb->get_results( $q );
 		if ( ! $_img_in_queue ) {
+			if ( $post_id ) {
+				Admin_Display::error( __( 'No valid image found in the current request.', 'litespeed-cache' ) );
+			}
 			return;
 		}
 
