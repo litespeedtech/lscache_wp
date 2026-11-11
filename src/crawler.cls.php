@@ -801,15 +801,15 @@ class Crawler extends Root {
 		curl_setopt( $ch, CURLOPT_URL, $url );
 		$result      = curl_exec( $ch );
 		$errno       = curl_errno( $ch );
+		$http_code   = $errno ? 0 : (int) curl_getinfo( $ch, CURLINFO_RESPONSE_CODE );
 		$test_result = false;
 		if ( 0 === $errno && $result === $home ) {
 			self::debug( '✅ Tested local 443 port successfully' );
 			define( 'LITESPEED_CRAWLER_LOCAL_PORT', 443 );
 			$this->_summary['test_port'] = 443;
 			$test_result                 = true;
-		} elseif ( CURLE_COULDNT_CONNECT === $errno ) {
-			// Fall back only on connection failure; this does not prove ports 80 and 443 share a cache.
-			self::debug( '❌ Test local 443 port could not connect, try port 80' );
+		} elseif ( CURLE_COULDNT_CONNECT === $errno || in_array( $http_code, [ 404, 421 ], true ) ) {
+			self::debug( '❌ Test local 443 port ' . ( $errno ? 'could not connect' : 'returned HTTP ' . $http_code ) . ', try port 80' );
 
 			// Try port 80.
 			$resolved                   = $parsed_url['host'] . ':80:' . $this->_server_ip;
@@ -836,6 +836,9 @@ class Crawler extends Root {
 			self::debug( '❌ Test local 443 port failed, no fallback: [errNo] ' . $errno . ' [err] ' . curl_error( $ch ) );
 		} else {
 			self::debug( '❌ Test local 443 port failed, no fallback, response is wrong: ' . $result );
+		}
+		if ( ! $test_result ) {
+			self::debug( 'Define LITESPEED_CRAWLER_LOCAL_PORT in wp-config.php to set the crawler port explicitly.' );
 		}
 		self::save_summary();
 		unset( $ch );
