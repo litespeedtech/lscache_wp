@@ -8,14 +8,32 @@ on:
       - 'v*.*'
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
+  # Lint with the real minimum-version parser; keep php-version in sync with "Requires PHP" in readme.txt.
+  lint-min-php:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '7.4'
+          coverage: none
+
+      - name: Run PHP syntax check
+        run: find cli lib src tpl thirdparty autoload.php guest.vary.php litespeed-cache.php uninstall.php -name '*.php' -print0 | xargs -0 -n1 php -l
+
   check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: '8.2'
           coverage: none
