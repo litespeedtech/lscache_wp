@@ -51,10 +51,14 @@ class Task extends Root {
 			'name' => 'litespeed_task_vpi',
 			'hook' => 'LiteSpeed\VPI::cron',
 		],
-		Base::O_OPTIMAX => [
+		Base::O_OPTIMAX_CRON => [
 			'name' => 'litespeed_task_optimax',
-			'hook' => 'LiteSpeed\Optimax::cron',
+			'hook' => 'LiteSpeed\Optimax::cron_push',
 		],
+		Base::O_OPTIMAX => [
+			'name' => Optimax::PULL_HOOK,
+			'hook' => 'LiteSpeed\Optimax::cron_pull',
+		], // always collect finished builds
 		Base::O_MEDIA_PLACEHOLDER_RESP_ASYNC => [
 			'name' => 'litespeed_task_lqip',
 			'hook' => 'LiteSpeed\Placeholder::cron',
@@ -125,6 +129,9 @@ class Task extends Root {
 				if ( ! Img_Optm::need_pull() ) {
 					continue;
 				}
+			} elseif ( Base::O_OPTIMAX === $id ) {
+				Optimax::hook_pull( $trigger );
+				continue;
 			} elseif ( ! $this->conf( $id ) ) {
 				if ( ! $guest_optm || ! in_array( $id, self::$_guest_options, true ) ) {
 					continue;
@@ -135,7 +142,7 @@ class Task extends Root {
 			$try_later_map = [
 				Base::O_OPTM_UCSS     => [ 'UCSS', 'ucss_next_run_after' ],
 				Base::O_OPTM_CSS_ASYNC => [ 'CSS', 'ccss_next_run_after' ],
-				Base::O_OPTIMAX       => [ 'Optimax', 'ox_next_run_after' ],
+				Base::O_OPTIMAX_CRON   => [ 'Optimax', 'ox_next_run_after' ],
 			];
 			if ( isset( $try_later_map[ $id ] ) ) {
 				list( $cls_name, $summary_key ) = $try_later_map[ $id ];

@@ -719,6 +719,9 @@ class Htaccess extends Root {
 	 * @return array{0:array<int,string>,1:array<int,string>,2:array<int,string>,3:array<int,string>} Rules arrays [frontend_ls, backend_ls, frontend_nonls, backend_nonls].
 	 */
 	private function _generate_rules( $cfg ) {
+		// The settings OptimaX turns on (Browser Cache) need their rules too.
+		$cfg = Optimax::with_required( $cfg );
+
 		foreach ( [ Base::O_CACHE_MOBILE_RULES => self::PATTERN_REGEX_LITERAL, Base::O_CACHE_EXC_COOKIES => self::PATTERN_REGEX_LITERAL, Base::O_CACHE_EXC_USERAGENTS => self::PATTERN_REGEX_LITERAL, Base::O_CACHE_DROP_QS => self::PATTERN_DROP_QS ] as $list_id => $pattern ) {
 			$cfg[ $list_id ] = $this->filter_list( isset( $cfg[ $list_id ] ) ? $cfg[ $list_id ] : [], $pattern, $list_id );
 		}

@@ -189,3 +189,19 @@ function litespeed_update_7_9_4() {
 	Conf::delete_option( 'optm-css_async_inline' );
 	Conf::delete_site_option( 'optm-css_async_inline' );
 }
+
+/**
+ * Update the url_file type comment.
+ *
+ * @since 7.9.4
+ */
+function litespeed_update_7_9_4_ox() {
+	global $wpdb;
+	Debug2::debug( '[Data] Update url_file type comment' );
+
+	$tb = $wpdb->prefix . 'litespeed_url_file';
+	if ( litespeed_table_exists( $tb ) ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$wpdb->query( "ALTER TABLE `{$tb}` MODIFY `type` tinyint(4) NOT NULL COMMENT 'css=1,js=2,ccss=3,ucss=4,optimax=5,optimax_src=6'" );
+	}
+}

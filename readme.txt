@@ -264,7 +264,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 == Changelog ==
 
 = 8.0 - Coming soon 2026 =
-* 🌱**OptiMax** OptiMax to maximize the page score.
+* 🌱**OptimaX** OptimaX to maximize the page score.
 
 = 7.9.4 - Coming soon 2026 =
 * **Object Cache** Flush once after the backend was unreachable. (PR#1069)
@@ -295,7 +295,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)
 * **Core** Moved uninstall handling to uninstall.php to avoid unnecessary option reads on normal requests. (Contributolo PR#1078)
 * **Purge** Added the litespeed_purged action for public purge tag additions. (Contributolo PR#1072)
-* **Page Optimize** Prioritized the front page in CCSS, UCSS, VPI and OptiMax queues and corrected queue capacity handling. (Faisal Ahammad PR#1064)
+* **Page Optimize** Prioritized the front page in CCSS, UCSS, VPI and OptimaX queues and corrected queue capacity handling. (Faisal Ahammad PR#1064)
 * **Guest Mode** Fixed PHP 8.5 deprecation warnings in CIDR checks. (deltafactory PR#1080)
 * **Conf** Fixed WooCommerce option warnings with shared multisite settings. (lhero-org #1077, dassels43)
 * **Page Optimize** Kept CSS/JS optimization on pages with a very large inline style or script block that previously exceeded the PCRE limit and skipped optimization. (ventio, PR#1081)

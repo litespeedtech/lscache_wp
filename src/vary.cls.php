@@ -214,6 +214,12 @@ class Vary extends Root {
 			return;
 		}
 
+		// A page with an OptimaX build is served as is to every visitor: no Guest Mode on it. Last: it reads the DB.
+		if ( $this->conf( Base::O_OPTIMAX ) && $this->cls( 'Optimax' )->has_build() ) {
+			self::debug( '👒👒 Guest mode skipped: OptimaX page' );
+			return;
+		}
+
 		self::debug( '👒👒 Guest mode' );
 
 		! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', true );
@@ -518,18 +524,19 @@ class Vary extends Root {
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param int|false $uid Optional user ID.
+	 * @param int|false $uid          Optional user ID.
+	 * @param bool      $ignore_guest Leave Guest Mode out: a guest request gets a vary like any visitor's, and `guest_mode` is not part of it. For keys that must not depend on Guest Mode (OptimaX versions).
 	 * @return false|string False for guests when no vary needed, or hashed vary.
 	 */
-	public function finalize_default_vary( $uid = false ) {
+	public function finalize_default_vary( $uid = false, $ignore_guest = false ) {
 		// Bypass vary for guests where applicable (avoid non-guest filenames for assets).
-		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && ! ( $uid > 0 ) ) {
+		if ( ! $ignore_guest && defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && ! ( $uid > 0 ) ) {
 			return false;
 		}
 
 		$vary = [];
 
-		if ( $this->conf( Base::O_GUEST ) ) {
+		if ( ! $ignore_guest && $this->conf( Base::O_GUEST ) ) {
 			$vary['guest_mode'] = 1;
 		}
 
@@ -601,11 +608,13 @@ class Vary extends Root {
 	 * Get hash of all varies that affect caching (current cookies + default + env).
 	 *
 	 * @since 4.0
+	 *
+	 * @param bool $ignore_guest Leave Guest Mode out of the default vary (see finalize_default_vary()).
 	 * @return string
 	 */
-	public function finalize_full_varies() {
+	public function finalize_full_varies( $ignore_guest = false ) {
 		$vary  = $this->_finalize_curr_vary_cookies( true );
-		$vary .= $this->finalize_default_vary( get_current_user_id() );
+		$vary .= $this->finalize_default_vary( get_current_user_id(), $ignore_guest );
 		$vary .= $this->get_env_vary();
 		return $vary;
 	}
