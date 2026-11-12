@@ -264,7 +264,7 @@ class Media extends Root {
 			$original_path   = $subdir . '/' . $meta_value['original_image'];
 
 			// Verify scaled file exists before proceeding
-			// TODO: need to ues isfile func to allow hook from offload plugins
+			// TODO: need to use isfile func to allow hook from offload plugins
 			$basedir = $this->_wp_upload_dir['basedir'] . '/';
 			if ( ! file_exists( $basedir . $scaled_path ) ) {
 				self::debug( 'Skipped: scaled file missing [pid] ' . $attachment_id );

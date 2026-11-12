@@ -175,7 +175,7 @@ class Admin_Display extends Base {
 	 * List of settings with filters and return type.
 	 *
 	 * @since 7.4
-	 * @deprecated 7.7 Use general conf fitlers.
+	 * @deprecated 7.7 Use general conf filters.
 	 *
 	 * @var array<string,array<string,mixed>>
 	 */

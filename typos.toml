@@ -1,7 +1,16 @@
 [files]
 extend-exclude = [
-  "**",
-  "!cli/**",
-  "!tpl/**",
-  "!autoload.php"
+    "assets/js/*.min.js",
+    "assets/js/webfontloader.js",
+    "lib/css_js_min/",
+    "thirdparty/",
 ]
+
+[default]
+extend-ignore-re = [
+    "\\bBig Sur\\b",
+]
+
+[default.extend-identifiers]
+# Legacy public constant retained for backwards compatibility.
+O_DEBUG_COLLAPS_QS = "O_DEBUG_COLLAPS_QS"
