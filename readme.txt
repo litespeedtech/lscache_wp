@@ -296,6 +296,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Purge** Fixed the OPcache `restrict_api` check always blocking the reset.
 * **Debug** Forced and constant option values are no longer written to the debug log.
 * **Core** Fixed a fatal error when a folder becomes unreadable during cleanup.
+* **Cloud** Avoided a PHP 8.6 deprecation notice in signed callback validation. (dhrupo PR#1097)
 
 = 7.9.3 - Nov 3 2026 =
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)
