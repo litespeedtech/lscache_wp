@@ -291,6 +291,8 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Page Optimize** CSS Async no longer loads the legacy preload polyfill; the Inline CSS Async Lib setting is removed. (PR#729)
 * **Misc** CI now also lints PHP syntax under PHP 7.4. (Viktor Szépe PR#873)
 * **ESI** Fixed widget ESI settings not showing or saving in classic widgets. (PR#775)
+* **Media** Fixed Auto Rescale Original Images breaking metadata of images in older folders. (giangel84 PR#1101)
+* **Media** Batch rescale no longer saves a `./` path prefix for images in the uploads root.
 
 = 7.9.3 - Nov 3 2026 =
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)

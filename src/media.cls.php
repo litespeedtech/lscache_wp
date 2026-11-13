@@ -151,8 +151,7 @@ class Media extends Root {
 		// Test if create and image was resized.
 		if ( $metadata && isset( $metadata['original_image'], $metadata['file'] ) && false !== strpos( $metadata['file'], '-scaled' ) ) {
 			// Use the attachment's own folder (e.g. "2021/04/"), not the current upload month.
-			$subdir = dirname( $metadata['file'] );
-			$subdir = '.' === $subdir ? '' : $subdir . '/';
+			$subdir = $this->_meta_folder( $metadata['file'] );
 
 			// Create paths for images: resized and original.
 			$base_path     = trailingslashit( $this->_wp_upload_dir['basedir'] ) . $subdir;
@@ -185,6 +184,20 @@ class Media extends Root {
 		}
 
 		return $metadata;
+	}
+
+	/**
+	 * Get the folder prefix of an attachment from its metadata file path.
+	 *
+	 * @since 7.9.4
+	 *
+	 * @param string $file Metadata file value relative to the uploads folder, e.g. "2024/05/photo.jpg" or "photo.jpg".
+	 * @return string Folder with a trailing slash, or an empty string when the file sits in the uploads root.
+	 */
+	private function _meta_folder( $file ) {
+		$folder = dirname( $file );
+
+		return '.' === $folder ? '' : $folder . '/';
 	}
 
 	/**
@@ -255,13 +268,12 @@ class Media extends Root {
 
 			$attachment_id = $v->ID;
 
-			// Extract subdirectory from metadata file path (e.g. "2024/05/photo-scaled.jpg" → "2024/05").
-			$subdir = pathinfo( $meta_value['file'], PATHINFO_DIRNAME );
+			// Folder prefix from the metadata file path (e.g. "2024/05/photo-scaled.jpg" gives "2024/05/", "photo-scaled.jpg" gives "").
+			$subdir = $this->_meta_folder( $meta_value['file'] );
 
 			// Build relative paths for rename().
-			$scaled_filename = basename( $meta_value['file'] );
-			$scaled_path     = $subdir . '/' . $scaled_filename;
-			$original_path   = $subdir . '/' . $meta_value['original_image'];
+			$scaled_path   = $subdir . wp_basename( $meta_value['file'] );
+			$original_path = $subdir . $meta_value['original_image'];
 
 			// Verify scaled file exists before proceeding
 			// TODO: need to use isfile func to allow hook from offload plugins
@@ -277,7 +289,7 @@ class Media extends Root {
 			}
 
 			// Update metadata: point file to original, remove original_image key.
-			$meta_value['file'] = $subdir . '/' . $meta_value['original_image'];
+			$meta_value['file'] = $original_path;
 			unset( $meta_value['original_image'] );
 
 			wp_update_attachment_metadata( $attachment_id, $meta_value );
