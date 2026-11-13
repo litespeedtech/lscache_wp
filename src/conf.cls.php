@@ -573,8 +573,8 @@ class Conf extends Base {
 			return;
 		}
 
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
-		Debug2::debug( '[Conf] ** ' . $k . ' forced from ' . var_export( $this->conf( $k ), true ) . ' to ' . var_export( $v, true ) );
+		// Option values can contain credentials; log only the overridden key.
+		Debug2::debug( '[Conf] ** ' . $k . ' forced' );
 
 		$this->set_conf( $k, $v );
 	}

@@ -293,6 +293,9 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **ESI** Fixed widget ESI settings not showing or saving in classic widgets. (PR#775)
 * **Media** Fixed Auto Rescale Original Images breaking metadata of images in older folders. (giangel84 PR#1101)
 * **Media** Batch rescale no longer saves a `./` path prefix for images in the uploads root.
+* **Purge** Fixed the OPcache `restrict_api` check always blocking the reset.
+* **Debug** Forced and constant option values are no longer written to the debug log.
+* **Core** Fixed a fatal error when a folder becomes unreadable during cleanup.
 
 = 7.9.3 - Nov 3 2026 =
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)

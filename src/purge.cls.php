@@ -553,7 +553,13 @@ class Purge extends Base {
 			return false;
 		}
 
-		if ( Router::opcache_restricted( __FILE__ ) ) {
+		// PHP applies restrict_api to the SAPI entry script, not this included plugin file.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Compare the exact SAPI path; sanitizing it would change PHP's prefix check.
+		$script = isset( $_SERVER['SCRIPT_FILENAME'] ) ? wp_unslash( $_SERVER['SCRIPT_FILENAME'] ) : '';
+		if ( 'cli' === PHP_SAPI && $script ) {
+			$script = realpath( $script );
+		}
+		if ( Router::opcache_restricted( $script ) ) {
 			self::debug( '❌ Failed to reset OPcache due to OPcache is restricted. File requesting the clear is not allowed.' );
 
 			if ( ! $silence ) {
@@ -572,7 +578,7 @@ class Purge extends Base {
 			if ( ! $silence ) {
 				$msg = __( 'Reset the OPcache failed.', 'litespeed-cache' );
 				if ( ! defined( 'LITESPEED_PURGE_SILENT' ) ) {
-					Admin_Display::success( $msg );
+					Admin_Display::error( $msg );
 				}
 			}
 

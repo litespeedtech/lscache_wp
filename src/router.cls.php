@@ -757,7 +757,7 @@ class Router extends Base {
 	}
 
 	/**
-	 * Check if opcode cache is restricted and file that is requesting.
+	 * Check whether the main request script is outside the OPcache API prefix.
 	 * https://www.php.net/manual/en/opcache.configuration.php#ini.opcache.restrict-api
 	 *
 	 * @since  7.3
@@ -765,9 +765,9 @@ class Router extends Base {
 	 */
 	public static function opcache_restricted($file)
 	{
-		$restrict_value = ini_get('opcache.restrict_api');
-		if ($restrict_value) {
-			if ( !$file || false === strpos($restrict_value, $file) ) {
+		$restrict_value = (string) ini_get('opcache.restrict_api');
+		if ('' !== $restrict_value) {
+			if ( !$file || 0 !== strpos($file, $restrict_value) ) {
 				return true;
 			}
 		}

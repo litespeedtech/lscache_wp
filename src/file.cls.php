@@ -214,7 +214,12 @@ HTACCESS;
 		if ( ! is_dir( $dir ) || is_link( $dir ) ) {
 			return false;
 		}
-		$files = array_diff(scandir($dir), array( '.', '..' ));
+		$files = scandir($dir);
+		// The directory can become unreadable or disappear after is_dir().
+		if (false === $files) {
+			return false;
+		}
+		$files = array_diff($files, [ '.', '..' ]);
 
 		foreach ($files as $file) {
 			is_dir("$dir/$file") && ! is_link("$dir/$file") ? self::rrmdir("$dir/$file") : unlink("$dir/$file");

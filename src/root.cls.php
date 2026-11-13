@@ -484,7 +484,8 @@ abstract class Root {
 			if (!$ori) {
 				$val = $this->const_overwritten($id);
 				if ($val !== null) {
-					defined('LSCWP_LOG') && Debug2::debug('[Conf] 🏛️ const option ' . $id . '=' . var_export($val, true));
+					// Constant overrides can contain credentials; log only the key.
+					defined('LSCWP_LOG') && Debug2::debug('[Conf] 🏛️ const option ' . $id);
 					return $val;
 				}
 
@@ -509,7 +510,8 @@ abstract class Root {
 			if (!$ori) {
 				$val = $this->const_overwritten($id);
 				if ($val !== null) {
-					defined('LSCWP_LOG') && Debug2::debug('[Conf] 🏛️ const option ' . $id . '=' . var_export($val, true));
+					// Constant overrides can contain credentials; log only the key.
+					defined('LSCWP_LOG') && Debug2::debug('[Conf] 🏛️ const option ' . $id);
 					return $val;
 				}
 			}
