@@ -150,38 +150,38 @@ class Media extends Root {
 	public function rescale_ori( $metadata, $attachment_id ) {
 		// Test if create and image was resized.
 		if ( $metadata && isset( $metadata['original_image'], $metadata['file'] ) && false !== strpos( $metadata['file'], '-scaled' ) ) {
-			// Get rescaled file name.
-			$path_exploded      = explode( '/', strrev( $metadata['file'] ), 2 );
-			$rescaled_file_name = strrev( $path_exploded[0] );
+			// Use the attachment's own folder (e.g. "2021/04/"), not the current upload month.
+			$subdir = dirname( $metadata['file'] );
+			$subdir = '.' === $subdir ? '' : $subdir . '/';
 
 			// Create paths for images: resized and original.
-			$base_path     = $this->_wp_upload_dir['basedir'] . $this->_wp_upload_dir['subdir'] . '/';
-			$rescaled_path = $base_path . $rescaled_file_name;
+			$base_path     = trailingslashit( $this->_wp_upload_dir['basedir'] ) . $subdir;
+			$rescaled_path = $base_path . wp_basename( $metadata['file'] );
 			$new_path      = $base_path . $metadata['original_image'];
 
-			// Change array file key.
-			$metadata['file'] = $this->_wp_upload_dir['subdir'] . '/' . $metadata['original_image'];
-			if ( 0 === strpos( $metadata['file'], '/' ) ) {
-				$metadata['file'] = substr( $metadata['file'], 1 );
+			if ( ! file_exists( $new_path ) ) {
+				return $metadata;
 			}
 
-			// Delete array "original_image" key.
-			unset( $metadata['original_image'] );
-
-			if ( file_exists( $rescaled_path ) && file_exists( $new_path ) ) {
+			if ( file_exists( $rescaled_path ) ) {
 				// Move rescaled to original using WP_Filesystem.
 				global $wp_filesystem;
 				if ( ! $wp_filesystem ) {
 					require_once ABSPATH . '/wp-admin/includes/file.php';
 					\WP_Filesystem();
 				}
-				if ( $wp_filesystem ) {
-					$wp_filesystem->move( $rescaled_path, $new_path, true );
+				if ( ! $wp_filesystem || ! $wp_filesystem->move( $rescaled_path, $new_path, true ) ) {
+					return $metadata;
 				}
-
-				// Update meta "_wp_attached_file".
-				update_post_meta( $attachment_id, '_wp_attached_file', $metadata['file'] );
 			}
+			// Otherwise an earlier metadata save of this upload already moved it.
+
+			// Point metadata to the original only once the rescaled file is in its place.
+			$metadata['file'] = $subdir . $metadata['original_image'];
+			unset( $metadata['original_image'] );
+
+			// Update meta "_wp_attached_file".
+			update_post_meta( $attachment_id, '_wp_attached_file', $metadata['file'] );
 		}
 
 		return $metadata;
