@@ -46,6 +46,12 @@ class ESI extends Root {
 	 * @since  4.0 Change to be after Vary init in hook 'after_setup_theme'
 	 */
 	public function init() {
+		// Widget ESI settings are registered before the AJAX bypass below: the classic widgets screen and the Customizer save through admin-ajax, the block editor through REST.
+		if ( $this->cls( 'Router' )->esi_enabled() ) {
+			add_action( 'in_widget_form', [ $this, 'widget_form' ], 100, 3 );
+			add_filter( 'widget_update_callback', __NAMESPACE__ . '\Admin_Settings::validate_widget_save', 10, 4 );
+		}
+
 		/**
 		 * Bypass ESI related funcs if disabled ESI to fix potential DIVI compatibility issue
 		 *
@@ -80,6 +86,23 @@ class ESI extends Root {
 		$this->_transform_nonce();
 
 		!defined('LITESPEED_ESI_INITED') && define('LITESPEED_ESI_INITED', true);
+	}
+
+	/**
+	 * Output the LiteSpeed ESI settings inside a widget form.
+	 *
+	 * Hooked to the in_widget_form action.
+	 *
+	 * @since 7.9.4
+	 * @access public
+	 *
+	 * @param \WP_Widget $widget     The widget instance (passed by reference).
+	 * @param mixed      $return_val Return param (unused).
+	 * @param array      $instance   The widget instance's settings.
+	 * @return void
+	 */
+	public function widget_form( $widget, $return_val, $instance ) {
+		require LSCWP_DIR . 'tpl/esi_widget_edit.php';
 	}
 
 	/**

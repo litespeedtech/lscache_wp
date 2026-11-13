@@ -875,22 +875,6 @@ class Admin_Display extends Base {
 	}
 
 	/**
-	 * Hooked to the in_widget_form action.
-	 * Appends LiteSpeed Cache settings to the widget edit settings screen.
-	 * This will append the esi on/off selector and ttl text.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param \WP_Widget $widget     The widget instance (passed by reference).
-	 * @param mixed      $return_val Return param (unused).
-	 * @param array      $instance   The widget instance's settings.
-	 * @return void
-	 */
-	public function show_widget_edit( $widget, $return_val, $instance ) {
-		require LSCWP_DIR . 'tpl/esi_widget_edit.php';
-	}
-
-	/**
 	 * Outputs a notice when the plugin is installed via WHM.
 	 *
 	 * @since 1.0.12
