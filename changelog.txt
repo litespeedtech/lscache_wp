@@ -257,7 +257,7 @@
 * **Report** Escaped report content to protect it from potential XSS attack. (Islam R alsaid #505746)
 * **ESI** Added nonce for Advanced Custom Fields + Advanced Forms. (David Lapointe Gilbert #439)
 * **Purge** Run ACTION_PURGE_EMPTYCACHE even if cache is disabled in network admin. (Philip #453)
-* **Page Optimize** Disable UCSS exclusion when UCSS is inactived. (#640)
+* **Page Optimize** Disable UCSS exclusion when UCSS is inactive. (#640)
 * **3rd** Fixed undefined warning in WooCommerce Widgets. (Lolosan #719)
 * **3rd** Correct the integration with User Switching. (John Blackbourn #725)
 * **3rd** Fixed Admin Bar Missing issue on DIVI + Elementor frontend. (thyran/robertstaddon PR#727)
@@ -681,7 +681,7 @@
 * 🐞**Page Optimize** Fixed an issue where combined CSS/JS files would potentially return 404 errors after a Purge All. (Special thanks to Abe & Ruikai)
 * **Page Optimize** Minimized the potential for 404 errors by query string when Purging All.
 * **Page Optimize** Dropped redundant query strings for minified CSS/JS files.
-* **Conf** Ugrade configuration safely to avoid the issue of new functions not being found in old codebase.
+* **Conf** Upgrade configuration safely to avoid the issue of new functions not being found in old codebase.
 * **Conf** Configuration upgrade process now adds a notification to admin pages and disables configuration save until upgrade is complete. (Lisa)
 * **JS** Fixed an issue where JS Defer caused a `litespeed_var_1_ is not defined` error when enabled w/ ESI options. (Tobolo)
 * 🐞**JS** Fixed an issue where `JS Delay` doesn't work for combined JS when `JS Combine` is enabled. (Special thanks to Joshua & Ankit)
@@ -836,7 +836,7 @@
 * **Cache** Send cache tag header whenever adding a tag to make it effective in the page optimization process.
 * **Core** Used hook for buffer optimization; Used `init()` instead of `constructor`.
 * **Object** Used `cls` instead of `get_instance` for init.
-* **Cloud** Replaced one-time message with a dismissible-only message when the domain key has been automatically cleared due to domain/key dismatch.
+* **Cloud** Replaced one-time message with a dismissible-only message when the domain key has been automatically cleared due to domain/key mismatch.
 * **API** Dropped function `hook_vary_add()`.
 * **API** Dropped function `vary_add()`.
 * **API** Dropped function `filter_vary_cookies()`.
@@ -1059,7 +1059,7 @@
 * **Crawler** Updated role simulator function for future UCSS usage.
 * **GUI** Textarea will now automatically adjust the height based on the number of rows input.
 * **CLI** Fixed an issue that caused WP-Cron to exit when a task errored out. (@DovidLevine @MatthewJohnson)
-* **Cloud** No longer communcate with QUIC.cloud when Domain Key is not set and Debug is enabled.
+* **Cloud** No longer communicate with QUIC.cloud when Domain Key is not set and Debug is enabled.
 * **Cloud** Score banner no longer automatically fetches a new score. (@LucasRolff)
 
 = 3.2.3.2 - Jun 19 2020 =

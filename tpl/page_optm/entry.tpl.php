@@ -51,7 +51,7 @@ $menu_list = array(
 	<?php
 		$this->form_action();
 
-		// Include all tpl for faster UE
+		// Include all templates for a faster user experience
 		foreach ( $menu_list as $tab_key => $tab_val ) {
 			GUI::display_tab_layout( $menu_list, $tab_key );
 			require LSCWP_DIR . 'tpl/page_optm/' . $tab_key . '.tpl.php';
