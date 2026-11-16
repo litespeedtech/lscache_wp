@@ -226,13 +226,18 @@ class Vary extends Root {
 	/**
 	 * Update Guest vary
 	 *
-	 * @since      4.0
-	 * @deprecated 4.1 Use independent lightweight guest.vary.php instead.
+	 * The WCML integration points Guest Mode at this WordPress-based handler (via
+	 * the `litespeed_guest_vary_url` filter) when the rendered currency needs it,
+	 * so the cookie issued here is the full vary of a normal page request.
+	 *
+	 * @since 4.0
 	 * @return void
 	 */
 	public function update_guest_vary() {
 		// Must not be cached.
 		! defined( 'LSCACHE_NO_CACHE' ) && define( 'LSCACHE_NO_CACHE', true );
+		header( 'X-Robots-Tag: noindex' );
+		nocache_headers();
 
 		$_guest = new Lib\Guest();
 		if ( $_guest->always_guest() || self::has_vary() ) {
@@ -243,10 +248,11 @@ class Vary extends Root {
 			exit;
 		}
 
-		self::debug( 'Will update guest vary in finalize' );
+		// Issue the full vary now, so the reply only asks for a reload when a cookie was really sent.
+		$issued = $this->_update_default_vary();
+		self::debug( 'Guest vary issued: ' . ( $issued ? 'yes' : 'no' ) );
 
-		// Return JSON to trigger reload.
-		echo wp_json_encode( [ 'reload' => 'yes' ] );
+		echo wp_json_encode( $issued ? [ 'reload' => 'yes' ] : [] );
 		exit;
 	}
 
@@ -372,6 +378,7 @@ class Vary extends Root {
 	 * Whether we can change the default vary right now.
 	 *
 	 * @since 1.6.2
+	 * @since 7.9.4 Sub-resource requests (Sec-Fetch-Dest outside navigation/fetch) never change the vary.
 	 * @return bool
 	 */
 	private function can_change_vary() {
@@ -401,6 +408,15 @@ class Vary extends Root {
 			return false;
 		}
 
+		// A sub-resource handled by WordPress (e.g. a missing script/image/font) must not rewrite the visitor's identity.
+		if ( isset( $_SERVER['HTTP_SEC_FETCH_DEST'] ) && '' !== $_SERVER['HTTP_SEC_FETCH_DEST'] ) {
+			$dest = sanitize_key( wp_unslash( $_SERVER['HTTP_SEC_FETCH_DEST'] ) );
+			if ( ! in_array( $dest, [ 'document', 'iframe', 'frame', 'embed', 'object', 'empty' ], true ) ) {
+				self::debug( 'can_change_vary bypassed due to sub-resource request [dest] ' . $dest );
+				return false;
+			}
+		}
+
 		if ( ! apply_filters( 'litespeed_can_change_vary', true ) ) {
 			self::debug( 'can_change_vary bypassed due to litespeed_can_change_vary hook' );
 			return false;
@@ -417,7 +433,7 @@ class Vary extends Root {
 	 *
 	 * @param int|false $uid    User ID or false.
 	 * @param int|false $expire Timestamp, zero for a session cookie, or false for auth expiry / anonymous +2 days.
-	 * @return void
+	 * @return bool True only when the anonymous/mismatch path wrote the default vary cookie in this call; false otherwise. The authenticated-commenter repair path may write cookies but always returns false.
 	 */
 	private function _update_default_vary( $uid = false, $expire = false ) {
 		// Ensure header output only runs once.
@@ -425,7 +441,7 @@ class Vary extends Root {
 			define( 'LITESPEED_DID_' . __FUNCTION__, true );
 		} else {
 			self::debug2( '_update_default_vary bypassed due to run already' );
-			return;
+			return false;
 		}
 
 		// ESI must validate the request identity without changing the main page's cookies.
@@ -442,7 +458,7 @@ class Vary extends Root {
 
 		if ( 'commenter' === $current_vary ) {
 			if ( ! $authenticated ) {
-				return;
+				return false;
 			}
 			// An authenticated render must never be stored in the shared commenter bucket; clear the commenter cookie on this path and issue the real vary so the next request recovers.
 			Control::set_nocache_hard( 'authenticated user carrying commenter vary' );
@@ -450,7 +466,7 @@ class Vary extends Root {
 				$this->remove_commenter();
 				$this->_cookie( $vary, (int) $expire );
 			}
-			return;
+			return false;
 		}
 
 		if ( $current_vary !== $vary || $uid > 0 ) {
@@ -459,14 +475,16 @@ class Vary extends Root {
 				Control::set_nocache_hard( 'vary mismatch with an existing identity' );
 			}
 			if ( $is_esi ) {
-				return;
+				return false;
 			}
 			if ( $this->can_change_vary() ) {
-				$this->_cookie( $vary, (int) $expire );
+				return $this->_cookie( $vary, (int) $expire );
 			} else {
 				Control::set_nocache( 'vary mismatch, cookie not updatable' );
 			}
 		}
+
+		return false;
 	}
 
 	/**
@@ -779,7 +797,7 @@ class Vary extends Root {
 	 * @param int|false $val    Cookie value to set, or false to clear.
 	 * @param int       $expire Expiration timestamp (ignored when $val is false).
 	 * @param string    $path   Cookie path (false to use COOKIEPATH).
-	 * @return void
+	 * @return bool Result of the last setcookie() call.
 	 */
 	private function _cookie( $val = false, $expire = 0, $path = false ) {
 		if ( ! $val ) {
@@ -796,8 +814,9 @@ class Vary extends Root {
 			// Remove the former scope before publishing the shared cookie, so duplicate names cannot mask it.
 			setcookie( self::$_vary_name, false, 1, $legacy_path, COOKIE_DOMAIN, $is_ssl, true );
 		}
-		setcookie( self::$_vary_name, $val, (int) $expire, $cookie_path, $scope['domain'], $is_ssl, true );
+		$sent = setcookie( self::$_vary_name, $val, (int) $expire, $cookie_path, $scope['domain'], $is_ssl, true );
 		self::debug( 'set_cookie ---> [k] ' . self::$_vary_name . ' [v] ' . ( false === $val ? 'false' : $val ) . ' [ttl] ' . ( (int) $expire - time() ) );
+		return $sent;
 	}
 
 	/**
