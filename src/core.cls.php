@@ -221,6 +221,10 @@ class Core extends Root {
 
 		ob_start( [ $this, 'send_headers_force' ] );
 		add_action( 'shutdown', [ $this, 'send_headers' ], 0 );
+		// CLI: send_headers() runs once and may fire early on an output flush, so purges queued later in the command (e.g. by upgrader hooks) need their own last-moment kick.
+		if ( defined( 'LITESPEED_CLI' ) ) {
+			add_action( 'shutdown', [ __CLASS__, 'kick_cli_purge_queues' ], PHP_INT_MAX );
+		}
 		add_action( 'wp_footer', [ $this, 'footer_hook' ] );
 
 		/**
@@ -780,10 +784,26 @@ class Core extends Root {
 		if ( $is_forced ) {
 			Debug2::debug( '--forced--' );
 		}
+	}
 
-		// If CLI and contains Purge Header, issue an HTTP request to Purge
-		if ( defined( 'LITESPEED_CLI' ) ) {
+	/**
+	 * At CLI shutdown, kick the current blog's queue and, on multisite, the queue of every other blog this process stored a purge for.
+	 *
+	 * Each blog's queue is only consumed by a request to that blog, so a purge stored after switch_to_blog() needs its own kick.
+	 */
+	public static function kick_cli_purge_queues() {
+		self::kick_purge_queue();
+		if ( ! is_multisite() ) {
+			return;
+		}
+		$current = get_current_blog_id();
+		foreach ( Purge::cli_queued_blogs() as $blog_id ) {
+			if ( $blog_id === $current ) {
+				continue;
+			}
+			switch_to_blog( $blog_id );
 			self::kick_purge_queue();
+			restore_current_blog();
 		}
 	}
 
