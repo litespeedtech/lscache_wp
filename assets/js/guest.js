@@ -48,13 +48,11 @@ if (!litespeed_vary) {
 					);
 			};
 
-			// Only an explicit reload request counts as success; anything else is treated as a failure of that endpoint.
+			// A reply that parsed is final: it resolves with whether a reload was requested, and an explicit "no" (e.g. `[]`) is never retried on the fallback. Only a transport failure of the request (rejection) falls back.
 			var attempt = function (url, withTimeout) {
 				return request(url, withTimeout).then(data => {
 					console.log(data);
-					if (data === null || typeof data !== 'object' || data.reload != 'yes') {
-						throw new Error('no reload requested');
-					}
+					return data !== null && typeof data === 'object' && data.reload == 'yes';
 				});
 			};
 
@@ -64,7 +62,10 @@ if (!litespeed_vary) {
 				result = result.catch(() => attempt(fallback, false));
 			}
 			result
-				.then(() => {
+				.then(reload => {
+					if (!reload) {
+						return;
+					}
 					// Save doc.ref for organic traffic usage
 					sessionStorage.setItem('litespeed_docref', document.referrer);
 					sessionStorage.setItem('litespeed_reloaded', '1');
