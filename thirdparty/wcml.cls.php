@@ -135,6 +135,8 @@ class WCML {
 					$defaults,
 					// WCML reads the switch as (int) (wcml_is_multi_currency_on()).
 					isset($settings['enable_multi_currency']) ? (int) $settings['enable_multi_currency'] : null,
+					// Whether a cart is kept (sync) or asks first (clear) on a currency switch decides if the site qualifies for the default vary.
+					isset($settings['cart_sync']['currency_switch']) ? (int) $settings['cart_sync']['currency_switch'] : null,
 					$langs,
 				];
 			};
@@ -506,7 +508,7 @@ class WCML {
 	/**
 	 * The currency of each language, when every language of the site has exactly one.
 	 *
-	 * Whether a URL's currency can be left out of the vary depends on the cookie a visitor brings to the next URL, so it is decided for the whole site: a single language that allows two currencies (WCML then keeps the stored one across a language switch) turns this off everywhere. Anything missing or of an unexpected type turns it off too, and the vary is then what it was before this check. The answer does not change within a request, so it is computed once per request.
+	 * Whether a URL's currency can be left out of the vary depends on the cookie a visitor brings to the next URL, so it is decided for the whole site: a single language that allows two currencies (WCML then keeps the stored one across a language switch) turns this off everywhere. So does a cart setting other than "keep the cart on a currency switch", because WCML's confirmation dialog needs PHP to run. Anything missing or of an unexpected type turns it off too, and the vary is then what it was before this check. The answer does not change within a request, so it is computed once per request.
 	 *
 	 * @since 7.9.4
 	 * @access private
@@ -531,6 +533,12 @@ class WCML {
 			|| !$cls::isModeByLanguage()
 			|| self::_by_location()
 		) {
+			return $memo;
+		}
+		// WCML's "Switching currency?" cart dialog (cart setting not SYNC) is built by PHP, which a cache hit skips: the cart would be converted silently.
+		global $woocommerce_wpml;
+		$switch = is_object($woocommerce_wpml) && isset($woocommerce_wpml->settings['cart_sync']['currency_switch']) ? $woocommerce_wpml->settings['cart_sync']['currency_switch'] : null;
+		if (!defined('WCML_CART_SYNC') || !is_numeric($switch) || (int) $switch !== (int) WCML_CART_SYNC) {
 			return $memo;
 		}
 
