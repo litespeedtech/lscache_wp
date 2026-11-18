@@ -1455,13 +1455,13 @@ class Media extends Root {
 		$slide_depth = 0;
 		$result      = Utility::html_tokens( $content, function ( $token ) use ( &$slide_depth, $replace_srcset ) {
 			$html = $token[0];
-			if ( $slide_depth && preg_match( '~\A</div(?=[\s/>])~i', $html ) ) {
+			if ( $slide_depth && preg_match( '~\A</(?:div|figure)(?=[\s/>])~i', $html ) ) {
 				--$slide_depth;
 			}
 
 			$tag        = isset( $token['tag'] ) ? strtolower( $token['tag'] ) : '';
 			$attributes = [];
-			if ( 'div' === $tag ) {
+			if ( 'div' === $tag || 'figure' === $tag ) {
 				$attrs   = false !== strpos( $token['attrs'], 'woocommerce-product-gallery__image' ) ? Utility::parse_attr( $token['attrs'] ) : [];
 				$classes = isset( $attrs['class'] ) ? preg_split( '/[\x09\x0a\x0c\x0d ]+/', $attrs['class'] ) : [];
 				if ( in_array( 'woocommerce-product-gallery__image', $classes, true ) ) {
