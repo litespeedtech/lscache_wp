@@ -1452,10 +1452,11 @@ class Media extends Root {
 	 * @return string Modified content.
 	 */
 	private function _replace_gallery_images( $content, $replace_srcset ) {
+		$slide_tag   = '';
 		$slide_depth = 0;
-		$result      = Utility::html_tokens( $content, function ( $token ) use ( &$slide_depth, $replace_srcset ) {
+		$result      = Utility::html_tokens( $content, function ( $token ) use ( &$slide_tag, &$slide_depth, $replace_srcset ) {
 			$html = $token[0];
-			if ( $slide_depth && preg_match( '~\A</(?:div|figure)(?=[\s/>])~i', $html ) ) {
+			if ( $slide_depth && preg_match( '~\A</' . $slide_tag . '(?=[\s/>])~i', $html ) ) {
 				--$slide_depth;
 			}
 
@@ -1465,12 +1466,15 @@ class Media extends Root {
 				$attrs   = false !== strpos( $token['attrs'], 'woocommerce-product-gallery__image' ) ? Utility::parse_attr( $token['attrs'] ) : [];
 				$classes = isset( $attrs['class'] ) ? preg_split( '/[\x09\x0a\x0c\x0d ]+/', $attrs['class'] ) : [];
 				if ( in_array( 'woocommerce-product-gallery__image', $classes, true ) ) {
+					if ( ! $slide_depth ) {
+						$slide_tag = $tag;
+					}
 					$attributes = [ 'data-thumb' ];
 					if ( $replace_srcset ) {
 						$html = Utility::srcset_replace( $html, [ $this, 'replace_webp' ], 'data-thumb-srcset' );
 					}
 				}
-				if ( $slide_depth || $attributes ) {
+				if ( $tag === $slide_tag && ( $slide_depth || $attributes ) ) {
 					++$slide_depth;
 				}
 			} elseif ( 1 === $slide_depth && 'a' === $tag ) {
