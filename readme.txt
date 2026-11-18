@@ -297,6 +297,12 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Debug** Forced and constant option values are no longer written to the debug log.
 * **Core** Fixed a fatal error when a folder becomes unreadable during cleanup.
 * **Cloud** Avoided a PHP 8.6 deprecation notice in signed callback validation. (dhrupo PR#1097)
+* **3rd** WooCommerce: ESI nonces now work on the order review page. (PR#1102)
+* **CDN** Fixed file type rewriting altering page markup when an Original URL has a wildcard.
+* **Media** WebP/AVIF replacement in `data-settings` now only touches real attributes.
+* **ESI** Nonce placeholders are now bound to the visitor session.
+* **Page Optimize** HTML and inline JS minify can no longer turn page text into tags.
+* **Media** VPI preload and iframe lazy load now only rewrite real elements.
 
 = 7.9.3 - Nov 3 2026 =
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)

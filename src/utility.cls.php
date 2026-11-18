@@ -44,7 +44,13 @@ class Utility extends Root {
 	 *
 	 * Quotes are consumed only as a complete value after `=`, and no branch consumes a lone quote or `=`, so an unquoted value may contain quotes (`data-x=it's`) while an unclosed quote (`alt="x src=/evil>`) makes the whole match fail and the tag stays untouched.
 	 */
-	const HTML_ATTR_PREFIX = '(?>\s+|[^\s"\'>=]+|=\s*"[^"]*"|=\s*\'[^\']*\'|=\s*[^\s"\'>][^\s>]*|=(?=[\s>]))*?';
+	const HTML_ATTR_PREFIX = '(?>[\x09\x0a\x0c\x0d ]+|[^\x09\x0a\x0c\x0d "\'>=]+|=[\x09\x0a\x0c\x0d ]*"[^"]*"|=[\x09\x0a\x0c\x0d ]*\'[^\']*\'|=[\x09\x0a\x0c\x0d ]*[^\x09\x0a\x0c\x0d "\'>][^\x09\x0a\x0c\x0d >]*|=(?=[\x09\x0a\x0c\x0d >]))*?';
+
+	// HTML whitespace for use inside a character class. PCRE `\s` also matches 0x0B, which HTML treats as an ordinary character.
+	const HTML_WS = '\x09\x0a\x0c\x0d ';
+
+	// Walk the attributes of one opening tag from its start: 1 separator, 2 name, 3 equals sign with its whitespace, 4 raw value. Use with preg_replace_callback(); a valueless attribute matches without groups.
+	const HTML_ATTR_WALK = '~\G([\x09\x0a\x0c\x0d /]+|(?<=["\']))([^\x09\x0a\x0c\x0d =/>]+)([\x09\x0a\x0c\x0d ]*=[\x09\x0a\x0c\x0d ]*)("[^"]*"|\'[^\']*\'|[^\x09\x0a\x0c\x0d >]+)|\G(?:[\x09\x0a\x0c\x0d /]+|(?<=["\']))[^\x09\x0a\x0c\x0d =/>]++(?![\x09\x0a\x0c\x0d ]*=)~';
 	// CDATA can contain raw-element end tags inside an opaque foreign block.
 	private const HTML_OPAQUE_TOKEN_PATTERN = self::HTML_TOKEN_PREFIX . '[^<]*+(?:(?:<!\[CDATA\[.*?(?:\]\]>|\z)|(?!' . self::HTML_RAW_END . ')<)[^<]*+)*+' . self::HTML_TOKEN_SUFFIX;
 
@@ -168,6 +174,29 @@ class Utility extends Root {
 				return $found ? [ $start + strlen( $ending[0] ), $ending[0] ] : [ strlen( $html ), '' ];
 			}
 		}
+	}
+
+	/**
+	 * Whether a rewritten script body could end the script element or change its escaped-data state.
+	 *
+	 * @since 7.9.4
+	 *
+	 * @param string $before Original script body.
+	 * @param string $after  Rewritten script body.
+	 * @return bool True when the rewritten body must not be used.
+	 */
+	public static function script_body_unsafe( $before, $after ) {
+		if ( false !== stripos( $after, '</script' ) ) {
+			return true;
+		}
+		// Removing whitespace can create `<!--` or `<script` (`a < !--b`, `a < script > 0`), which together keep the element open past its end tag.
+		foreach ( [ '<!--', '<script' ] as $marker ) {
+			if ( substr_count( strtolower( $after ), $marker ) > substr_count( strtolower( $before ), $marker ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -553,7 +582,7 @@ class Utility extends Root {
 		while ( $offset < $length ) {
 			$gap_start = $offset;
 			// Consume one complete attribute; stop at malformed markup instead of scanning inside its quoted text.
-			if ( ! preg_match( '/\G(\s*+)([_a-zA-Z][-_a-zA-Z0-9:.]*+)(?:\s*+=\s*+("[^"]*"|\'[^\']*\'|(?!["\'])[^\s>]*+)|(?!\s*=))/', $attr_str, $match, 0, $offset ) ) {
+			if ( ! preg_match( '/\G([\x09\x0a\x0c\x0d ]*+)([_a-zA-Z][-_a-zA-Z0-9:.]*+)(?:[\x09\x0a\x0c\x0d ]*+=[\x09\x0a\x0c\x0d ]*+("[^"]*"|\'[^\']*\'|(?!["\'])[^\x09\x0a\x0c\x0d >]*+)|(?![\x09\x0a\x0c\x0d ]*=))/', $attr_str, $match, 0, $offset ) ) {
 				break;
 			}
 			$offset    += strlen( $match[0] );
@@ -571,7 +600,7 @@ class Utility extends Root {
 			$remove_from = $gap_start;
 			$remove_end  = $offset;
 			if ( 0 === $gap_start ) {
-				while ( $remove_end < $length && ctype_space( $attr_str[ $remove_end ] ) ) {
+				while ( $remove_end < $length && false !== strpos( "\t\n\f\r ", $attr_str[ $remove_end ] ) ) {
 					++$remove_end;
 				}
 				// Attribute-only callers concatenate the leading whitespace after the tag name.

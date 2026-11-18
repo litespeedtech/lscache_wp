@@ -136,6 +136,9 @@ class HTML_MIN {
 		}
 		$this->_html = $html;
 
+		// Every real tag is tokenized by now, so a `<` followed by whitespace is literal text; encode it so removing whitespace cannot join it to the next word as a tag.
+		$this->_html = preg_replace( '/<(?=\s)/', '&lt;', $this->_html );
+
 		// trim each line.
 		// @todo take into account attribute values that span multiple lines.
 		$this->_html = preg_replace( '/^\\s+|\\s+$/m', '', $this->_html );
@@ -264,7 +267,7 @@ class HTML_MIN {
 		} else {
 			$js = trim( $js );
 		}
-		if ( false !== stripos( $js, '</script' ) ) {
+		if ( \LiteSpeed\Utility::script_body_unsafe( $m[3], $js ) ) {
 			return $this->_reservePlace( $m[0] );
 		}
 

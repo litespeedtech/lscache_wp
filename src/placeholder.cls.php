@@ -293,17 +293,17 @@ class Placeholder extends Base {
 
 		$lazy = $html;
 		foreach ( [ 'src', 'srcset', 'sizes' ] as $attr ) {
-			$lazy = preg_replace( '/\A(<img\b' . Utility::HTML_ATTR_PREFIX . ')\s+' . $attr . '\s*=/i', '$1 data-' . $attr . '=', $lazy, 1, $renamed );
+			$lazy = preg_replace( '/\A(<img\b' . Utility::HTML_ATTR_PREFIX . ')[' . Utility::HTML_WS . ']+' . $attr . '[' . Utility::HTML_WS . ']*=/i', '$1 data-' . $attr . '=', $lazy, 1, $renamed );
 			// Only a real src rename may receive the placeholder src; otherwise keep the tag untouched to avoid a duplicate src.
 			if ( null === $lazy || ( 'src' === $attr && 1 !== $renamed ) ) {
 				return $html;
 			}
 		}
-		$lazy = preg_replace(
-			'/\A<img\s+/i',
-			'<img data-lazyloaded="1"' . $additional_attr . ' src="' . Str::trim_quotes($this_placeholder) . '" ',
-			$lazy
-		);
+		// Concatenate instead of using a regex replacement string, and escape the placeholder for its attribute.
+		if ( ! preg_match( '/\A<img[' . Utility::HTML_WS . ']+/i', $lazy, $opening ) ) {
+			return $html;
+		}
+		$lazy = '<img data-lazyloaded="1"' . $additional_attr . ' src="' . esc_attr( Str::trim_quotes( $this_placeholder ) ) . '" ' . substr( $lazy, strlen( $opening[0] ) );
 
 		$snippet = $lazy . $snippet;
 

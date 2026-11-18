@@ -769,7 +769,7 @@ class Optimize extends Base {
 						$attrs   = !empty($src_info['attrs']) ? $src_info['attrs'] : '';
 						$snippet = $this->_js_inline_defer($src_info['src'], $attrs) ?: $html_list[$key];
 					} else {
-						$code    = Optimizer::minify_js($src_info['src']);
+						$code    = $this->_minify_inline_js( $src_info['src'] );
 						$snippet = str_replace($src_info['src'], $code, $html_list[$key]);
 					}
 				}
@@ -790,7 +790,10 @@ class Optimize extends Base {
 				}
 			}
 
-			$snippet         = str_replace("<$tag ", '<' . $tag . ' data-optimized="1" ', $snippet);
+			// Mark the opening tag only; the same text inside an inline body is data.
+			if ( 0 === strpos( $snippet, "<$tag " ) ) {
+				$snippet = '<' . $tag . ' data-optimized="1" ' . substr( $snippet, strlen( $tag ) + 2 );
+			}
 			$html_list[$key] = $snippet;
 		}
 
@@ -1007,7 +1010,7 @@ class Optimize extends Base {
 		// Minify JS first
 		if (!$minified) {
 			// && $this->cfg_js_defer !== 2
-			$con = Optimizer::minify_js($con);
+			$con = $this->_minify_inline_js( $con );
 		}
 
 		if (!$con) {
@@ -1028,6 +1031,21 @@ class Optimize extends Base {
 		}
 
 		return '<script' . $attrs . ' src="data:text/javascript;base64,' . base64_encode($con) . '" defer></script>';
+	}
+
+	/**
+	 * Minify an inline script body, keeping the original when the result could end or re-open the script element.
+	 *
+	 * @since 7.9.4
+	 * @access private
+	 *
+	 * @param string $code Inline script body.
+	 * @return string
+	 */
+	private function _minify_inline_js( $code ) {
+		$minified = Optimizer::minify_js( $code );
+		// Removing whitespace can turn `a < /script>/` into a real end tag, or create `<!--` / `<script` markers.
+		return Utility::script_body_unsafe( $code, $minified ) ? $code : $minified;
 	}
 
 	/**
@@ -1312,6 +1330,11 @@ class Optimize extends Base {
 			return $delayed;
 		}
 
-		return str_replace('></script>', ' defer data-deferred="1"></script>', $ori);
+		// Append to the opening tag only; the same bytes inside a quoted attribute value are data.
+		if ( ! preg_match( '~\A<script' . Utility::HTML_ATTR_PATTERN . '(?=></script>\z)~i', $ori, $opening ) ) {
+			return false;
+		}
+
+		return $opening[0] . ' defer data-deferred="1"></script>';
 	}
 }

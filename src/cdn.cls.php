@@ -255,7 +255,7 @@ class CDN extends Root {
 		}
 
 		// Check if need preg_replace
-		$this->_cfg_url_ori = Utility::wildcard2regex( $this->_cfg_url_ori );
+		$this->_cfg_url_ori = $this->_ori_patterns( $this->_cfg_url_ori );
 
 		$this->_cfg_cdn_exclude = $this->conf( Base::O_CDN_EXC );
 
@@ -278,6 +278,33 @@ class CDN extends Root {
 		}
 
 		add_filter( 'litespeed_buffer_finalize', [ $this, 'finalize' ], 30 );
+	}
+
+	/**
+	 * Turn wildcard Original URLs into regex fragments that cannot leave the URL they match.
+	 *
+	 * @since 7.9.4
+	 * @access private
+	 *
+	 * @param array $urls Original URLs from settings.
+	 * @return array Plain entries unchanged; entries with `*` as regex fragments for a `#` delimiter.
+	 */
+	private function _ori_patterns( $urls ) {
+		$patterns = [];
+		foreach ( (array) $urls as $url ) {
+			if ( false === strpos( $url, '*' ) ) {
+				$patterns[] = $url;
+				continue;
+			}
+			// A wildcard in the host stays inside the host; elsewhere it still never matches whitespace, quotes, angle brackets, backslash or backtick.
+			$host_start = strpos( $url, '//' );
+			$host_end   = strpos( $url, '/', false === $host_start ? 0 : $host_start + 2 );
+			$host       = false === $host_end ? $url : substr( $url, 0, $host_end );
+			$path       = false === $host_end ? '' : substr( $url, $host_end );
+			$patterns[] = str_replace( '\*', '[^/\s"\'<>\\\\`]*', preg_quote( $host, '#' ) ) . str_replace( '\*', '[^\s"\'<>\\\\`]*', preg_quote( $path, '#' ) );
+		}
+
+		return $patterns;
 	}
 
 	/**
@@ -403,6 +430,10 @@ class CDN extends Root {
 			}
 
 			foreach ($matches[$v[0] ? 3 : 2] as $k2 => $url) {
+				// The pattern also matches text and can span tags; only a capture without delimiter bytes is a URL that can be rewritten in place.
+				if ( preg_match( '/[\s\x00-\x1f\x7f\'"<>\\\\`]/', $url ) ) {
+					continue;
+				}
 				// self::debug2( 'check ' . $url );
 				$postfix = '.' . pathinfo((string) wp_parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
 				if (!array_key_exists($postfix, $this->_cfg_cdn_mapping)) {
@@ -476,7 +507,7 @@ class CDN extends Root {
 			$is_img = 'img' === strtolower( $token['tag'] );
 			$src    = false;
 			// Consume every attribute, including non-style quoted values, before advancing; like browsers, whitespace, `/` runs or a just-closed quote separate attributes (`<img/src=x>`, `alt="x"src=y`).
-			$attrs = preg_replace_callback( '~\G([\s/]+|(?<=["\']))([^\s=/>]+)(\s*=\s*)("[^"]*"|\'[^\']*\'|[^\s>]+)|\G(?:[\s/]+|(?<=["\']))[^\s=/>]++(?!\s*=)~', function ( $attr ) use ( $is_img, &$src ) {
+			$attrs = preg_replace_callback( Utility::HTML_ATTR_WALK, function ( $attr ) use ( $is_img, &$src ) {
 				if ( empty( $attr[2] ) ) {
 					return $attr[0];
 				}
@@ -485,7 +516,8 @@ class CDN extends Root {
 					return $attr[0];
 				}
 				$value = $attr[4];
-				$quote = '"' === $value[0] || "'" === $value[0] ? $value[0] : '';
+				// An opening quote without its closing quote is part of an unquoted value.
+				$quote = strlen( $value ) > 1 && ( '"' === $value[0] || "'" === $value[0] ) && substr( $value, -1 ) === $value[0] ? $value[0] : '';
 				$inner = $quote ? substr( $value, 1, -1 ) : $value;
 				if ( 'style' === $name ) {
 					return $attr[1] . $attr[2] . $attr[3] . $quote . $this->_rewrite_css_urls( $inner ) . $quote;
@@ -741,9 +773,10 @@ class CDN extends Root {
 		// Now lets replace CDN url
 		foreach ( $this->_cfg_url_ori as $v ) {
 			if ( false !== strpos( $v, '*' ) ) {
-				$url = preg_replace_callback( '#' . $scheme . $v . '#iU', static function () use ( $final_url ) {
+				$replaced = preg_replace_callback( '#\A' . preg_quote( $scheme, '#' ) . $v . '#iU', static function () use ( $final_url ) {
 					return $final_url;
-				}, $url );
+				}, $url, 1 );
+				$url      = null === $replaced ? $url : $replaced;
 			} else {
 				$url = str_replace( $scheme . $v, $final_url, $url );
 			}
@@ -770,7 +803,7 @@ class CDN extends Root {
 		foreach ( $this->_cfg_url_ori as $v ) {
 			$needle = $scheme . $v;
 			if ( false !== strpos( $v, '*' ) ) {
-				if ( preg_match( '#' . $needle . '#iU', $url ) ) {
+				if ( preg_match( '#\A' . preg_quote( $scheme, '#' ) . $v . '#iU', $url ) ) {
 					return true;
 				}
 			} elseif ( 0 === strpos( $url, $needle ) ) {

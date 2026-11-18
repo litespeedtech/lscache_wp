@@ -944,7 +944,7 @@ class Media extends Root {
 			foreach ( $html_list as $k => $v ) {
 				$snippet     = $cfg_trim_noscript || false !== stripos( $v, '</noscript' ) ? '' : '<noscript>' . $v . '</noscript>';
 				$source_attr = $cfg_js_delay ? 'data-litespeed-src' : 'data-src';
-				$v           = preg_replace_callback( '/\A(<iframe\b' . Utility::HTML_ATTR_PREFIX . ')\s+src\s*=/i', static function ( $matches ) use ( $source_attr ) {
+				$v           = preg_replace_callback( '/\A(<iframe\b' . Utility::HTML_ATTR_PREFIX . ')[' . Utility::HTML_WS . ']+src[' . Utility::HTML_WS . ']*=/i', static function ( $matches ) use ( $source_attr ) {
 					return $matches[1] . ' ' . $source_attr . '=';
 				}, $v, 1, $renamed );
 				// Only a real src rename may receive the about:blank src; otherwise keep the iframe untouched.
@@ -1002,37 +1002,30 @@ class Media extends Root {
 			return;
 		}
 
-		$replacements = [];
-		$content      = Utility::html_mask( $this->content, [ 'img' ] );
-		if ( null === $content ) {
-			return;
-		}
-		// Keep source offsets and skip non-rendered markup, even when it contains the same image tag.
-		preg_match_all( '#<img\s+(?P<attrs>' . Utility::HTML_ATTR_PATTERN . ')>#is', $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE );
-		foreach ($matches as $source_match) {
-			if ( ! isset( $source_match['attrs'] ) || -1 === $source_match['attrs'][1] || ! preg_match( '//u', $source_match['attrs'][0] ) ) {
-				continue;
+		// Walk real img tokens only; identical text in comments, scripts or another tag's attribute value is never a token.
+		$result = Utility::html_tokens( $this->content, function ( $token ) use ( $vpi_files ) {
+			if ( empty( $token['tag'] ) || empty( $token['end'] ) || ! empty( $token['opaque'] ) || 'img' !== strtolower( $token['tag'] ) || ! preg_match( '//u', $token['attrs'] ) ) {
+				return $token[0];
 			}
-			$match = [ $source_match[0][0], $source_match['attrs'][0] ];
-			$attrs = Utility::parse_attr($match[1]);
+			$attrs = Utility::parse_attr( $token['attrs'] );
 
 			if ( empty( $attrs['src'] ) ) {
-				continue;
+				return $token[0];
 			}
 
 			if ( false !== strpos( $attrs['src'], 'base64' ) || 0 === strpos( $attrs['src'], 'data:' ) ) {
 				self::debug2( 'lazyload bypassed base64 img' );
-				continue;
+				return $token[0];
 			}
 
 			if ( false !== strpos( $attrs['src'], '{' ) ) {
 				self::debug2( 'image src has {} ' . $attrs['src'] );
-				continue;
+				return $token[0];
 			}
 
 			// If the src contains VPI filename, then preload it.
 			if ( ! Utility::str_hit_array( $attrs['src'], $vpi_files ) ) {
-				continue;
+				return $token[0];
 			}
 
 			self::debug2( 'VPI preload found and matched: ' . $attrs['src'] );
@@ -1046,29 +1039,16 @@ class Media extends Root {
 				$this->_vpi_preload_list[] = $preload;
 			}
 
-			// Add attributes fetchpriority="high" and decode="sync"
-			// after WP 6.3.0 use: wp_img_tag_add_loading_optimization_attrs().
-			$new_html                 = [];
-			$attrs[ 'fetchpriority' ] = 'high';
-			$attrs[ 'decoding' ]      = 'sync';
-			// create html with new attributes.
-			foreach ( $attrs as $k => $attr ) {
-				// Escape the value and drop anything whose name is not a plain attribute name.
-				if ( ! preg_match( '/^[a-zA-Z_:][-\w:.]*$/', (string) $k ) ) {
-					self::debug2( 'VPI preload dropped an attribute with an unusable name' );
-					continue;
-				}
-				$new_html[] = $k . '="' . esc_attr( $attr ) . '"';
+			// Add fetchpriority="high" and decoding="sync" in front of the original attribute bytes; the tag is never rebuilt from parsed values.
+			$kept = Utility::remove_attr( Utility::remove_attr( $token['attrs'], 'fetchpriority' ), 'decoding' );
+			if ( '' !== $kept && false === strpos( "\t\n\f\r /", $kept[0] ) ) {
+				return $token[0];
 			}
 
-			if ( $new_html ) {
-				$replacements[] = [ $source_match[0][1], strlen( $match[0] ), '<img ' . implode( ' ', $new_html ) . '>' ];
-			}
-		}
-
-		// Replace from the end so earlier source offsets remain valid.
-		foreach ( array_reverse( $replacements ) as $replacement ) {
-			$this->content = substr_replace( $this->content, $replacement[2], $replacement[0], $replacement[1] );
+			return '<' . $token['tag'] . ' fetchpriority="high" decoding="sync"' . $kept . '>';
+		} );
+		if ( null !== $result ) {
+			$this->content = $result;
 		}
 	}
 
@@ -1139,7 +1119,7 @@ class Media extends Root {
 			&& apply_filters( 'litespeed_media_add_missing_sizes', true );
 		$replacements      = [];
 
-		preg_match_all( '#<img\s+(' . Utility::HTML_ATTR_PATTERN . ')>#is', $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE );
+		preg_match_all( '#<img[' . Utility::HTML_WS . ']+(' . Utility::HTML_ATTR_PATTERN . ')>#is', $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE );
 		foreach ( $matches as $source_match ) {
 			$match = [ $source_match[0][0], $source_match[1][0] ];
 			// Exclusion masks may hide tokens, but must never expose previously inert text.
@@ -1223,16 +1203,19 @@ class Media extends Root {
 						}
 
 						// Remove existing width/height, then append new values
-						$inner    = Utility::html_self_closing( $match[1] ) ? substr( $match[1], 0, -1 ) : $match[1];
-						$inner    = Utility::remove_attr( $inner, 'width' );
-						$inner    = Utility::remove_attr( $inner, 'height' );
-						$inner    = rtrim( $inner, " \t\n\r\f" );
-						$new_html = '<img ' . $inner . ' width="' . (int) $ori_width . '" height="' . (int) $ori_height . '" />';
-						self::debug( 'Add missing sizes ' . $ori_width . 'x' . $ori_height . ' to ' . $attrs['src'] );
-						$replacements[ $match[0] ] = $new_html;
-						$match[0]                  = $new_html;
-						$attrs['width']            = $ori_width;
-						$attrs['height']           = $ori_height;
+						$inner = Utility::html_self_closing( $match[1] ) ? substr( $match[1], 0, -1 ) : $match[1];
+						$inner = Utility::remove_attr( $inner, 'width' );
+						$inner = Utility::remove_attr( $inner, 'height' );
+						$inner = rtrim( $inner, " \t\n\r\f" );
+						// A trailing `name=` would take the appended attributes as its value, so such a tag keeps its own markup.
+						if ( '=' !== substr( $inner, -1 ) ) {
+							$new_html = '<img ' . $inner . ' width="' . (int) $ori_width . '" height="' . (int) $ori_height . '" />';
+							self::debug( 'Add missing sizes ' . $ori_width . 'x' . $ori_height . ' to ' . $attrs['src'] );
+							$replacements[ $match[0] ] = $new_html;
+							$match[0]                  = $new_html;
+							$attrs['width']            = $ori_width;
+							$attrs['height']           = $ori_height;
+						}
 					}
 				}
 			}
@@ -1330,12 +1313,23 @@ class Media extends Root {
 		if ( null === $content ) {
 			return $html_list;
 		}
-		preg_match_all( '#<iframe\s+(?P<attrs>' . Utility::HTML_ATTR_PATTERN . ')>.*?</iframe\s*>#is', $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE );
+		// Offsets and lengths of complete iframe elements; a match that is not exactly one of them started inside another token or ran past its end tag.
+		$iframe_tokens = [];
+		Utility::html_tokens( $this->content, static function ( $token ) use ( &$iframe_tokens ) {
+			if ( ! empty( $token['raw'] ) && empty( $token['opaque'] ) && ! empty( $token['close'] ) && 'iframe' === strtolower( $token['raw'] ) ) {
+				$iframe_tokens[ $token['offset'] ] = strlen( $token[0] );
+			}
+			return $token[0];
+		} );
+		preg_match_all( '#<iframe[' . Utility::HTML_WS . ']+(?P<attrs>' . Utility::HTML_ATTR_PATTERN . ')>.*?</iframe[' . Utility::HTML_WS . ']*>#is', $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE );
 		foreach ( $matches as $source_match ) {
 			if ( ! isset( $source_match['attrs'] ) || -1 === $source_match['attrs'][1] ) {
 				continue;
 			}
 			$match = [ $source_match[0][0], $source_match['attrs'][0] ];
+			if ( ! isset( $iframe_tokens[ $source_match[0][1] ] ) || strlen( $match[0] ) !== $iframe_tokens[ $source_match[0][1] ] ) {
+				continue;
+			}
 			if ( substr( $eligible_content, $source_match[0][1], strlen( $match[0] ) ) !== $match[0] ) {
 				continue;
 			}
@@ -1494,53 +1488,65 @@ class Media extends Root {
 	 * @return string Modified content with replaced URLs inside JSON attributes.
 	 */
 	public function replace_urls_in_json( $content ) {
-		$pattern      = '/data-settings="(.*?)"/i';
-		$parent_class = $this;
-
-		preg_match_all( $pattern, $content, $matches, PREG_SET_ORDER );
-
-		foreach ( $matches as $match ) {
-			// Decode HTML entities in the JSON string.
-			$json_string = html_entity_decode( $match[1] );
-
-			$json_data = \json_decode( $json_string, true );
-
-			if ( JSON_ERROR_NONE === json_last_error() && is_array( $json_data ) ) {
-				$did_webp_replace = false;
-
-				array_walk_recursive(
-					$json_data,
-                    /**
-                     * Replace URLs in JSON data recursively.
-                     *
-                     * @param mixed  $item Value (modified in place).
-                     * @param string $key  Array key.
-                     */
-					function ( &$item, $key ) use ( &$did_webp_replace, $parent_class ) {
-						if ( 'url' === $key ) {
-							$item_image = $parent_class->replace_webp( $item );
-							if ( $item_image ) {
-								$item             = $item_image;
-								$did_webp_replace = true;
-							}
-						}
-					}
-				);
-
-				if ( $did_webp_replace ) {
-					$new_json_string = wp_json_encode( $json_data );
-
-					// Force double_encode; esc_attr() would leave a literal `&quot;` intact and the browser decodes it back into a quote.
-					$new_json_string = htmlspecialchars( $new_json_string, ENT_QUOTES, 'UTF-8', true );
-
-					// Replace the whole attribute, not the bare value, which may also appear in inline JS. Prefix sliced to keep original casing.
-					$attr_prefix = substr( $match[0], 0, strlen( $match[0] ) - strlen( $match[1] ) - 1 );
-					$content     = str_replace( $match[0], $attr_prefix . $new_json_string . '"', $content );
-				}
-			}
+		if ( false === stripos( $content, 'data-settings' ) ) {
+			return $content;
 		}
 
-		return $content;
+		// Only a real double-quoted data-settings attribute of a complete tag is rewritten, in place; the same bytes in text, comments, scripts or another attribute's value stay untouched.
+		$result = Utility::html_tokens( $content, function ( $token ) {
+			if ( empty( $token['tag'] ) || empty( $token['end'] ) || ! empty( $token['opaque'] ) || false === stripos( $token['attrs'], 'data-settings' ) ) {
+				return $token[0];
+			}
+			$attrs = preg_replace_callback( Utility::HTML_ATTR_WALK, function ( $attr ) {
+				if ( empty( $attr[2] ) || 0 !== strcasecmp( $attr[2], 'data-settings' ) || strlen( $attr[4] ) < 2 || '"' !== $attr[4][0] || '"' !== substr( $attr[4], -1 ) ) {
+					return $attr[0];
+				}
+				$value = $this->_replace_json_urls( substr( $attr[4], 1, -1 ) );
+				return null === $value ? $attr[0] : $attr[1] . $attr[2] . $attr[3] . '"' . $value . '"';
+			}, $token['attrs'] );
+
+			return null === $attrs ? $token[0] : '<' . $token['tag'] . $attrs . '>';
+		} );
+
+		return null === $result ? $content : $result;
+	}
+
+	/**
+	 * Replace image URLs inside one JSON attribute value.
+	 *
+	 * @since 7.9.4
+	 *
+	 * @param string $raw Attribute value as it appears in the HTML source.
+	 * @return string|null New attribute value, or null when nothing was replaced.
+	 */
+	private function _replace_json_urls( $raw ) {
+		// Decode to objects so an empty JSON object is not written back as an array.
+		$json_data = \json_decode( html_entity_decode( $raw ) );
+		if ( JSON_ERROR_NONE !== json_last_error() || ( ! is_array( $json_data ) && ! is_object( $json_data ) ) ) {
+			return null;
+		}
+
+		$did_webp_replace = false;
+		$walk             = function ( &$node ) use ( &$walk, &$did_webp_replace ) {
+			foreach ( $node as $key => &$item ) {
+				if ( is_array( $item ) || is_object( $item ) ) {
+					$walk( $item );
+				} elseif ( 'url' === $key && is_string( $item ) ) {
+					$item_image = $this->replace_webp( $item );
+					if ( $item_image ) {
+						$item             = $item_image;
+						$did_webp_replace = true;
+					}
+				}
+			}
+		};
+		$walk( $json_data );
+		if ( ! $did_webp_replace ) {
+			return null;
+		}
+
+		// Force double_encode; esc_attr() would leave a literal `&quot;` intact and the browser decodes it back into a quote.
+		return htmlspecialchars( wp_json_encode( $json_data ), ENT_QUOTES, 'UTF-8', true );
 	}
 
 	/**
