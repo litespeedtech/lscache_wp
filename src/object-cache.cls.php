@@ -586,11 +586,13 @@ class Object_Cache extends Root {
 			} catch ( \Exception $e ) {
 				$this->debug_oc( 'Redis connect exception: ' . $e->getMessage() );
 				$failed = true;
-			} catch ( \ErrorException $e ) {
+			} catch ( \Throwable $e ) {
+				// TypeError and ValueError are not an \Exception, catch them too so the connection fails cleanly.
 				$this->debug_oc( 'Redis connect error: ' . $e->getMessage() );
 				$failed = true;
+			} finally {
+				restore_error_handler();
 			}
-			restore_error_handler();
 		} else {
 			// Connect to Memcached.
 			if ( $this->_cfg_persistent ) {
