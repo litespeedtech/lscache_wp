@@ -139,6 +139,11 @@ trait Img_Optm_Manage {
 		// Start deleting files
 		$limit = apply_filters( 'litespeed_imgoptm_destroy_max_rows', 500 );
 
+		// OptimaX builds and their CSS link the images about to go.
+		if ( ! $offset ) {
+			$this->cls( 'Optimax_Pages' )->all_designs_changed( 'optimized images destroyed' );
+		}
+
 		$img_q = "SELECT b.post_id, b.meta_value
 			FROM `$wpdb->posts` a
 			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID

@@ -68,7 +68,7 @@ if ( Router::opcache_enabled() && ( ! is_multisite() || current_user_can( 'manag
 	);
 }
 
-if ( $this->has_cache_folder( 'ccss' ) ) {
+if ( Purge::has_purgeable_folder( 'ccss' ) ) {
 	$_panels[] = array(
 		'title'      => esc_html__( 'Purge All', 'litespeed-cache' ) . ' - ' . esc_html__( 'Critical CSS', 'litespeed-cache' ),
 		'desc'       => esc_html__( 'This will delete all generated critical CSS files', 'litespeed-cache' ),
@@ -77,7 +77,7 @@ if ( $this->has_cache_folder( 'ccss' ) ) {
 	);
 }
 
-if ( $this->has_cache_folder( 'ucss' ) ) {
+if ( Purge::has_purgeable_folder( 'ucss' ) ) {
 	$_panels[] = array(
 		'title'      => esc_html__( 'Purge All', 'litespeed-cache' ) . ' - ' . esc_html__( 'Unique CSS', 'litespeed-cache' ),
 		'desc'       => esc_html__( 'This will delete all generated unique CSS files', 'litespeed-cache' ),
@@ -104,7 +104,7 @@ if ( $this->has_cache_folder( 'lqip' ) ) {
 	);
 }
 
-if ( $this->has_cache_folder( 'vpi' ) ) {
+if ( Purge::has_purgeable_folder( 'vpi' ) ) {
 	$_panels[] = array(
 		'title'      => __( 'Purge All', 'litespeed-cache' ) . ' - VPI',
 		'desc'       => __( 'This will delete all generated Viewport Images', 'litespeed-cache' ),

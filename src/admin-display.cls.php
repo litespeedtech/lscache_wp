@@ -221,6 +221,9 @@ class Admin_Display extends Base {
 		self::O_OPTM_EXC => [
 			'filter' => 'litespeed_optm_uri_exc',
 		],
+		self::O_OPTIMAX_EXC => [
+			'filter' => 'litespeed_optimax_uri_exc',
+		],
 		// Page Optimization - Tuning (CSS).
 		self::O_OPTM_CSS_EXC => [
 			'filter' => 'litespeed_optimize_css_excludes',
@@ -1232,6 +1235,12 @@ class Admin_Display extends Base {
 		$deprecated_filter_val = $this->deprecated_filter_overwritten( $id );
 		$filter_val            = $this->filter_overwritten( $id );
 		$server_val            = $this->server_overwritten( $id );
+
+		// A setting OptimaX turns on shows its own note.
+		if ( ! is_network_admin() && Optimax::forces( $id ) ) {
+			Optimax::forced_note();
+			$filter_val = null;
+		}
 
 		if ( null === $const_val && null === $primary_val && null === $deprecated_filter_val && null === $filter_val && null === $server_val ) {
 			return;

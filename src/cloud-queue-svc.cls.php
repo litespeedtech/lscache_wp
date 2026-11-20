@@ -194,6 +194,16 @@ abstract class Cloud_Queue_Svc extends Base {
 	}
 
 	/**
+	 * Whether a queue item is sent without local credit: QUIC.cloud decides if it is free.
+	 *
+	 * @param array $v Queue item.
+	 * @return bool
+	 */
+	protected function _free_item( $v ) {
+		return false;
+	}
+
+	/**
 	 * Static cron entry point invoked by WP cron and admin actions.
 	 *
 	 * @param bool $keep_going Process the whole queue when true; otherwise stop
@@ -300,7 +310,7 @@ abstract class Cloud_Queue_Svc extends Base {
 
 		$err       = false;
 		$allowance = $this->cls( 'Cloud' )->allowance( $svc, $err );
-		if ( ! $allowance ) {
+		if ( ! $allowance && ! $this->_free_item( $v ) ) {
 			self::debug( '❌ No credit: ' . $err );
 			$err && Admin_Display::error( Error::msg( $err ) );
 			return 'out_of_quota';
