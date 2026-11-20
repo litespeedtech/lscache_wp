@@ -47,9 +47,9 @@ class Purge extends Base {
 	protected $_purge_single = false;
 
 	/**
-	 * Blog IDs whose purge queue this CLI process stored, so shutdown can kick each one.
+	 * Blog IDs whose purge queues this CLI process stored, so shutdown can kick each one; per blog and queue name, true once a Purge All was saved there.
 	 *
-	 * @var array<int,true>
+	 * @var array<int,array<string,bool>>
 	 */
 	private static $_cli_queued_blogs = [];
 
@@ -692,8 +692,9 @@ class Purge extends Base {
 
 		$tags = $this->_prepend_bid( $tags );
 
-		// In CLI, '*' carries no blog ID, so a Purge All after switch_to_blog() must still store that blog's own queue.
-		$is_cli_purge_all = defined( 'LITESPEED_CLI' ) && is_multisite() && in_array( '*', $tags, true );
+		// In CLI, '*' carries no blog ID, so a Purge All after switch_to_blog() must still store that blog's own queue, once per queue.
+		$queue            = $purge2 ? self::DB_QUEUE2 : self::DB_QUEUE;
+		$is_cli_purge_all = defined( 'LITESPEED_CLI' ) && is_multisite() && in_array( '*', $tags, true ) && empty( self::$_cli_queued_blogs[ get_current_blog_id() ][ $queue ] );
 		if ( ! $is_cli_purge_all && ! array_diff( $tags, $purge2 ? $this->_pub_purge2 : $this->_pub_purge ) ) {
 			return;
 		}
@@ -720,8 +721,9 @@ class Purge extends Base {
 
 		if ( defined( 'LITESPEED_CLI' ) ) {
 			// Can't send, already has output, need to save and wait for next run
-			self::update_option($purge2 ? self::DB_QUEUE2 : self::DB_QUEUE, $curr_built);
-			self::$_cli_queued_blogs[ get_current_blog_id() ] = true;
+			$saved = self::update_option( $queue, $curr_built );
+			// Only a saved Purge All stops later ones on this blog and queue; a failed save or a tag-only queue does not.
+			self::$_cli_queued_blogs[ get_current_blog_id() ][ $queue ] = ! empty( self::$_cli_queued_blogs[ get_current_blog_id() ][ $queue ] ) || ( $saved && in_array( '*', $tags, true ) );
 			self::debug( 'CLI request, queue stored: ' . $curr_built );
 		} else {
 			if ( ! headers_sent() ) {
