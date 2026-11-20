@@ -46,11 +46,27 @@ class Purge extends Base {
 	 */
 	protected $_purge_single = false;
 
+	/**
+	 * Blog IDs whose purge queue this CLI process stored, so shutdown can kick each one.
+	 *
+	 * @var array<int,true>
+	 */
+	private static $_cli_queued_blogs = [];
+
 	const X_HEADER             = 'X-LiteSpeed-Purge';
 	const X_HEADER2            = 'X-LiteSpeed-Purge2';
 	const DB_QUEUE             = 'queue';
 	const DB_QUEUE2            = 'queue2';
 	const UPGRADE_PURGE_HEADER = 'X-LiteSpeed-Purge2: public,*';
+
+	/**
+	 * Blog IDs whose purge queue this CLI process stored.
+	 *
+	 * @return array<int,int>
+	 */
+	public static function cli_queued_blogs() {
+		return array_keys( self::$_cli_queued_blogs );
+	}
 
 	/**
 	 * Persist a full page-cache invalidation before an upgrade version is committed.
@@ -676,7 +692,9 @@ class Purge extends Base {
 
 		$tags = $this->_prepend_bid( $tags );
 
-		if ( ! array_diff( $tags, $purge2 ? $this->_pub_purge2 : $this->_pub_purge ) ) {
+		// In CLI, '*' carries no blog ID, so a Purge All after switch_to_blog() must still store that blog's own queue.
+		$is_cli_purge_all = defined( 'LITESPEED_CLI' ) && is_multisite() && in_array( '*', $tags, true );
+		if ( ! $is_cli_purge_all && ! array_diff( $tags, $purge2 ? $this->_pub_purge2 : $this->_pub_purge ) ) {
 			return;
 		}
 
@@ -703,6 +721,7 @@ class Purge extends Base {
 		if ( defined( 'LITESPEED_CLI' ) ) {
 			// Can't send, already has output, need to save and wait for next run
 			self::update_option($purge2 ? self::DB_QUEUE2 : self::DB_QUEUE, $curr_built);
+			self::$_cli_queued_blogs[ get_current_blog_id() ] = true;
 			self::debug( 'CLI request, queue stored: ' . $curr_built );
 		} else {
 			if ( ! headers_sent() ) {
@@ -1319,8 +1338,8 @@ class Purge extends Base {
 			return $tags;
 		}
 
-		// Purge All: maybe reset crawler.
-		if ( ! $is_private && $this->conf( self::O_CRAWLER ) ) {
+		// Purge All: maybe reset crawler. Skip while switched: the Crawler singleton is bound to the blog it was built on.
+		if ( ! $is_private && ! ( is_multisite() && ms_is_switched() ) && $this->conf( self::O_CRAWLER ) ) {
 			Crawler::cls()->reset_pos();
 		}
 
