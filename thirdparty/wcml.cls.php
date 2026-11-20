@@ -538,7 +538,7 @@ class WCML {
 		// WCML's "Switching currency?" cart dialog (cart setting not SYNC) is built by PHP, which a cache hit skips: the cart would be converted silently.
 		global $woocommerce_wpml;
 		$switch = is_object($woocommerce_wpml) && isset($woocommerce_wpml->settings['cart_sync']['currency_switch']) ? $woocommerce_wpml->settings['cart_sync']['currency_switch'] : null;
-		if (!defined('WCML_CART_SYNC') || !is_numeric($switch) || (int) $switch !== (int) WCML_CART_SYNC) {
+		if (!defined('WCML_CART_SYNC') || !is_numeric($switch) || (int) WCML_CART_SYNC !== (int) $switch) {
 			return $memo;
 		}
 
