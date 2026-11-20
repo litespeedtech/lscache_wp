@@ -13,7 +13,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 $closest_server = Cloud::get_summary( 'server.' . Cloud::SVC_IMG_OPTM );
-$usage_cloud    = Cloud::get_summary( 'usage.' . Cloud::SVC_IMG_OPTM );
 $allowance      = Cloud::cls()->allowance( Cloud::SVC_IMG_OPTM );
 
 $img_optm = Img_Optm::cls();

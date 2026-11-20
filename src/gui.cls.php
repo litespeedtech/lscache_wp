@@ -170,10 +170,13 @@ class GUI extends Base {
 	 * @param bool        $finished_tick       Show a tick when 100%.
 	 * @param bool        $without_percentage  Hide the % label.
 	 * @param string|bool $append_cls          Extra CSS class.
+	 * @param string|bool $label               Text shown in the center instead of the percentage.
 	 * @return string SVG markup.
 	 */
-	public static function pie( $percent, $width = 50, $finished_tick = false, $without_percentage = false, $append_cls = false ) {
-		$label      = $without_percentage ? $percent : ( $percent . '%' );
+	public static function pie( $percent, $width = 50, $finished_tick = false, $without_percentage = false, $append_cls = false, $label = false ) {
+		if ( false === $label ) {
+			$label = $without_percentage ? $percent : ( $percent . '%' );
+		}
 		$percentage = '<text x="50%" y="50%">' . esc_html( $label ) . '</text>';
 
 		if ( 100 === $percent && $finished_tick ) {

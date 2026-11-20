@@ -233,13 +233,11 @@ trait Cloud_Misc {
 	public function allowance( $service, &$err = false ) {
 		$allowance    = $this->_cached_allowance( $service, $err );
 		$last_request = (int) ( $this->_summary[ 'last_request.' . self::SVC_D_USAGE ] ?? 0 );
-		$interval     = DAY_IN_SECONDS;
 		if ( ! $allowance ) {
-			// Recheck exhausted credit on demand; a failed usage request also starts the hourly interval.
-			$interval     = HOUR_IN_SECONDS;
+			// Exhausted credit keeps the daily interval; a failed usage request also counts as the last one.
 			$last_request = max( $last_request, (int) ( $this->_summary[ 'curr_request.' . self::SVC_D_USAGE ] ?? 0 ) );
 		}
-		if ( ! $last_request || time() - $last_request >= $interval ) {
+		if ( ! $last_request || time() - $last_request >= DAY_IN_SECONDS ) {
 			$this->sync_usage();
 			$allowance = $this->_cached_allowance( $service, $err );
 		}
@@ -255,6 +253,28 @@ trait Cloud_Misc {
 	 * @return int
 	 */
 	private function _cached_allowance( $service, &$err ) {
+		// Usage v4: every optimization service draws from the shared `optm` units.
+		if ( ! empty( $this->_summary['usage.optm'] ) ) {
+			$usage = $this->_summary['usage.optm'];
+			$left  = 0;
+			// `remaining` decides when reported; without it: plan units first, then PAYG balance, then overage. -1 means unlimited.
+			$caps = isset( $usage['remaining'] ) ? [ 'remaining' => '' ] : [ 'quota' => 'used', 'pag_bal' => '', 'overage_cap' => 'overage_used' ];
+			foreach ( $caps as $cap => $spent ) {
+				$left = isset( $usage[ $cap ] ) ? (int) $usage[ $cap ] : 0;
+				if ( -1 === $left ) {
+					$left = PHP_INT_MAX;
+				} elseif ( $spent && isset( $usage[ $spent ] ) ) {
+					$left -= (int) $usage[ $spent ];
+				}
+				if ( $left > 0 ) {
+					// Image optimization sends one group per request; units are not converted into an image count.
+					return self::SVC_IMG_OPTM === $service ? self::IMG_OPTM_DEFAULT_GROUP : $left;
+				}
+			}
+			$err = 'out_of_quota';
+			return 0;
+		}
+
 		if ( in_array( $service, [ self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI ], true ) ) {
 			// @since 4.2
 			$service = self::SVC_PAGE_OPTM;
@@ -320,6 +340,13 @@ trait Cloud_Misc {
 		foreach ( self::$services as $v ) {
 			$this->_summary[ 'usage.' . $v ] = ! empty( $usage[ $v ] ) ? $usage[ $v ] : false;
 		}
+		// Usage v4 reports only `cdn` and `optm`; a stored `usage.optm` marks that format, and an older response clears it.
+		$this->_summary['usage.optm'] = ! empty( $usage['optm'] ) && is_array( $usage['optm'] ) ? $usage['optm'] : false;
+		$this->_summary['usage.plan'] = ! empty( $usage['plan'] ) && is_string( $usage['plan'] ) ? $usage['plan'] : false;
+		// End of the current billing cycle as a Unix timestamp; empty when there is no reset.
+		$this->_summary['usage.cycle_end'] = ! empty( $usage['cycle_end'] ) && is_numeric( $usage['cycle_end'] ) ? (int) $usage['cycle_end'] : false;
+		// The plan description is text.
+		$this->_summary['usage.plan_desc'] = ! empty( $usage['plan_desc'] ) && is_string( $usage['plan_desc'] ) ? $usage['plan_desc'] : false;
 
 		self::save_summary();
 

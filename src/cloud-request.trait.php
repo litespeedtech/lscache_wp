@@ -518,6 +518,25 @@ trait Cloud_Request {
 				if ( isset( $json['_carry_on'][ $v ] ) ) {
 					switch ( $v ) {
 						case 'usage':
+							// Usage v4 carries the same `optm` / `cdn` items as the `d/usage` response.
+							if ( is_array( $json['_carry_on'][ $v ] ) && ! empty( $json['_carry_on'][ $v ]['optm'] ) && is_array( $json['_carry_on'][ $v ]['optm'] ) ) {
+								// The cycle end is a timestamp, or null when there is no reset.
+								if ( array_key_exists( 'cycle_end', $json['_carry_on'][ $v ] ) && ( null === $json['_carry_on'][ $v ]['cycle_end'] || is_numeric( $json['_carry_on'][ $v ]['cycle_end'] ) ) ) {
+									$this->_summary['usage.cycle_end'] = (int) $json['_carry_on'][ $v ]['cycle_end'];
+								}
+								foreach ( [ 'optm', 'cdn', 'plan', 'plan_desc' ] as $k2 ) {
+									$v2 = isset( $json['_carry_on'][ $v ][ $k2 ] ) ? $json['_carry_on'][ $v ][ $k2 ] : null;
+									// Only the items carried are refreshed (an empty one clears it); usage items must be arrays, plan fields strings.
+									if ( 0 === strpos( $k2, 'plan' ) ? is_string( $v2 ) : is_array( $v2 ) ) {
+										// A service response may carry only its own `sub_svc` entry: merge by key so the others stay.
+										if ( 'optm' === $k2 && ! empty( $this->_summary['usage.optm']['sub_svc'] ) && is_array( $this->_summary['usage.optm']['sub_svc'] ) ) {
+											$v2['sub_svc'] = array_merge( $this->_summary['usage.optm']['sub_svc'], ! empty( $v2['sub_svc'] ) && is_array( $v2['sub_svc'] ) ? $v2['sub_svc'] : [] );
+										}
+										$this->_summary[ 'usage.' . $k2 ] = $v2;
+									}
+								}
+								break;
+							}
 							$usage_svc_tag                               = in_array( $service, [ self::SVC_CCSS, self::SVC_UCSS, self::SVC_VPI ], true ) ? self::SVC_PAGE_OPTM : $service;
 							$this->_summary[ 'usage.' . $usage_svc_tag ] = $json['_carry_on'][ $v ];
 							break;

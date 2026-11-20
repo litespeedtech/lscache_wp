@@ -206,6 +206,11 @@ $can_page_load_time      = defined( 'LITESPEED_SERVER_TYPE' ) && 'NONE' !== LITE
 					'cdn'       => esc_html__( 'CDN Bandwidth', 'litespeed-cache' ),
 					'lqip'      => esc_html__( 'Low Quality Image Placeholder', 'litespeed-cache' ),
 				);
+				// Usage v4 only has optimization units and CDN, rendered by its own template.
+				if ( ! empty( $cloud_summary['usage.optm'] ) ) {
+					$cat_list = [];
+					require LSCWP_DIR . 'tpl/dash/usage_v4.tpl.php';
+				}
 
 				foreach ( $cat_list as $svc => $svc_title ) :
 					$finished_percentage = 0;

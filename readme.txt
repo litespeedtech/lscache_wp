@@ -303,6 +303,8 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **ESI** Nonce placeholders are now bound to the visitor session.
 * **Page Optimize** HTML and inline JS minify can no longer turn page text into tags.
 * **Media** VPI preload and iframe lazy load now only rewrite real elements.
+* **Cloud** Supported the new QUIC.cloud usage format with unified optimization units.
+* **Cloud** Exhausted credit is no longer rechecked every hour.
 
 = 7.9.3 - Nov 3 2026 =
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)

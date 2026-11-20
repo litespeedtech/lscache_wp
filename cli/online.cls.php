@@ -202,7 +202,8 @@ class Online {
 		WP_CLI::success( 'Sync successfully' );
 
 		$list = array();
-		foreach ( Cloud::$services as $v ) {
+		// Usage v4 only reports optimization units and CDN.
+		foreach ( ! empty( $json['usage.optm'] ) ? [ 'optm', 'cdn' ] : Cloud::$services as $v ) {
 			$list[] = array(
 				'key' => $v,
 				'used' => ! empty( $json['usage.' . $v]['used'] ) ? $json['usage.' . $v]['used'] : 0,

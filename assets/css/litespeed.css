@@ -2970,6 +2970,114 @@ g.litespeed-pie_info .litespeed-pie-done {
 	margin-bottom: -0.55em !important;
 }
 
+.litespeed-postbox div.litespeed-usage-sub {
+	padding: 0.75em 20px 0 20px;
+	border-top: 1px dashed #eee;
+	margin: 0.55em -20px 0 -20px;
+}
+
+.litespeed-dashboard-stats-wrapper .litespeed-postbox-plan {
+	flex: 0 1 560px;
+}
+
+.litespeed-usage-plan {
+	flex-wrap: nowrap;
+	align-items: center;
+	gap: 28px;
+}
+
+.litespeed-usage-plan strong.litespeed-primary {
+	display: block;
+	font-size: 72px;
+	font-weight: 700;
+	line-height: 1.1;
+	white-space: nowrap;
+}
+
+.litespeed-usage-plan > div:first-child {
+	flex: 0 0 auto;
+}
+
+.litespeed-usage-plan p {
+	margin: 2px 0;
+}
+
+@media screen and (max-width: 569px) {
+	.litespeed-usage-plan {
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.litespeed-usage-plan strong.litespeed-primary {
+		font-size: 44px;
+	}
+}
+
+.litespeed-wrap .litespeed-usage-sub span.litespeed-label-usage {
+	border-bottom: 0;
+}
+
+.litespeed-usage-bar {
+	display: flex;
+	gap: 2px;
+	height: 8px;
+	margin-bottom: 6px;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.litespeed-usage-bar i {
+	flex: 1 0 2px;
+}
+
+.litespeed-usage-sub .litespeed-label-usage {
+	display: inline-block;
+	margin: 0 4px 4px 0;
+}
+
+.litespeed-usage-sub .litespeed-label-usage,
+.litespeed-usage-sub .litespeed-label-usage:hover,
+.litespeed-usage-sub .litespeed-label-usage:focus {
+	color: #0b0b0b;
+}
+
+.litespeed-usage-c0 {
+	background: #898781;
+}
+
+.litespeed-usage-c1 {
+	background: #256abf;
+}
+
+.litespeed-usage-c2 {
+	background: #eb6834;
+}
+
+.litespeed-usage-c3 {
+	background: #1baf7a;
+}
+
+.litespeed-usage-c4 {
+	background: #eda100;
+}
+
+.litespeed-usage-c5 {
+	background: #e87ba4;
+}
+
+.litespeed-usage-c6 {
+	background: #008300;
+}
+
+.litespeed-usage-sub .litespeed-usage-c1,
+.litespeed-usage-sub .litespeed-usage-c1:hover,
+.litespeed-usage-sub .litespeed-usage-c1:focus,
+.litespeed-usage-sub .litespeed-usage-c6,
+.litespeed-usage-sub .litespeed-usage-c6:hover,
+.litespeed-usage-sub .litespeed-usage-c6:focus {
+	color: #fff;
+}
+
 .litespeed-postbox.litespeed-postbox-partner .inside {
 	margin: 11px 0;
 }

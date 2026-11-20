@@ -741,10 +741,12 @@ body.litespeed-darkmode .litespeed-postbox .inside.litespeed-postbox-footer {
 }
 
 @media (prefers-color-scheme: dark) {
+	body[class*="litespeed-cache_page_litespeed"]:not(.litespeed-lightmode) .litespeed-postbox div.litespeed-usage-sub,
 	body[class*="litespeed-cache_page_litespeed"]:not(.litespeed-lightmode) .litespeed-postbox p.litespeed-dashboard-stats-total {
 		border-top: 1px dashed #5a5a5d;
 	}
 }
+body.litespeed-darkmode .litespeed-postbox div.litespeed-usage-sub,
 body.litespeed-darkmode .litespeed-postbox p.litespeed-dashboard-stats-total {
 	border-top: 1px dashed #5a5a5d;
 }
