@@ -1217,10 +1217,17 @@ class Utility extends Root {
 	 *
 	 * @param string   $content  HTML content containing srcset.
 	 * @param callable $callback Callback that receives old URL and returns new URL or false.
+	 * @param string   $attribute Attribute containing responsive candidates.
 	 * @return string Modified content.
 	 */
-	public static function srcset_replace( $content, $callback ) {
-		preg_match_all( '# srcset=([\'"])(.+)\g{1}#iU', $content, $matches );
+	public static function srcset_replace( $content, $callback, $attribute = 'srcset' ) {
+		if ( 'srcset' === $attribute ) {
+			$pattern = '# srcset=([\'"])(.+)\g{1}#iU';
+		} else {
+			// Custom candidate attributes are processed on a single opening tag.
+			$pattern = '#\A<[a-z]+' . self::HTML_ATTR_PREFIX . '\s+' . preg_quote( $attribute, '#' ) . '\s*=\s*([\'"])(.*?)\g{1}#is';
+		}
+		preg_match_all( $pattern, $content, $matches );
 		$srcset_ori   = [];
 		$srcset_final = [];
 		if ( ! empty( $matches[2] ) ) {
@@ -1250,7 +1257,7 @@ class Utility extends Root {
 				$urls_final = implode( ',', $urls_final );
 
 				$srcset_ori[]   = $matches[0][ $k ];
-				$srcset_final[] = str_replace( $urls_ori, $urls_final, $matches[0][ $k ] );
+				$srcset_final[] = substr_replace( $matches[0][ $k ], $urls_final, -strlen( $urls_ori ) - 1, strlen( $urls_ori ) );
 			}
 		}
 

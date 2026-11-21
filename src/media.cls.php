@@ -1422,8 +1422,12 @@ class Media extends Root {
 
 		// parse srcset.
 		// todo: should apply this to cdn too.
-		if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) && $this->webp_support() ) {
+		$replace_srcset = ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) && $this->webp_support();
+		if ( $replace_srcset ) {
 			$content = Utility::srcset_replace( $content, [ $this, 'replace_webp' ] );
+		}
+		if ( false !== strpos( $content, 'woocommerce-product-gallery__image' ) ) {
+			$content = $this->_replace_gallery_images( $content, $replace_srcset );
 		}
 
 		// Replace background-image.
@@ -1432,6 +1436,67 @@ class Media extends Root {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Replace image URLs in WooCommerce product gallery slides.
+	 *
+	 * @param string $content        HTML buffer.
+	 * @param bool   $replace_srcset Whether to replace responsive candidates.
+	 * @return string Modified content.
+	 */
+	private function _replace_gallery_images( $content, $replace_srcset ) {
+		$slide_tag   = '';
+		$slide_depth = 0;
+		$result      = Utility::html_tokens( $content, function ( $token ) use ( &$slide_tag, &$slide_depth, $replace_srcset ) {
+			$html = $token[0];
+			if ( $slide_depth && preg_match( '~\A</' . $slide_tag . '(?=[\s/>])~i', $html ) ) {
+				--$slide_depth;
+			}
+
+			$tag        = isset( $token['tag'] ) ? strtolower( $token['tag'] ) : '';
+			$attributes = [];
+			if ( 'div' === $tag || 'figure' === $tag ) {
+				$attrs   = false !== strpos( $token['attrs'], 'woocommerce-product-gallery__image' ) ? Utility::parse_attr( $token['attrs'] ) : [];
+				$classes = isset( $attrs['class'] ) ? preg_split( '/[\x09\x0a\x0c\x0d ]+/', $attrs['class'] ) : [];
+				if ( in_array( 'woocommerce-product-gallery__image', $classes, true ) ) {
+					if ( ! $slide_depth ) {
+						$slide_tag = $tag;
+					}
+					$attributes = [ 'data-thumb' ];
+					if ( $replace_srcset ) {
+						$html = Utility::srcset_replace( $html, [ $this, 'replace_webp' ], 'data-thumb-srcset' );
+					}
+				}
+				if ( $tag === $slide_tag && ( $slide_depth || $attributes ) ) {
+					++$slide_depth;
+				}
+			} elseif ( 1 === $slide_depth && 'a' === $tag ) {
+				$attributes = [ 'href' ];
+			} elseif ( 1 === $slide_depth && 'img' === $tag ) {
+				$attributes = [ 'src', 'data-src', 'data-large_image' ];
+			}
+
+			foreach ( $attributes as $attribute ) {
+				$pattern = '~\A(<[a-z]+' . Utility::HTML_ATTR_PREFIX . '\s+' . $attribute . '\s*=\s*)([\'"])(.*?)\2~is';
+				$updated = preg_replace_callback( $pattern, function ( $matches ) {
+					$url = $this->replace_webp( $matches[3] );
+					return $url ? $matches[1] . $matches[2] . $url . $matches[2] : $matches[0];
+				}, $html );
+				if ( null === $updated ) {
+					self::debug2( 'WooCommerce gallery attribute match failed: ' . $attribute . ' [PCRE ' . preg_last_error() . ']' );
+					continue;
+				}
+				$html = $updated;
+			}
+			return $html;
+		} );
+
+		if ( null === $result ) {
+			self::debug2( 'WooCommerce gallery HTML tokenization failed [PCRE ' . preg_last_error() . ']' );
+			return $content;
+		}
+		return $result;
 	}
 
 	/**
