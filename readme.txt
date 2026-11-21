@@ -266,7 +266,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
-= 7.9.4 - Coming soon 2026 =
+= 7.9.4 - Nov 25 2026 =
 * **Object Cache** Flush once after the backend was unreachable. (PR#1069)
 * **GUI** Fixed a dark mode flash on load. (RyansGit PR#983)
 * **Optimize** `litespeed_comment` now also hides the HTML Minify comment. (Tobolo #1093 PR#1094)
@@ -305,6 +305,10 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 * **Media** VPI preload and iframe lazy load now only rewrite real elements.
 * **Cloud** Supported the new QUIC.cloud usage format with unified optimization units.
 * **Cloud** Exhausted credit is no longer rechecked every hour.
+* **CLI** Multisite purges now reach every touched blog. (PR#1103)
+* **3rd** WCML: guests now get the right currency cache from the first page view. (PR#1107)
+* **Vary** Sub-resource requests no longer change the vary cookie.
+* **Media** WebP/AVIF replacement now covers WooCommerce product gallery zoom and lightbox images. (PR#1105)
 
 = 7.9.3 - Nov 3 2026 =
 * **Object Cache** Fixed repeated database queries when Memcached rejects oversized alloptions values. (Peter Wells #1076)
