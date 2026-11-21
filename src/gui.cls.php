@@ -1183,9 +1183,39 @@ class GUI extends Base {
 	private function _enqueue_guest_js( $buffer ) {
 		$js_con = File::read( LSCWP_DIR . self::LIB_GUEST_JS );
 		// Build path for guest endpoint using wp_parse_url for compatibility.
-		$guest_update_path = wp_parse_url( LSWCP_PLUGIN_URL . self::PHP_GUEST, PHP_URL_PATH );
-		$js_con            = str_replace( 'litespeed_url', esc_url( $guest_update_path ), $js_con );
-		$buffer            = Utility::insert_before_last_tag( $buffer, '</body>', '<script data-no-optimize="1">' . $js_con . '</script>' );
+		$default = wp_parse_url( LSWCP_PLUGIN_URL . self::PHP_GUEST, PHP_URL_PATH );
+
+		/**
+		 * Filters the endpoint the Guest Mode script posts to; the lightweight guest.vary.php path by default.
+		 *
+		 * @since 7.9.4
+		 * @param string $default Endpoint URL or path.
+		 */
+		$url = apply_filters( 'litespeed_guest_vary_url', $default );
+		if ( ! is_string( $url ) || '' === $url ) {
+			$url = $default;
+		}
+		// When the endpoint was replaced, the script retries once with the default one if it fails.
+		$fallback = $url === $default ? '' : $default;
+
+		// Inject as JSON string literals: esc_url() would turn `&` into `&#038;`.
+		$url_js      = wp_json_encode( $url, Str::JSON_HTML_FLAGS );
+		$fallback_js = wp_json_encode( $fallback, Str::JSON_HTML_FLAGS );
+		if ( false === $url_js || false === $fallback_js ) {
+			// An endpoint that cannot be encoded must never leave the script without a value.
+			$url_js      = wp_json_encode( $default, Str::JSON_HTML_FLAGS );
+			$fallback_js = '""';
+		}
+		$js_con = strtr(
+			$js_con,
+			[
+				"'litespeed_url'"          => $url_js,
+				'"litespeed_url"'          => $url_js,
+				"'litespeed_fallback_url'" => $fallback_js,
+				'"litespeed_fallback_url"' => $fallback_js,
+			]
+		);
+		$buffer = Utility::insert_before_last_tag( $buffer, '</body>', '<script data-no-optimize="1">' . $js_con . '</script>' );
 		return $buffer;
 	}
 }

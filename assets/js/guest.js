@@ -4,22 +4,77 @@ if (!litespeed_vary) {
 	if (sessionStorage.getItem('litespeed_reloaded')) {
 		console.log('LiteSpeed: skipping guest vary reload (already reloaded this session)');
 	} else {
-		// Note: as the vary may be changed in Login Cookie option, even the visitor doesn't have this cookie, it doesn't mean the visitor doesn't have the vary, so still need PHP side to decide if need to set vary or not.
-		fetch('litespeed_url', {
-			method: 'POST',
-			cache: 'no-cache',
-			redirect: 'follow',
-		})
-			.then(response => response.json())
-			.then(data => {
-				console.log(data);
-				if (data.hasOwnProperty('reload') && data.reload == 'yes') {
+		(function () {
+			// Note: as the vary may be changed in Login Cookie option, even the visitor doesn't have this cookie, it doesn't mean the visitor doesn't have the vary, so still need PHP side to decide if need to set vary or not.
+			// The fallback is an empty string unless the primary endpoint was replaced (e.g. WCML); then it is the default endpoint.
+			var primary = 'litespeed_url';
+			var fallback = 'litespeed_fallback_url';
+
+			// Post to one endpoint; resolves with its JSON reply, rejects on HTTP error, network error, timeout or invalid JSON.
+			var request = function (url, withTimeout) {
+				var options = {
+					method: 'POST',
+					cache: 'no-cache',
+					mode: 'same-origin',
+					credentials: 'same-origin',
+					referrerPolicy: 'origin',
+					redirect: 'follow',
+				};
+				var timer = 0;
+				if (withTimeout && typeof AbortController !== 'undefined') {
+					var controller = new AbortController();
+					options.signal = controller.signal;
+					timer = setTimeout(function () {
+						controller.abort();
+					}, 5000);
+				}
+				// Keep the timer running until the body is read, so a stalled body is aborted as well.
+				return fetch(url, options)
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('HTTP ' + response.status);
+						}
+						return response.json();
+					})
+					.then(
+						data => {
+							clearTimeout(timer);
+							return data;
+						},
+						error => {
+							clearTimeout(timer);
+							throw error;
+						}
+					);
+			};
+
+			// A reply that parsed is final: it resolves with whether a reload was requested, and an explicit "no" (e.g. `[]`) is never retried on the fallback. Only a transport failure of the request (rejection) falls back.
+			var attempt = function (url, withTimeout) {
+				return request(url, withTimeout).then(data => {
+					console.log(data);
+					return data !== null && typeof data === 'object' && data.reload == 'yes';
+				});
+			};
+
+			// Only a request that has a fallback to fall back to is time-limited; the default endpoint behaves as it always did.
+			var result = attempt(primary, !!fallback);
+			if (fallback) {
+				result = result.catch(() => attempt(fallback, false));
+			}
+			result
+				.then(reload => {
+					if (!reload) {
+						return;
+					}
 					// Save doc.ref for organic traffic usage
 					sessionStorage.setItem('litespeed_docref', document.referrer);
 					sessionStorage.setItem('litespeed_reloaded', '1');
 
 					window.location.reload(true);
-				}
-			});
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		})();
 	}
 }
