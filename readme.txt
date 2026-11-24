@@ -4,7 +4,7 @@ Tags: caching, optimize, performance, pagespeed, seo, image optimize, object cac
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 7.9.3
+Stable tag: 7.9.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
