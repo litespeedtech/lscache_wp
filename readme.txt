@@ -266,7 +266,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
-= 7.9.4 - Nov 25 2026 =
+= 7.9.4 - Nov 24 2026 =
 * **Object Cache** Flush once after the backend was unreachable. (PR#1069)
 * **GUI** Fixed a dark mode flash on load. (RyansGit PR#983)
 * **Optimize** `litespeed_comment` now also hides the HTML Minify comment. (Tobolo #1093 PR#1094)
