@@ -12,6 +12,7 @@ defined( 'WPINC' ) || exit();
 
 use LiteSpeed\Debug2;
 use LiteSpeed\Conf;
+use LiteSpeed\Data;
 use LiteSpeed\Htaccess;
 
 /**
@@ -53,7 +54,7 @@ function litespeed_update_7_0_1() {
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 	$list          = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `{$tb_url}` WHERE url LIKE %s", 'https://%/' ), ARRAY_A );
-	$existing_urls = array();
+	$existing_urls = [];
 	if ($list) {
 		foreach ($list as $v) {
 			$existing_urls[] = $v['url'];
@@ -188,4 +189,80 @@ function litespeed_update_7_9_2() {
 function litespeed_update_7_9_4() {
 	Conf::delete_option( 'optm-css_async_inline' );
 	Conf::delete_site_option( 'optm-css_async_inline' );
+}
+
+/**
+ * Store URL tags that do not fit the `url`(191) unique index prefix as hash keys. [2026-11-25]
+ *
+ * Raw rows of 191 bytes or more are rewritten in place to Data::url_key(), keeping their ids so every url_file child stays attached. A row whose key already exists is skipped by IGNORE and stays an unreachable leftover. Rows of exactly 500 characters may hold a URL truncated by non-strict SQL mode, so they are never converted. Orphaned url_file rows saved with url_id=0 by the failed inserts are removed (rows only, never the files they name). Re-runnable.
+ *
+ * @since 7.9.5
+ * @return void
+ */
+function litespeed_update_7_9_5() {
+	global $wpdb;
+
+	Debug2::debug( '[Data] v7.9.5 upgrade: converting long URL tags to hash keys' );
+
+	$tb_url = $wpdb->prefix . Data::TB_URL;
+	if ( ! litespeed_table_exists( $tb_url ) ) {
+		Debug2::debug( '[Data] Table `litespeed_url` not found, bypassed URL key migration' );
+		return;
+	}
+
+	// Ids stay the decimal strings the database returns: the column is BIGINT and a PHP int cast would collapse ids above 2147483647 on 32-bit PHP. Only ctype_digit strings are interpolated into SQL.
+	$last_id = '0';
+	do {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT id, url FROM `{$tb_url}` WHERE id > {$last_id} AND LENGTH(url) >= %d AND CHAR_LENGTH(url) < %d ORDER BY id LIMIT %d", Data::URL_KEY_RAW_LIMIT, Data::URL_COLUMN_CHARS, Data::URL_KEY_UPGRADE_BATCH ), ARRAY_A );
+		if ( ! $rows ) {
+			if ( $wpdb->last_error ) {
+				Debug2::debug( '[Data] URL key migration: select failed after id ' . $last_id . ': ' . $wpdb->last_error );
+			}
+			break;
+		}
+
+		$fetched = count( $rows );
+		$cases   = [];
+		$keys    = [];
+		$ids     = [];
+		foreach ( $rows as $row ) {
+			$id = (string) $row['id'];
+			if ( ! ctype_digit( $id ) ) {
+				Debug2::debug( '[Data] URL key migration: skipped row with non-numeric id ' . $id );
+				continue;
+			}
+			$cases[] = "WHEN {$id} THEN %s";
+			$keys[]  = Data::url_key( $row['url'] );
+			$ids[]   = $id;
+		}
+
+		if ( $ids ) {
+			$sql = "UPDATE IGNORE `{$tb_url}` SET url = CASE id " . implode( ' ', $cases ) . ' END WHERE id IN (' . implode( ',', $ids ) . ')';
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$res = $wpdb->query( $wpdb->prepare( $sql, $keys ) );
+			if ( false === $res ) {
+				Debug2::debug( '[Data] URL key migration: update failed for ids ' . reset( $ids ) . '-' . end( $ids ) . ': ' . $wpdb->last_error );
+			}
+		}
+
+		// Rows come ORDER BY id, so the last fetched id moves the cursor past the whole batch and a row that cannot be updated never loops.
+		$last_row = end( $rows );
+		$last_id  = (string) $last_row['id'];
+		if ( ! ctype_digit( $last_id ) ) {
+			Debug2::debug( '[Data] URL key migration: stopped at non-numeric id ' . $last_id );
+			break;
+		}
+	} while ( $fetched >= Data::URL_KEY_UPGRADE_BATCH );
+
+	$tb_url_file = $wpdb->prefix . Data::TB_URL_FILE;
+	if ( ! litespeed_table_exists( $tb_url_file ) ) {
+		Debug2::debug( '[Data] Table `litespeed_url_file` not found, bypassed orphan cleanup' );
+		return;
+	}
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+	if ( false === $wpdb->query( "DELETE FROM `{$tb_url_file}` WHERE url_id = 0" ) ) {
+		Debug2::debug( '[Data] URL key migration: orphan cleanup failed: ' . $wpdb->last_error );
+	}
 }

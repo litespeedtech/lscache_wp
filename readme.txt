@@ -266,6 +266,9 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 = 8.0 - Coming soon 2026 =
 * 🌱**OptiMax** OptiMax to maximize the page score.
 
+= 7.9.5 - Coming soon 2026 =
+* **Page Optimize** Fixed a duplicate key database error on long URLs. (oblivyoung)
+
 = 7.9.4 - Nov 24 2026 =
 * **Object Cache** Flush once after the backend was unreachable. (PR#1069)
 * **GUI** Fixed a dark mode flash on load. (RyansGit PR#983)

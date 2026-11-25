@@ -31,6 +31,7 @@ class Data extends Root {
 		'7.9-b5'    => [ 'litespeed_update_7_9' ],
 		'7.9.2-b60' => [ 'litespeed_update_7_9_2' ],
 		'7.9.4-b15' => [ 'litespeed_update_7_9_4' ],
+		'7.9.5-b1'  => [ 'litespeed_update_7_9_5' ],
 	];
 
 	/**
@@ -67,6 +68,15 @@ class Data extends Root {
 	const TB_URL = 'litespeed_url';
 	/** Table: URL → generated file mapping. */
 	const TB_URL_FILE = 'litespeed_url_file';
+
+	/** URL tags of this many bytes or more are stored as a hash key; equals the `url`(191) unique index prefix in data_structure/url.sql. */
+	const URL_KEY_RAW_LIMIT = 191;
+	/** Prefix of a hashed URL key. */
+	const URL_KEY_HASH_PREFIX = 'sha256:';
+	/** Width of the `url` column (varchar(500) in data_structure/url.sql). */
+	const URL_COLUMN_CHARS = 500;
+	/** Rows converted per batch by the v7.9.5 URL key upgrade. */
+	const URL_KEY_UPGRADE_BATCH = 200;
 
 	/**
 	 * Constructor.
@@ -468,6 +478,43 @@ class Data extends Root {
 	}
 
 	/**
+	 * Lookup key of a URL tag in the `url` table.
+	 *
+	 * Tags shorter than the unique index prefix are stored as-is; longer ones as a SHA-256 key, so the unique index and the lookup always compare the same full value.
+	 *
+	 * @since 7.9.5
+	 * @access public
+	 *
+	 * @param string $url URL tag.
+	 * @return string The tag itself, or 'sha256:' followed by its hex SHA-256 digest.
+	 */
+	public static function url_key( $url ) {
+		$url = (string) $url;
+		if ( strlen( $url ) < self::URL_KEY_RAW_LIMIT ) {
+			return $url;
+		}
+
+		return self::URL_KEY_HASH_PREFIX . hash( 'sha256', $url );
+	}
+
+	/**
+	 * Resolve the `url` row id of a lookup key.
+	 *
+	 * @since 7.9.5
+	 * @access private
+	 *
+	 * @param string $url_key Key from url_key().
+	 * @return int Row id, or 0 when absent.
+	 */
+	private function _url_id( $url_key ) {
+		global $wpdb;
+
+		$tb_url = $this->tb( 'url' );
+		$q      = "SELECT id FROM `$tb_url` WHERE url=%s";
+		return (int) $wpdb->get_var( $wpdb->prepare( $q, $url_key ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+	}
+
+	/**
 	 * Persist (or rotate) the mapping from URL+vary to a generated file.
 	 *
 	 * @since 4.0
@@ -498,15 +545,18 @@ class Data extends Root {
 		$tb_url      = $this->tb( 'url' );
 		$tb_url_file = $this->tb( 'url_file' );
 
-		// Ensure URL row exists.
-		$q       = "SELECT * FROM `$tb_url` WHERE url=%s";
-		$url_row = $wpdb->get_row( $wpdb->prepare( $q, $request_url ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
-		if ( ! $url_row ) {
-			$q = "INSERT INTO `$tb_url` SET url=%s";
-			$wpdb->query( $wpdb->prepare( $q, $request_url ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
-			$url_id = (int) $wpdb->insert_id;
-		} else {
-			$url_id = (int) $url_row['id'];
+		// Ensure URL row exists; a concurrent first save of the same key turns the insert into a no-op, so the id is always resolved through the key again.
+		$url_key = self::url_key( $request_url );
+		$url_id  = $this->_url_id( $url_key );
+		if ( ! $url_id ) {
+			$q = "INSERT INTO `$tb_url` SET url=%s ON DUPLICATE KEY UPDATE id = id";
+			$wpdb->query( $wpdb->prepare( $q, $url_key ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+			$insert_error = $wpdb->last_error;
+			$url_id       = $this->_url_id( $url_key );
+			if ( ! $url_id ) {
+				self::debugErr( 'Failed to resolve url row, mapping not saved: ' . $request_url . ' ' . $insert_error );
+				return;
+			}
 		}
 
 		// Active mapping (not expired).
@@ -587,14 +637,11 @@ class Data extends Root {
 
 		self::debug2( 'load url file: ' . $request_url );
 
-		$tb_url  = $this->tb( 'url' );
-		$q       = "SELECT * FROM `$tb_url` WHERE url=%s";
-		$url_row = $wpdb->get_row( $wpdb->prepare( $q, $request_url ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
-		if ( ! $url_row ) {
+		$url_id = $this->_url_id( self::url_key( $request_url ) );
+		if ( ! $url_id ) {
 			return false;
 		}
 
-		$url_id      = (int) $url_row['id'];
 		$tb_url_file = $this->tb( 'url_file' );
 		$q           = "SELECT * FROM `$tb_url_file` WHERE url_id=%d AND vary=%s AND type=%d AND expired=0";
 		$file_row    = $wpdb->get_row( $wpdb->prepare( $q, [ $url_id, $vary, $type ] ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
@@ -620,26 +667,34 @@ class Data extends Root {
 		$tb_url = $this->tb( 'url' );
 
 		self::debug( 'Try to mark as expired: ' . $request_url );
-		$q       = "SELECT * FROM `$tb_url` WHERE url=%s";
-		$url_row = $wpdb->get_row( $wpdb->prepare( $q, $request_url ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
-		if ( ! $url_row ) {
+		$request_url = (string) $request_url;
+		$url_key     = self::url_key( $request_url );
+		$url_id      = $this->_url_id( $url_key );
+		if ( ! $url_id ) {
 			return [];
 		}
 
-		self::debug( 'Mark url_id=' . $url_row['id'] . ' as expired' );
+		self::debug( 'Mark url_id=' . $url_id . ' as expired' );
 
 		$tb_url_file = $this->tb( 'url_file' );
 
 		$existing_url_files = [];
 		if ( $auto_q ) {
 			$q                  = "SELECT a.*, b.url FROM `$tb_url_file` a LEFT JOIN `$tb_url` b ON b.id=a.url_id WHERE a.url_id=%d AND a.type=%d AND a.expired=0";
-			$q                  = $wpdb->prepare( $q, [ (int) $url_row['id'], $this->_url_file_types['ucss'] ] ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$q                  = $wpdb->prepare( $q, [ $url_id, $this->_url_file_types['ucss'] ] ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$existing_url_files = $wpdb->get_results( $q, ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+
+			// A hashed key holds no URL, so the re-queue address is the URL the caller passed; a raw key keeps the stored spelling.
+			if ( $existing_url_files && $url_key !== $request_url ) {
+				foreach ( $existing_url_files as $k => $row ) {
+					$existing_url_files[ $k ]['url'] = $request_url;
+				}
+			}
 		}
 
 		$q       = "UPDATE `$tb_url_file` SET expired=%d WHERE url_id=%d AND type=%d AND expired=0";
 		$expired = time() + 86400 * apply_filters( 'litespeed_url_file_expired_days', 20 );
-		$wpdb->query( $wpdb->prepare( $q, [ $expired, (int) $url_row['id'], $this->_url_file_types['ucss'] ] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( $wpdb->prepare( $q, [ $expired, $url_id, $this->_url_file_types['ucss'] ] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
 
 		return $existing_url_files;
 	}
