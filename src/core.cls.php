@@ -227,8 +227,8 @@ class Core extends Root {
 		// CLI: send_headers() runs once and may fire early on an output flush, so purges queued later in the command (e.g. by upgrader hooks) need their own last-moment kick.
 		if ( defined( 'LITESPEED_CLI' ) ) {
 			add_action( 'shutdown', [ __CLASS__, 'kick_cli_purge_queues' ], PHP_INT_MAX );
-		} elseif ( defined( 'LITESPEED_ON' ) && wp_doing_cron() ) {
-			// HTTP cron (e.g. wp-cron.php after litespeed_finish_request) can't send purge headers either, so kick its stored queue too.
+		} elseif ( defined( 'LITESPEED_ON' ) ) {
+			// HTTP cron can't always send purge headers either (e.g. wp-cron.php after litespeed_finish_request). Registered for every request since ALTERNATE_WP_CRON starts cron later in a page request; the callback checks for cron.
 			add_action( 'shutdown', [ __CLASS__, 'kick_cron_purge_queue' ], PHP_INT_MAX );
 		}
 		add_action( 'wp_footer', [ $this, 'footer_hook' ] );
@@ -797,12 +797,16 @@ class Core extends Root {
 	}
 
 	/**
-	 * At CLI shutdown, kick the current blog's queue and, on multisite, the queue of every other blog this process stored a purge for.
+	 * At CLI or cron shutdown, kick the current blog's queue and, on multisite, the queue of every other blog this process stored a purge for.
 	 *
 	 * Each blog's queue is only consumed by a request to that blog, so a purge stored after switch_to_blog() needs its own kick.
+	 *
+	 * @param bool $skip_current Skip the current blog, e.g. when its purge header still goes out with this response.
 	 */
-	public static function kick_cli_purge_queues() {
-		self::kick_purge_queue();
+	public static function kick_cli_purge_queues( $skip_current = false ) {
+		if ( ! $skip_current ) {
+			self::kick_purge_queue();
+		}
 		if ( ! is_multisite() ) {
 			return;
 		}
@@ -818,11 +822,11 @@ class Core extends Root {
 	}
 
 	/**
-	 * At HTTP cron shutdown, kick the stored queue when the response already finished and purge headers could not be sent.
+	 * At HTTP cron shutdown, kick the stored queues that this response can't deliver: all of them once the response already finished, otherwise only other blogs' since the current blog's purge header still goes out.
 	 */
 	public static function kick_cron_purge_queue() {
-		if ( headers_sent() ) {
-			self::kick_purge_queue();
+		if ( wp_doing_cron() ) {
+			self::kick_cli_purge_queues( ! headers_sent() );
 		}
 	}
 
