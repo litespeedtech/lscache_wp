@@ -108,6 +108,11 @@ if ( ! defined( 'LITESPEED_SERVER_TYPE' ) ) {
 	}
 }
 
+// Server cron run by a non-CLI SAPI outside the web server (e.g. cPanel /usr/bin/php = php-cgi): treat as CLI so purges are queued and delivered via loopback
+if ( ! defined( 'LITESPEED_CLI' ) && 'NONE' === LITESPEED_SERVER_TYPE && empty( $_SERVER['X-LSCACHE'] ) && ! isset( $_SERVER['REQUEST_METHOD'] ) && wp_doing_cron() ) {
+	define( 'LITESPEED_CLI', true );
+}
+
 // Checks if caching is allowed via server variable
 if ( ! empty( $_SERVER['X-LSCACHE'] ) || 'LITESPEED_SERVER_ADC' === LITESPEED_SERVER_TYPE || defined( 'LITESPEED_CLI' ) ) {
 	! defined( 'LITESPEED_ALLOWED' ) && define( 'LITESPEED_ALLOWED', true );

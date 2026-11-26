@@ -143,7 +143,10 @@ class Core extends Root {
 		add_action( 'after_setup_theme', [ $this, 'init' ] );
 
 		// Check if there is a purge request in queue
-		if ( ! defined( 'LITESPEED_CLI' ) ) {
+		if ( ! defined( 'LITESPEED_CLI' ) && headers_sent() && wp_doing_cron() ) {
+			// HTTP cron after litespeed_finish_request can't send headers: deliver an earlier queue now, before this run's purges overwrite it
+			self::kick_purge_queue();
+		} elseif ( ! defined( 'LITESPEED_CLI' ) ) {
 			$purge_queue = Purge::get_option( Purge::DB_QUEUE );
 			if ( $purge_queue && '-1' !== $purge_queue ) {
 				$this->http_header( $purge_queue );
@@ -224,6 +227,9 @@ class Core extends Root {
 		// CLI: send_headers() runs once and may fire early on an output flush, so purges queued later in the command (e.g. by upgrader hooks) need their own last-moment kick.
 		if ( defined( 'LITESPEED_CLI' ) ) {
 			add_action( 'shutdown', [ __CLASS__, 'kick_cli_purge_queues' ], PHP_INT_MAX );
+		} elseif ( defined( 'LITESPEED_ON' ) && wp_doing_cron() ) {
+			// HTTP cron (e.g. wp-cron.php after litespeed_finish_request) can't send purge headers either, so kick its stored queue too.
+			add_action( 'shutdown', [ __CLASS__, 'kick_cron_purge_queue' ], PHP_INT_MAX );
 		}
 		add_action( 'wp_footer', [ $this, 'footer_hook' ] );
 
@@ -664,6 +670,10 @@ class Core extends Root {
 		// Avoid PHP warning for headers sent out already
 		if ( headers_sent() ) {
 			self::debug( '❌ !!! Err: Header sent out already' );
+			// CLI or cron whose response already finished: still run purge finalize hooks so their tags get queued for the shutdown kick
+			if ( defined( 'LITESPEED_CLI' ) || ( defined( 'LITESPEED_ON' ) && wp_doing_cron() ) ) {
+				Purge::output();
+			}
 			return;
 		}
 
@@ -804,6 +814,15 @@ class Core extends Root {
 			switch_to_blog( $blog_id );
 			self::kick_purge_queue();
 			restore_current_blog();
+		}
+	}
+
+	/**
+	 * At HTTP cron shutdown, kick the stored queue when the response already finished and purge headers could not be sent.
+	 */
+	public static function kick_cron_purge_queue() {
+		if ( headers_sent() ) {
+			self::kick_purge_queue();
 		}
 	}
 
