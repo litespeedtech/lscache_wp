@@ -594,7 +594,7 @@ class GUI extends Base {
 			]
 		);
 
-		if ( $this->has_cache_folder( 'ucss' ) ) {
+		if ( Purge::has_purgeable_folder( 'ucss' ) ) {
 			$possible_url_tag = UCSS::get_url_tag();
 			$append_arr       = [];
 			if ( $possible_url_tag ) {
@@ -752,7 +752,7 @@ class GUI extends Base {
 			);
 		}
 
-		if ( $this->has_cache_folder( 'ccss' ) ) {
+		if ( Purge::has_purgeable_folder( 'ccss' ) ) {
 			$wp_admin_bar->add_menu(
 				[
 					'parent' => 'litespeed-menu',
@@ -764,7 +764,7 @@ class GUI extends Base {
 			);
 		}
 
-		if ( $this->has_cache_folder( 'ucss' ) ) {
+		if ( Purge::has_purgeable_folder( 'ucss' ) ) {
 			$wp_admin_bar->add_menu(
 				[
 					'parent' => 'litespeed-menu',
@@ -799,7 +799,7 @@ class GUI extends Base {
 			);
 		}
 
-		if ( $this->has_cache_folder( 'vpi' ) ) {
+		if ( Purge::has_purgeable_folder( 'vpi' ) ) {
 			$wp_admin_bar->add_menu(
 				[
 					'parent' => 'litespeed-menu',
@@ -971,7 +971,7 @@ class GUI extends Base {
 			);
 		}
 
-		if ( $this->has_cache_folder( 'ccss' ) ) {
+		if ( Purge::has_purgeable_folder( 'ccss' ) ) {
 			$wp_admin_bar->add_menu(
 				[
 					'parent' => 'litespeed-menu',
@@ -983,7 +983,7 @@ class GUI extends Base {
 			);
 		}
 
-		if ( $this->has_cache_folder( 'ucss' ) ) {
+		if ( Purge::has_purgeable_folder( 'ucss' ) ) {
 			$wp_admin_bar->add_menu(
 				[
 					'parent' => 'litespeed-menu',
@@ -1018,7 +1018,7 @@ class GUI extends Base {
 			);
 		}
 
-    	if ( $this->has_cache_folder( 'vpi' ) ) {
+    	if ( Purge::has_purgeable_folder( 'vpi' ) ) {
 			$wp_admin_bar->add_menu(
 				[
 					'parent' => 'litespeed-menu',

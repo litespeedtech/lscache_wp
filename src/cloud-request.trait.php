@@ -438,6 +438,9 @@ trait Cloud_Request {
 			self::debugErr( 'Node error, redetecting node [svc] ' . $service );
 			$this->detect_cloud( $service, true );
 
+			// A passing fault on QUIC.cloud's side, not a refusal: a caller may keep its work for later.
+			do_action( 'litespeed_cloud_503', $service );
+
 			return false;
 		}
 
