@@ -21,7 +21,9 @@ class Utility extends Root {
 	 */
 	const HTML_ATTR_PATTERN = '(?:[\x09\x0a\x0c\x0d /]+|[^\x09\x0a\x0c\x0d />=]+(?:[\x09\x0a\x0c\x0d ]*=[\x09\x0a\x0c\x0d ]*(?>"[^"]*(?:"|\z)|\'[^\']*(?:\'|\z)|[^\x09\x0a\x0c\x0d >]*))?|=)*+';
 
-	private const HTML_TOKEN_PREFIX = '~<!--(?:>|->|.*?(?:-->|--!>|\z))'
+	private const HTML_TOKEN_PREFIX = '~' . self::HTML_TOKEN_BRANCHES;
+
+	private const HTML_TOKEN_BRANCHES = '<!--(?:>|->|.*?(?:-->|--!>|\z))'
 		. '|<!\[CDATA\[.*?(?:\]\]>|\z)'
 		. '|<!DOCTYPE(?:[^\'">]|"[^"]*(?:"|\z)|\'[^\']*(?:\'|\z))*(?:>|\z)'
 		. '|<![^>]*(?:>|\z)|<\?[^>]*(?:>|\z)'
@@ -52,7 +54,15 @@ class Utility extends Root {
 	// Walk the attributes of one opening tag from its start: 1 separator, 2 name, 3 equals sign with its whitespace, 4 raw value. Use with preg_replace_callback(); a valueless attribute matches without groups.
 	const HTML_ATTR_WALK = '~\G([\x09\x0a\x0c\x0d /]+|(?<=["\']))([^\x09\x0a\x0c\x0d =/>]+)([\x09\x0a\x0c\x0d ]*=[\x09\x0a\x0c\x0d ]*)("[^"]*"|\'[^\']*\'|[^\x09\x0a\x0c\x0d >]+)|\G(?:[\x09\x0a\x0c\x0d /]+|(?<=["\']))[^\x09\x0a\x0c\x0d =/>]++(?![\x09\x0a\x0c\x0d ]*=)~';
 	// CDATA can contain raw-element end tags inside an opaque foreign block.
-	private const HTML_OPAQUE_TOKEN_PATTERN = self::HTML_TOKEN_PREFIX . '[^<]*+(?:(?:<!\[CDATA\[.*?(?:\]\]>|\z)|(?!' . self::HTML_RAW_END . ')<)[^<]*+)*+' . self::HTML_TOKEN_SUFFIX;
+	private const HTML_OPAQUE_BODY = '[^<]*+(?:(?:<!\[CDATA\[.*?(?:\]\]>|\z)|(?!' . self::HTML_RAW_END . ')<)[^<]*+)*+';
+
+	private const HTML_OPAQUE_TOKEN_PATTERN = self::HTML_TOKEN_PREFIX . self::HTML_OPAQUE_BODY . self::HTML_TOKEN_SUFFIX;
+
+	// Names whose self-closing form is an empty element inside an svg or math block; script, textarea and noframes stay raw text because frameset and legacy select modes read them that way.
+	private const HTML_FOREIGN_EMPTY_NAMES = 'style|title';
+
+	// Inside an svg or math block, match a style or title opener as a bare tag before the raw-text branch; every other token matches as in HTML_OPAQUE_TOKEN_PATTERN.
+	private const HTML_FOREIGN_TOKEN_PATTERN = '~<(?P<bare>' . self::HTML_FOREIGN_EMPTY_NAMES . ')(?=[\x09\x0a\x0c\x0d />])(?P<bare_attrs>' . self::HTML_ATTR_PATTERN . ')>|' . self::HTML_TOKEN_BRANCHES . self::HTML_OPAQUE_BODY . self::HTML_TOKEN_SUFFIX;
 
 	/**
 	 * Walk HTML boundaries, retaining opaque blocks without stopping later rewrites.
@@ -68,8 +78,10 @@ class Utility extends Root {
 		$cursor = 0;
 		$depth  = 0;
 		$block  = [];
+		// Offset of a style or title opener inside svg or math that must be matched again as raw text; offsets only grow afterwards, so each marker fires once.
+		$raw_at = -1;
 		while ( true ) {
-			$matched = preg_match( $depth ? self::HTML_OPAQUE_TOKEN_PATTERN : self::HTML_TOKEN_PATTERN, $html, $matches, PREG_OFFSET_CAPTURE, $offset );
+			$matched = preg_match( $depth ? ( $offset !== $raw_at && in_array( $block['raw'], [ 'svg', 'math' ], true ) ? self::HTML_FOREIGN_TOKEN_PATTERN : self::HTML_OPAQUE_TOKEN_PATTERN ) : self::HTML_TOKEN_PATTERN, $html, $matches, PREG_OFFSET_CAPTURE, $offset );
 			if ( false === $matched ) {
 				return null;
 			}
@@ -82,6 +94,18 @@ class Utility extends Root {
 			}
 			$start  = $matches[0][1];
 			$offset = $start + strlen( $token[0] );
+			if ( ! empty( $token['bare'] ) ) {
+				$empty = self::html_self_closing( $token['bare_attrs'] );
+				if ( PREG_NO_ERROR !== preg_last_error() ) {
+					return null;
+				}
+				// An empty element consumes only its tag; otherwise match the same opener again as raw text, as before.
+				if ( ! $empty ) {
+					$raw_at = $start;
+					$offset = $start;
+				}
+				continue;
+			}
 			// A script end tag inside double-escaped data only returns to escaped data.
 			if ( ! empty( $token['raw'] ) && 'script' === strtolower( $token['raw'] ) && false !== strpos( $token['body'], '<!--' ) && false !== stripos( $token['body'], '<script' ) ) {
 				$body_start = $start + strlen( $token['raw_attrs'] ) + strlen( $token['raw'] ) + 2;

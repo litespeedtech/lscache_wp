@@ -268,6 +268,7 @@ Please don't report a suspected vulnerability in this support forum. Reporting d
 
 = 7.9.5 - Coming soon 2026 =
 * **Page Optimize** Fixed a duplicate key database error on long URLs. (oblivyoung)
+* **Page Optimize** Fixed images not loading on pages with a self-closing style tag in an inline SVG. (ww1way)
 
 = 7.9.4 - Nov 24 2026 =
 * **Object Cache** Flush once after the backend was unreachable. (PR#1069)
