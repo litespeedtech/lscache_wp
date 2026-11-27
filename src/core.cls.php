@@ -845,6 +845,10 @@ class Core extends Root {
 		}
 		// A WP_Error yields code 0.
 		$code = (int) wp_remote_retrieve_response_code( wp_safe_remote_get( admin_url( 'admin-ajax.php' ) ) );
+		// That request resets the queue rows, so drop this process's cached copies; otherwise storing the same header again is skipped as unchanged.
+		wp_cache_delete( 'alloptions', 'options' );
+		wp_cache_delete( Purge::name( Purge::DB_QUEUE ), 'options' );
+		wp_cache_delete( Purge::name( Purge::DB_QUEUE2 ), 'options' );
 		if ( ! $code || $code >= 500 ) {
 			self::debug( 'Failed to kick the current blog purge queue.' );
 			return false;
