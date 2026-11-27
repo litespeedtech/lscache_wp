@@ -374,10 +374,11 @@ class Purge extends Base {
 	 * @return void
 	 */
 	private function _purge_all_optimax( $silence = false ) {
+		$this->_purge_all_lscache( true ); // Cached pages link the builds' JS and CSS files: purge them too to avoid 404
+
 		do_action( 'litespeed_purged_all_optimax' );
 
-		$this->cls( 'Optimax' )->rm_cache_folder( 'optimax' );
-		$this->cls( 'Data' )->url_file_clean( 'optimax' );
+		$this->cls( 'Optimax_Pages' )->purge_builds();
 		$this->clear_q( 'optimax', true );
 
 		if ( ! $silence ) {
@@ -613,6 +614,30 @@ class Purge extends Base {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Whether to show the Purge action of a cache folder: the folder exists and `litespeed_purgeable_folder` allows it.
+	 *
+	 * OptimaX hides the UCSS, CCSS and VPI purges while it is on: it reuses those files in its builds.
+	 *
+	 * @since 8.0
+	 * @param string $type Cache folder: ccss, ucss, vpi...
+	 * @return bool
+	 */
+	public static function has_purgeable_folder( $type ) {
+		return (bool) apply_filters( 'litespeed_purgeable_folder', self::cls()->has_cache_folder( $type ), $type );
+	}
+
+	/**
+	 * Purge all OptimaX files, URL mappings and queue (public wrapper).
+	 *
+	 * @since 8.0
+	 * @param bool $silence If true, don't show admin notice.
+	 * @return void
+	 */
+	public static function purge_all_optimax( $silence = true ) {
+		self::cls()->_purge_all_optimax( $silence );
 	}
 
 	/**

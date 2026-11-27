@@ -94,6 +94,9 @@ class Conf extends Base {
 		add_action( 'litespeed_conf_append', [ $this, 'option_append' ], 10, 2 );
 		add_action( 'litespeed_conf_force', [ $this, 'force_option' ], 10, 2 );
 
+		// OptimaX turns on the settings it needs; before define_cache(), which reads Cache.
+		Optimax::force_required( $this );
+
 		$this->define_cache();
 	}
 
