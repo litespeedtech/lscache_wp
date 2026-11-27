@@ -47,7 +47,7 @@ class Purge extends Base {
 	protected $_purge_single = false;
 
 	/**
-	 * Blog IDs whose purge queues this CLI process stored, so shutdown can kick each one; per blog and queue name, true once a Purge All was saved there.
+	 * Blog IDs whose purge queues this CLI or cron process stored, so shutdown can kick each one; per blog and queue name, true once a Purge All was saved there.
 	 *
 	 * @var array<int,array<string,bool>>
 	 */
@@ -60,7 +60,7 @@ class Purge extends Base {
 	const UPGRADE_PURGE_HEADER = 'X-LiteSpeed-Purge2: public,*';
 
 	/**
-	 * Blog IDs whose purge queue this CLI process stored.
+	 * Blog IDs whose purge queue this CLI or cron process stored.
 	 *
 	 * @return array<int,int>
 	 */
@@ -692,9 +692,9 @@ class Purge extends Base {
 
 		$tags = $this->_prepend_bid( $tags );
 
-		// In CLI, '*' carries no blog ID, so a Purge All after switch_to_blog() must still store that blog's own queue, once per queue.
+		// In CLI or cron, '*' carries no blog ID, so a Purge All after switch_to_blog() must still store that blog's own queue, once per queue.
 		$queue            = $purge2 ? self::DB_QUEUE2 : self::DB_QUEUE;
-		$is_cli_purge_all = defined( 'LITESPEED_CLI' ) && is_multisite() && in_array( '*', $tags, true ) && empty( self::$_cli_queued_blogs[ get_current_blog_id() ][ $queue ] );
+		$is_cli_purge_all = ( defined( 'LITESPEED_CLI' ) || wp_doing_cron() ) && is_multisite() && in_array( '*', $tags, true ) && empty( self::$_cli_queued_blogs[ get_current_blog_id() ][ $queue ] );
 		if ( ! $is_cli_purge_all && ! array_diff( $tags, $purge2 ? $this->_pub_purge2 : $this->_pub_purge ) ) {
 			return;
 		}
@@ -722,19 +722,35 @@ class Purge extends Base {
 		if ( defined( 'LITESPEED_CLI' ) ) {
 			// Can't send, already has output, need to save and wait for next run
 			$saved = self::update_option( $queue, $curr_built );
-			// Only a saved Purge All stops later ones on this blog and queue; a failed save or a tag-only queue does not.
-			self::$_cli_queued_blogs[ get_current_blog_id() ][ $queue ] = ! empty( self::$_cli_queued_blogs[ get_current_blog_id() ][ $queue ] ) || ( $saved && in_array( '*', $tags, true ) );
+			self::_track_queued_blog( $queue, $saved, $tags );
 			self::debug( 'CLI request, queue stored: ' . $curr_built );
 		} else {
 			if ( ! headers_sent() ) {
 				header( $curr_built );
 			}
 			if ( wp_doing_cron() || defined( 'LITESPEED_DID_send_headers' ) || apply_filters( 'litespeed_delay_purge', false ) ) {
-				self::update_option( $purge2 ? self::DB_QUEUE2 : self::DB_QUEUE, $curr_built );
+				$saved = self::update_option( $queue, $curr_built );
+				// Cron kicks every blog it stored a queue for at shutdown, like CLI
+				if ( wp_doing_cron() ) {
+					self::_track_queued_blog( $queue, $saved, $tags );
+				}
 				self::debug( 'Output existed, queue stored: ' . $curr_built );
 			}
 			self::debug( $curr_built );
 		}
+	}
+
+	/**
+	 * Record that the current blog's purge queue was stored, so the shutdown kick reaches it.
+	 *
+	 * @param string            $queue Queue name.
+	 * @param bool              $saved Whether the queue was saved.
+	 * @param array<int,string> $tags  Tags just added.
+	 * @return void
+	 */
+	private static function _track_queued_blog( $queue, $saved, $tags ) {
+		// Only a saved Purge All stops later ones on this blog and queue; a failed save or a tag-only queue does not.
+		self::$_cli_queued_blogs[ get_current_blog_id() ][ $queue ] = ! empty( self::$_cli_queued_blogs[ get_current_blog_id() ][ $queue ] ) || ( $saved && in_array( '*', $tags, true ) );
 	}
 
 	/**
